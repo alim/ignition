@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= content_for?(:title) ? yield(:title) : "Ignition" %></title>
+    <%= csrf_meta_tags %>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
+    <![endif]-->
+
+    <%= stylesheet_link_tag "application", :media => "all" %>
+
+    <!-- For third-generation iPad with high-resolution Retina display: -->
+    <!-- Size should be 144 x 144 pixels -->
+    <%= favicon_link_tag 'apple-touch-icon-144x144-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '144x144' %>
+
+    <!-- For iPhone with high-resolution Retina display: -->
+    <!-- Size should be 114 x 114 pixels -->
+    <%= favicon_link_tag 'apple-touch-icon-114x114-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '114x114' %>
+
+    <!-- For first- and second-generation iPad: -->
+    <!-- Size should be 72 x 72 pixels -->
+    <%= favicon_link_tag 'apple-touch-icon-72x72-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '72x72' %>
+
+    <!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+    <!-- Size should be 57 x 57 pixels -->
+    <%= favicon_link_tag 'apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png' %>
+
+    <!-- For all other devices -->
+    <!-- Size should be 32 x 32 pixels -->
+    <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
+    
+  </head>
+  <body>
+
+		<!-- NAVIGATION BAR SECTION -->
+    <div class="navbar navbar-static-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+        
+        	<!-- Insert your logo here -->
+        	<%= image_tag 'logo.png', class: 'pull-left logo'%>
+        	
+          <a class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
+         
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          
+          </a>
+          <a class="brand" href="#">Web Services</a>
+          <div class="container-fluid nav-collapse">
+            <ul class="nav pull-right">
+              <li class="<%= @home_active %>"><%= link_to "Home", home_index_url  %></li>
+              <li class="<%= @support_active %>"><%= link_to "Support", home_support_url %></li>
+              <li class="<%= @about_active %>"><%= link_to "About", home_about_url  %></li>
+              <li class="<%= @contact_active %>"><%= link_to "Contact", home_contact_url  %></li>
+              <% if false %>
+              <li class="<%= @signup_active %>"><%= link_to "Signup", new_user_registration_url  %></li>
+              <li class="<%= @signin_active %>"><%= link_to "Signin", new_user_session_url  %></li>
+              <li class="<%= @password_reset_active %>"><%= link_to "Password Reset", edit_user_registration_url  %></li>
+              <li class="<%= @logout_active %>"><%= link_to "Logout", destroy_user_session_path, :method => :delete  %></li>
+            	<% end %>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+		
+		<!-- CAROUSEL SECTION ------------------------------------------ -->
+	
+		<!-- Image container -->
+		<div class="container-fluid">
+		
+			<!-- Slide indicators -->
+			<div id="myCarousel" class="carousel slide">
+				<ol class="carousel-indicators">
+					<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+					<li data-target="#myCarousel" data-slide-to="1"></li>
+					<li data-target="#myCarousel" data-slide-to="2"></li>
+				</ol>
+			
+				<!-- Carousel items -->
+				<div data-interval="3500" class="carousel-inner">
+
+					<div class="item active">
+						<%= image_tag 'banner-1.jpg' %>
+						<div class="carousel-caption">
+							<h4>Caption 1</h4>
+							<p>
+								Pellentesque habitant morbi tristique senectus et netus 
+								et malesuada fames ac turpis egestas.
+							</p>
+						</div>
+					</div>
+
+					<div class="item">
+						<%= image_tag 'banner-2.jpg' %>
+						<div class="carousel-caption">
+							<h4>Caption 2</h4>
+							<p>
+								Pellentesque habitant morbi tristique senectus et netus 
+								et malesuada fames ac turpis egestas.
+							</p>
+						</div>
+					</div>
+
+					<div class="item">
+						<%= image_tag 'banner-3.jpg' %>
+						<div class="carousel-caption">
+							<h4>Caption 3</h4>
+							<p>
+								Pellentesque habitant morbi tristique senectus et netus 
+								et malesuada fames ac turpis egestas.
+							</p>					
+						</div>
+					</div>
+				</div>
+
+				<!-- Carousel nav -->
+				<a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+				<a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+			</div>
+		</div>
+		
+		<!-- MAIN BODY SECTION -->
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12">
+          <%= bootstrap_flash %>
+          <%= yield %>
+        </div>
+      </div><!--/row-->
+
+			<!-- FOOTER -->
+      <footer>
+      	<div class="row-fluid">
+      		<div class="span3 widget">
+      			<h5>Address</h5>
+      			<p>
+      				Acme Web Services<br/>
+      				123 Main St.<br/>
+      				Somewhere, AZ 12345<br/>
+      			</p>
+      		</div>
+      		<div class="span3 widget">
+      			<h5>Follow Us</h5>
+      			<ul>
+      				<li>Twitter</li>
+      				<li>Facebook</li>
+      				<li>Google+</li>
+      			</ul>
+      		</div>
+					<div class="span3 widget">
+      			<h5>Secondary Links</h5>
+      			<ul>
+      				<li>Link1</li>
+      				<li>Link2</li>
+      				<li>Link3</li>
+      			</ul>
+      		</div>
+      		<div class="span3 widget">
+      			<h5>Copyright & Credits</h5>
+      			<p>&copy; Acme Web Services 2013</p>
+      			<p>Photo credit under Creative Commons license - Moyan Brenn</p>
+      		</div>      		      		      	
+      	</div>
+
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Javascripts
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <%= javascript_include_tag "application" %>
+
+  </body>
+</html>
