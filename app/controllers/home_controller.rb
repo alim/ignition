@@ -17,19 +17,4 @@ class HomeController < ApplicationController
   	@about_active="active"
   end
 
-  def signup
-        @signup_active="active"
-  end
-
-  def signin
-        @signin_active="active"
-  end
-
-  def password_reset
-        @password_reset_active="active"
-  end
-
-  def logout
-        @logout_active="active"
-  end
 end
