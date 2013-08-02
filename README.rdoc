@@ -1,28 +1,24 @@
-== README
+= Ignition
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+The Ignition project is a small effort to provide a starting framework
+for building online web-based subscription services. This particular
+project is targeted to support Openshift deployment. 
 
-Things you may want to cover:
+= Components
 
-* Ruby version
+The project is based on the following technology components:
 
-* System dependencies
+* Ruby On Rails 4
+* MongoDB using Mongoid ORM
+* Twitter Bootstrap
+* Devise authentication
+* Cancan authorization
+* Rspec testing
+* Stripe.com subscription billing
+* Openshift PaaS hosting integration scripts
 
-* Configuration
+= License
 
-* Database creation
+The Ignition project is available as GPLV3 licensed software. For more
+information on this license see {here}[http://www.gnu.org/licenses/gpl-3.0-standalone.html]
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
