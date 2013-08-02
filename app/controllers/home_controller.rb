@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-	layout 'home'
+
 	
   def index
   	@home_active="active"

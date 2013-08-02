@@ -5,6 +5,14 @@ class ApplicationController < ActionController::Base
   
   layout :layout_by_resource
 
+	def after_sign_in_path_for(resource)
+		admin_url
+	end
+	
+	def after_sign_out_path_for(resource)
+		root_url
+	end	
+
   protected
 
 	######################################################################
@@ -12,9 +20,7 @@ class ApplicationController < ActionController::Base
 	# is in use.
 	######################################################################
   def layout_by_resource
-    if devise_controller? || home_controller?
-      "home"
-    elsif admin_controller?
+    if self.is_a?(AdminController)
     	"admin"
     else
       "home"
