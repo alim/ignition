@@ -37,4 +37,15 @@ class User
 
   ## Token authenticatable
   # field :authentication_token, :type => String
+  
+  ## Additional fields and validations ---------------------------------
+  field :first_name, type: String, default: ''
+  validates_presence_of :first_name
+  
+  field :last_name, type: String, default: ''
+  validates_presence_of :last_name
+  
+  field :phone, type: String, default: ''
+  validates_presence_of :phone
 end
+

@@ -5,10 +5,18 @@ class ApplicationController < ActionController::Base
   
   layout :layout_by_resource
 
+	######################################################################
+	# A Devise method override that redirects the user to the admin_url
+	# after they have signed into the system.
+	######################################################################
 	def after_sign_in_path_for(resource)
 		admin_url
 	end
 	
+	######################################################################
+	# A Devise method override that redirects the user to the home_url
+	# after they have signed out the system.
+	######################################################################
 	def after_sign_out_path_for(resource)
 		root_url
 	end	
@@ -22,6 +30,8 @@ class ApplicationController < ActionController::Base
   def layout_by_resource
     if self.is_a?(AdminController)
     	"admin"
+    elsif self.is_a?(DeviseController)
+			"devise"
     else
       "home"
     end
