@@ -2,37 +2,46 @@
 	<div class="span1">
 	</div>
 	
-	<div class="span9">
-		<h2>Sign up</h2>
-
-		<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+	<div class="span11">
+		<div class="page-header">
+			<h2>Sign Up</h2>
+			<p>
+				You can sign for an account using the form below. 
+			</p>
+		</div>
+	
+		<%= form_for(resource, as: resource_name, url: registration_path(
+			resource_name), html: {class: 'form-horizontal'}) do |f| %>
+		
 			<%= devise_error_messages! %>
-			
-			<div><%= f.label :first_name %>
-			<%= f.text_field :first_name, :autofocus => true %></div>
+		
+			<div class='control-label'><%= f.label :first_name %></div>
+			<div class='controls'><%= f.text_field :first_name, :autofocus => true %></div>
 			<br/>
-			
-			<div><%= f.label :last_name %>
-			<%= f.text_field :last_name %></div>
+		
+			<div class='control-label'><%= f.label :last_name %></div>
+			<div class='controls'><%= f.text_field :last_name %></div>
 			<br/>
-			
-			<div><%= f.label :phone %>
-			<%= f.text_field :phone %></div>
+		
+			<div class='control-label'><%= f.label :phone %></div>
+			<div class='controls'><%= f.text_field :phone %></div>
 			<br/>
-			
-			<div><%= f.label :email %>
-			<%= f.email_field :email %></div>
+		
+			<div class='control-label'><%= f.label :email %></div>
+			<div class='controls'><%= f.email_field :email %></div>
 			<br/>
-			
-			<div><%= f.label :password %>
-			<%= f.password_field :password %></div>
+		
+			<div class='control-label'><%= f.label :password %></div>
+			<div class='controls'><%= f.password_field :password %></div>
 			<br/>
-			
-			<div><%= f.label :password_confirmation %>
-			<%= f.password_field :password_confirmation %></div>
+		
+			<div class='control-label'><%= f.label :password_confirmation %></div>
+			<div class='controls'><%= f.password_field :password_confirmation %></div>
 			<br/>
-			
-			<div><%= f.submit "Sign up" %></div>
+		
+			<div class='form-actions'>
+				<%= f.submit "Sign Up", class: 'btn btn-primary' %>
+			</div>
 		<% end %>
 
 		<%= render "devise/shared/links" %>
