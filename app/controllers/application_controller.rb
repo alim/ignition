@@ -5,6 +5,8 @@ class ApplicationController < ActionController::Base
   
   layout :layout_by_resource
 
+	before_filter :configure_permitted_parameters, if: :devise_controller?
+
 	######################################################################
 	# A Devise method override that redirects the user to the admin_url
 	# after they have signed into the system.
@@ -21,19 +23,33 @@ class ApplicationController < ActionController::Base
 		root_url
 	end	
 
+	## PROTECTED METHODS -------------------------------------------------
+	
   protected
+
+	######################################################################
+	# Devise strong parameters method for allowing additional attributes
+	# to be mass updated in the User model. See the Devise README file for
+	# more details.
+	######################################################################
+	def configure_permitted_parameters
+    devise_parameter_sanitizer.for(:account_update) { |u| u.permit(
+    	:email, :password, :password_confirmation, :current_password,
+    	:first_name, :last_name, :phone
+    ) }
+  end
 
 	######################################################################
 	# Callback function to specify the layout based on the controller that
 	# is in use.
 	######################################################################
   def layout_by_resource
-    if self.is_a?(AdminController)
-    	"admin"
+    if self.is_a?(HomeController)
+    	"home"
     elsif self.is_a?(DeviseController)
 			"devise"
     else
-      "home"
+      "admin"
     end
   end
 end

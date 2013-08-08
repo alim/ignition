@@ -1,5 +1,7 @@
 class User
   include Mongoid::Document
+  include Mongoid::Timestamps
+  
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
@@ -47,5 +49,8 @@ class User
   
   field :phone, type: String, default: ''
   validates_presence_of :phone
+  
+  ## Relationship items ------------------------------------------------
+  has_and_belongs_to_many :groups
 end
 

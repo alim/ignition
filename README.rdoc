@@ -13,6 +13,7 @@ The project is based on the following technology components:
 * Twitter Bootstrap
 * Devise authentication
 * Cancan authorization
+* Figaro environment variable utility
 * Rspec testing
 * Stripe.com subscription billing
 * Openshift PaaS hosting integration scripts
