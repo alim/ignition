@@ -1,0 +1,12 @@
+<!-- Print out any validation errors - should be in @verrors -->
+<% if @verrors -%>
+   <div class="alert alert-error">
+		<a class="close" data-dismiss="alert" href="#">×</a>
+		<h4 class="alert-heading">Error!</h4>
+		<ul>
+			<% @verrors.each do |message| %>
+				<li><%= message %></li>
+			<% end %>
+		</ul>
+	</div>
+<% end -%>

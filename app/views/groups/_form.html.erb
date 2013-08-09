@@ -1,20 +1,99 @@
-<%= form_for @group, :html => { :class => 'form-horizontal' } do |f| %>
+<%= render partial: 'shared/flash', locals: { flash: flash } %>
+<%= render partial: 'shared/validation_errors' %>
+
+<%= form_for @group, :html => { class: 'form-horizontal' } do |f| %>
+
   <div class="control-group">
-    <%= f.label :name, :class => 'control-label' %>
+    <%= f.label :name, class: 'control-label' %>
     <div class="controls">
-      <%= f.text_field :name, :class => 'text_field' %>
+      <%= f.text_field :name, class: 'text_field  span6' %>
     </div>
   </div>
+  
   <div class="control-group">
-    <%= f.label :description, :class => 'control-label' %>
+    <%= f.label :description, class: 'control-label' %>
     <div class="controls">
-      <%= f.text_area :description, :class => 'text_field' %>
+      <%= f.text_area :description, class: 'text_field span6', rows: 3 %>
+    </div>
+  </div>
+
+	<!-- Section for setting up group members -->
+	<% if @group.users.present? %>
+	<h3>Group Members</h3>
+	<p>
+	The group members are listed below. As a default starting point, the 
+	group owner is also a member of the group.
+	</p>
+
+	<table class="table table-striped">
+		<thead>
+			<tr>
+			  <th>First name</th>
+			  <th>Last name</th>
+			  <th>Email address</th>
+			  <th>Remove from group</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @group.users.each do |user| %>
+				<tr>
+					<td><%= user.first_name %></td>
+					<td><%= user.last_name %></td>
+					<td><%= user.email %></td>
+					<td>
+						<%= form_tag remove_member_group_url, method: :put do %>
+							<%= hidden_field_tag :uid, user.id %>
+							<%= submit_tag 'Remove', class: "btn btn-mini btn-warning" %>
+						<% end %>
+  				</td>
+				</tr>
+			<% end %>
+	 	</tbody>
+	</table>
+	<% end %>	
+	
+	<!-- Generate a checkbox list of Events that can be related to the group -->
+	<% if @resources.present? %>
+		<h3>Shared Resources</h3>
+		<p>
+			Group members will be able to access those resources that you
+			indicate in the checklist below. Please note that access to these
+			resources will also give them access to other items related to
+			the resource.
+		</p>
+	
+		<div class="control-group">
+			<%= f.label @resource_name, class: 'control-label' %>
+				<% @resources.each do |resource| %>
+					<div class="controls">
+						<div class="checkbox">
+							<%= check_box_tag "group[resource_ids][]", resource[:id], resource[:related] %>
+							<%= resource[:label] %>
+				  	</div>
+		    	</div>
+				<% end %>
+		</div>
+		
+	<% end %>	
+	
+	<h3>Add New Members</h3>	
+	<p>
+		Please list the email address of each new group member on separate line
+		in the box below.
+	</p>
+	<br/>
+
+  <div class="control-group">
+    <%= f.label 'Members', class: 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :members, class: 'text_field span6', rows: 4,
+      	placeholder: "Enter email address of each member on a separate line." %>
     </div>
   </div>
 
   <div class="form-actions">
-    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= f.submit nil, class: 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                groups_path, :class => 'btn' %>
+                groups_path, class: 'btn' %>
   </div>
 <% end %>

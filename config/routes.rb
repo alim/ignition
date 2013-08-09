@@ -1,7 +1,14 @@
 Ignition::Application.routes.draw do
-  resources :groups
+  resources :groups do
+  	# Route for notifying and re-invite
+		member do
+			put 'notify'
+			put 'remove_member'
+		end
+	end
 
-  devise_for :users do
+  devise_for :users 
+  devise_scope :user do
   	# Send user to admin index after updating the profile, really should
   	# add users controller for managing users.
  		get 'users', to: 'admin#index', as: :user_root

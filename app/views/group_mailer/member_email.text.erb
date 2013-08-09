@@ -1,0 +1,32 @@
+Example Web Application
+=======================
+
+Group Membership Notification
+
+You are receiving this email because you have been added to
+an event administration group. This group membership gives you
+administrative privileges for one or more events on the
+http://www.example.com Example Web Application service. The details of
+your group membership are listed below:<br/>
+
+Group Owner: <%= @owner.first_name %> <%= @owner.last_name %>
+Group Name: <%= @group.name %>
+Group Description: 
+<% if @group.description.empty? %>
+ No description provided
+<% else %>
+ <%= @group.description %>
+<% end %>
+
+Your account: <%= @user.email %>
+<% if @password %>
+Your password: <%= @password %><br/>
+               Please login and fill out your profile 
+               information, which includes the first name, 
+               last name, and phone number. You will also be
+               prompted to change your password.
+<% end %>
+
+To login to your account visit: http:///www.example.com
+
+
