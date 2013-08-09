@@ -1,11 +1,13 @@
 class User
   include Mongoid::Document
+  include Mongoid::Timestamps
+  
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
-
+  
   ## Database authenticatable
   field :email,              :type => String, :default => ""
   field :encrypted_password, :type => String, :default => ""
@@ -37,7 +39,15 @@ class User
 
   ## Token authenticatable
   # field :authentication_token, :type => String
-  
+ 
+  ## CONSTANTS ----------------------------------------------------------
+
+  # CUSTOMER ROLE - constant for specifying a customer role
+  CUSTOMER = 1
+
+  # SERVICE_ADMIN - constant for specify a service administrator
+  SERVICE_ADMIN = 2
+ 
   ## Additional fields and validations ---------------------------------
   field :first_name, type: String, default: ''
   validates_presence_of :first_name
@@ -47,5 +57,10 @@ class User
   
   field :phone, type: String, default: ''
   validates_presence_of :phone
+  
+  field :role, type: Integer, default: User::CUSTOMER
+  
+  ## Relationship items ------------------------------------------------
+  has_and_belongs_to_many :groups
 end
 

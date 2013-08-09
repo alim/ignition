@@ -51,6 +51,9 @@ gem 'cancan'
 gem 'paperclip'
 gem 'aws-sdk'
 
+# GEM for reading environment variables from a configuration file
+gem 'figaro'
+
 # Stripe GEM for interacting with stripe.com payment service
 gem 'stripe'
 
