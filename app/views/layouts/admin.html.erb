@@ -49,6 +49,13 @@
               <li><%= link_to "Link3", "/path3"  %></li>
             </ul>
           </div><!--/.well -->
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Administration</li>
+              <li <%= @groups_active %> ><%= link_to "Groups", groups_url  %></li>
+
+            </ul>
+          </div><!--/.well -->
         </div><!--/span-->
         <div class="span9">
           <%= bootstrap_flash %>

@@ -24,4 +24,16 @@ Ignition::Application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
+  
+  # Settings for email
+  config.action_mailer.delivery_method = :smtp
+	config.action_mailer.smtp_settings = {
+  	:address              => ENV["SMTP_HOST"],
+		:port                 => ENV["SMTP_PORT"],
+		:domain               => ENV["SMTP_DOMAIN"],
+		:user_name            => ENV["SMTP_USER"],
+		:password             => ENV["SMTP_PASSWORD"],
+		:authentication       => :login,
+#		:enable_starttls_auto => true
+  }  
 end

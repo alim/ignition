@@ -1,0 +1,14 @@
+<div class="page-header">
+  <h1><%=t 'Oops Something Went Wrong!' %></h1>
+  <br/>
+  <p>
+  	We are very sorry, but we seem to have run into a problem. Please see
+  	the error message below for more details
+  </p>
+</div>
+
+<div class="row-fluid">
+	<div class="span10">
+		<%= render partial: 'shared/flash', locals: { flash: flash }%>
+	</div>
+</div>
