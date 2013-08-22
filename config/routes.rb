@@ -28,6 +28,8 @@ Ignition::Application.routes.draw do
   
   get "admin/oops"
 
+  get "admin/calendar"
+
   get "admin" => 'admin#index'  
   
   # The priority is based upon order of creation: first created -> highest priority.
