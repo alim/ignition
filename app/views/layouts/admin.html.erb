@@ -38,16 +38,35 @@
 
 		<%= render :partial => 'layouts/admin_devise_nav'%>
 
+    <!-- SideBar Navigation
+    ================================================== -->
+
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span3">
           <div class="well sidebar-nav">
-            <ul class="nav nav-list">
+            <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
               <li class="nav-header">Sidebar</li>
-              <li><%= link_to "Link1", "/path1"  %></li>
-              <li><%= link_to "Link2", "/path2"  %></li>
-              <li><%= link_to "Link3", "/path3"  %></li>
+              <li><%= link_to "Home", home_index_url  %></li>
+              <li><%= link_to "Help", admin_help_url  %></li>
+              <li><%= link_to "Edit User", edit_user_registration_url  %></li>
+              <li class="<%= @logout_active %>"><%= link_to "Logout", destroy_user_session_path, :method => :delete  %></li>
             </ul>
+
+    <!-- Collapse Menu
+    ================================================== -->
+
+              <div class="accordion" id="accordion1">
+                 <div class="accordion-heading">
+                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne"> Menu  <i class="icon-chevron-right"></i></a>
+                 </div>
+                   <div id="collapseOne" class="accordion-body collapse out">
+                     <ul class="accordion-inner">
+                        <li><%= link_to "Home", home_index_url  %></li>
+                        <li><%= link_to "Help", admin_help_url  %></li>
+                   </ul>
+                  </div>
+                </div>
           </div><!--/.well -->
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
