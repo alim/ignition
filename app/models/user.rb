@@ -52,11 +52,11 @@ class User
   field :first_name, type: String, default: ''
   validates_presence_of :first_name
   
-  field :last_name, type: String
-#  validates_presence_of :last_name
+  field :last_name, type: String, default: ''
+  validates_presence_of :last_name
   
-  field :phone, type: String
-#  validates_presence_of :phone
+  field :phone, type: String, default: ''
+  validates_presence_of :phone
   
   field :role, type: Integer, default: User::CUSTOMER
   
