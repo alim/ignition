@@ -46,11 +46,13 @@
         <div class="span3">
           <div class="well sidebar-nav">
             <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
-              <li class="nav-header">Sidebar</li>
+              <li class="nav-header">Service Actions</li>
               <li><%= link_to "Home", home_index_url  %></li>
               <li><%= link_to "Help", admin_help_url  %></li>
+              <% if false %>
               <li><%= link_to "Edit User", edit_user_registration_url  %></li>
               <li class="<%= @logout_active %>"><%= link_to "Logout", destroy_user_session_path, :method => :delete  %></li>
+            	<% end %>
             </ul>
 
     <!-- Collapse Menu
