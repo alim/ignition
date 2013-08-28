@@ -50,7 +50,7 @@ class User
  
   ## Additional fields and validations ---------------------------------
   field :first_name, type: String, default: ''
-#  validates_presence_of :first_name
+  validates_presence_of :first_name
   
   field :last_name, type: String
 #  validates_presence_of :last_name

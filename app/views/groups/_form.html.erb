@@ -41,7 +41,7 @@
 					<td><%= user.last_name %></td>
 					<td><%= user.email %></td>
 					<td>
-						<%= form_tag remove_member_group_url, method: :put do %>
+						<%= form_tag remove_member_group_url(@group.id), method: :put do %>
 							<%= hidden_field_tag :uid, user.id %>
 							<%= submit_tag 'Remove', class: "btn btn-mini btn-warning" %>
 						<% end %>

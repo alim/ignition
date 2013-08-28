@@ -87,7 +87,7 @@ class GroupsController < ApplicationController
   	respond_to do |format|
 		  @group = current_user.groups.new(group_params)
 			@group.owner_id = current_user.id
-
+puts "[GROUPS.CREATE] Here."
 			if @group.save
 				# Relate selected resources
 				# relate_resources

@@ -11,6 +11,7 @@ class Group
   
   # Validations
   validate :members_list
+  validates_presence_of :name
   
   ## PUBLIC INSTANCE METHODS -------------------------------------------
   
