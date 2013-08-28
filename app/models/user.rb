@@ -61,6 +61,6 @@ class User
   field :role, type: Integer, default: User::CUSTOMER
   
   ## Relationship items ------------------------------------------------
-  has_and_belongs_to_many :groups
+  has_and_belongs_to_many :groups, dependent: :destroy
 end
 
