@@ -57,8 +57,12 @@ need to do the following:
 1. Generate a new secret token and copy the output of the following command.
     rake secret
 
-1. Replace the secret token stored in the config/initializers/secret_token.rb file with the one generated from the _rake secret_ command.
+1. Replace the secret token stored in the config/initializers/secret_token.rb file with the one generated from the rake secret command.
    
+1. Commit the merged changes
+    git add --all
+    git commit -m "Put your commit message here"
+
 1. Push the application
     git push
    
