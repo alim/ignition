@@ -32,7 +32,7 @@ need to do the following:
 1. Add a mongoDB cartridge to your application
     rhc cartridge add -a someapp -c mongodb-2.2
    
-1. Add this upstream repository
+1. Add this upstream repository. Note you may need to add a merge message.
     cd someapp
     git remote add upstream -m master git@github.com:alim/ignition.git
     git pull -s recursive -X theirs upstream master
@@ -40,7 +40,7 @@ need to do the following:
 1. Edit the config/application.yml to add your admin login
     cp config/application.yml.template config/application.yml
 
-1. Edit the application.yml file to include an administrator login and email settings for your environments. The development one is shown, but you can others for production and test.
+1. Edit the application.yml file to include an administrator login and email settings for your environments. The development one is shown, but you can add others for production and test.
     development:
       SMTP_HOST: 'smtpout.someserver.net'
       SMTP_PORT: 3535
@@ -57,13 +57,7 @@ need to do the following:
 1. Generate a new secret token and copy the output of the following command.
     rake secret
 
-1. Replace the secret token stored in the config/initializers/secret_token.rb file with the one generated from the +rake secret+ command.
-
-1. Generate the admin user.
-    rake db:seed
-   
-1. Run the bundle command
-    bundle install
+1. Replace the secret token stored in the config/initializers/secret_token.rb file with the one generated from the _rake secret_ command.
    
 1. Push the application
     git push

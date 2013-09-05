@@ -1,0 +1,9 @@
+#!/bin/bash
+########################################################################
+# Actions to be excecuted once the application has been deployed, but
+# not yet started.
+########################################################################
+
+# Add database seed values
+rake db:seed
+
