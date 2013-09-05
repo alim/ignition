@@ -69,9 +69,8 @@ need to do the following:
 1. Push the application
     git push
     
-1. Point your browser to the applicatin URL. You should now be able to 
-the application using the email and password that you entered in the
-application.yml file.
+1. Point your browser to the applicatin URL. You should now be able to the application using the email and password that you entered in the application.yml file.
+
    
 = License
 
