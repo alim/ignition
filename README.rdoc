@@ -40,8 +40,11 @@ need to do the following:
 1. Edit the config/application.yml to add your admin login
     cp config/application.yml.template config/application.yml
 
-1. Edit the application.yml file to include an administrator login and email settings for your environments. The development one is shown, but you can add others for production and test.
-    development:
+1. Edit the .gitignore file to comment out the line that ignores the application.yml file
+    # /config/application.yml    
+
+1. Edit the application.yml file to include an administrator login and email settings for your environments. The production one is shown, but you can add others for development and test.
+    production:
       SMTP_HOST: 'smtpout.someserver.net'
       SMTP_PORT: 3535
       SMTP_DOMAIN: 'somedomain.com'

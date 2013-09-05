@@ -6,5 +6,5 @@
 
 # Add database seed values
 cd $OPENSHIFT_REPO_DIR
-rake db:seed
+rake RAILS_ENV=production db:seed
 
