@@ -25,39 +25,29 @@ need to do the following:
 
 1. Create an account on the {Openshift}[http://www.openshift.com] service.
 
-1. Create a rails application and check the results
-    rhc app create -a someapp -t ruby-1.9
+1. Set up your local machine with the {RedHat client}[https://www.openshift.com/developers/rhc-client-tools-install] tools
+
+1. Create a rails application and check the results. You can name the application whatever you want. In the example, we use "someapp".
+    rhc app create someapp ruby-1.9 mongodb-2.2 --from-code git@github.com:alim/ignition.git
     rhc app show-app someapp
-    
-1. Add a mongoDB cartridge to your application
-    rhc cartridge add -a someapp -c mongodb-2.2
    
-1. Add this upstream repository. Note you may need to add a merge message.
-    cd someapp
-    git remote add upstream -m master git@github.com:alim/ignition.git
-    git pull -s recursive -X theirs upstream master
-
-1. Edit the config/application.yml to add your admin login
-    cp config/application.yml.template config/application.yml
-
-1. Edit the .gitignore file to comment out the line that ignores the application.yml file
-    # /config/application.yml    
-
-1. Edit the application.yml file to include an administrator login and email settings for your environments. The production one is shown, but you can add others for development and test.
-    production:
-      SMTP_HOST: 'smtpout.someserver.net'
-      SMTP_PORT: 3535
-      SMTP_DOMAIN: 'somedomain.com'
-      SMTP_USER: 'someuser@somedomain.com'
-      SMTP_PASSWORD: 'somepassword'
-
-      ADMIN_FIRST_NAME: 'Some'
-      ADMIN_LAST_NAME: 'Admin'
-      ADMIN_PHONE: '800.555.1212'
-      ADMIN_EMAIL: 'sdmin@example.com'
-      ADMIN_PASSWORD: 'somepassword'
-  
+1. Create a text file to hold environment varilables for setting up email and default administrator login. We will call this file 'varaibles.txt'. This file should not be included in your git repository. Example file contents are below:
+    SMTP_HOST='smtpout.someserver.net'
+    SMTP_PORT=3535
+    SMTP_DOMAIN='somedomain.com'
+    SMTP_USER='someuser@somedomain.com'
+    SMTP_PASSWORD='somepassword'
+    ADMIN_FIRST_NAME='Some'
+    ADMIN_LAST_NAME='Admin'
+    ADMIN_PHONE='800.555.1212'
+    ADMIN_EMAIL='sdmin@example.com'
+    ADMIN_PASSWORD='somepassword'
+      
+1. Run the rhc command to install these environment variables for your application. You can then destroy the text file your created in the previous step.
+    rhc set-env /path/to/variables.txt -a someapp
+ 
 1. Generate a new secret token and copy the output of the following command.
+    cd someapp
     rake secret
 
 1. Replace the secret token stored in the config/initializers/secret_token.rb file with the one generated from the rake secret command.
