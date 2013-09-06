@@ -28,7 +28,7 @@ need to do the following:
 1. Set up your local machine with the {RedHat client}[https://www.openshift.com/developers/rhc-client-tools-install] tools
 
 1. Create a rails application and check the results. You can name the application whatever you want. In the example, we use "someapp".
-    rhc app create someapp ruby-1.9 mongodb-2.2 --from-code git@github.com:alim/ignition.git
+    rhc app create someapp ruby-1.9 mongodb-2.2 --from-code https://github.com/alim/ignition.git
     rhc app show-app someapp
    
 1. Create a text file to hold environment varilables for setting up email and default administrator login. We will call this file 'varaibles.txt'. This file should not be included in your git repository. Example file contents are below:
@@ -43,7 +43,7 @@ need to do the following:
     ADMIN_EMAIL='sdmin@example.com'
     ADMIN_PASSWORD='somepassword'
       
-1. Run the rhc command to install these environment variables for your application. You can then destroy the text file your created in the previous step.
+1. Run the rhc command to install these environment variables for your application. You can then destroy the text file you created in the previous step.
     rhc set-env /path/to/variables.txt -a someapp
  
 1. Generate a new secret token and copy the output of the following command.

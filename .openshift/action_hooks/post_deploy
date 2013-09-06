@@ -6,5 +6,10 @@
 
 # Add database seed values
 cd $OPENSHIFT_REPO_DIR
-rake RAILS_ENV=production db:seed
+
+if `env | grep ADMIN`; then
+	rake RAILS_ENV=production db:seed
+else
+	echo "No administrative user variables found. Skipping database seeding."
+fi
 
