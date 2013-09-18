@@ -43,42 +43,49 @@
 
     <div class="container-fluid">
       <div class="row-fluid">
-        <div class="span3">
+        <div class="span2">
           <div class="well sidebar-nav">
+          
             <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
-              <li class="nav-header">Service Actions</li>
-              <li><%= link_to "Home", home_index_url  %></li>
-              <li><%= link_to "Help", admin_help_url  %></li>
+              <li class="nav-header">Service Menu</li>
+              <li <%= @admin_active %>><%= link_to "Dashboard", admin_url  %></li>
+              <li <%= @help_admin_active%>><%= link_to "Help", admin_help_url  %></li>
               <% if false %>
               <li><%= link_to "Edit User", edit_user_registration_url  %></li>
               <li class="<%= @logout_active %>"><%= link_to "Logout", destroy_user_session_path, :method => :delete  %></li>
             	<% end %>
             </ul>
 
-    <!-- Collapse Menu
-    ================================================== -->
+						<!-- Collapse Menu
+						================================================== -->
 
-              <div class="accordion" id="accordion1">
-                 <div class="accordion-heading">
-                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne"> Menu  <i class="icon-chevron-right"></i></a>
-                 </div>
-                   <div id="collapseOne" class="accordion-body collapse out">
-                     <ul class="accordion-inner">
-                        <li><%= link_to "Home", home_index_url  %></li>
-                        <li><%= link_to "Help", admin_help_url  %></li>
-                   </ul>
-                  </div>
-                </div>
+            <div class="accordion" id="accordion1">
+           		<div class="accordion-heading">
+           			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne"> Menu  <i class="icon-chevron-right"></i></a>
+           		</div>
+               
+							<div id="collapseOne" class="accordion-body collapse out">
+             		<ul class="accordion-inner">
+                  <li><%= link_to "Home", home_index_url  %></li>
+                  <li <%= @help_admin_active %>><%= link_to "Help", admin_help_url  %></li>
+             		</ul>
+              </div>
+             </div> <!-- accordion -->
+             
           </div><!--/.well -->
-          <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="nav-header">Administration</li>
-              <li <%= @groups_active %> ><%= link_to "Groups", groups_url  %></li>
-
-            </ul>
-          </div><!--/.well -->
+          
+          <!-- Service Administration Menu ========================= -->
+		      <div class="well sidebar-nav">
+		        <ul class="nav nav-list">
+		          <li class="nav-header">Administration</li>
+		          <li <%= @users_active %> ><%= link_to "Users", users_url  %></li>
+		          <li <%= @groups_active %> ><%= link_to "Groups", groups_url  %></li>
+		        </ul>
+		      </div><!--/.well -->
+		      
         </div><!--/span-->
-        <div class="span9">
+        
+        <div class="span10">
           <%= bootstrap_flash %>
           <%= yield %>
         </div>
