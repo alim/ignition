@@ -1,39 +1,55 @@
 <%- model_class = User -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+  <h1>User Account Information</h1>
+  <p>
+    The user account information is shown below. You can and edit or
+    destroy the user account using the buttons at the bottom of the
+    page.
+  </p>
 </div>
 
 <dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:_id) %>:</strong></dt>
-  <dd><%= @user.id %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:email) %>:</strong></dt>
+
+  <dt><strong>Email:</strong></dt>
   <dd><%= @user.email %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:encrypted_password) %>:</strong></dt>
-  <dd><%= @user.encrypted_password %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:reset_password_token) %>:</strong></dt>
-  <dd><%= @user.reset_password_token %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:reset_password_sent_at) %>:</strong></dt>
-  <dd><%= @user.reset_password_sent_at %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:remember_created_at) %>:</strong></dt>
-  <dd><%= @user.remember_created_at %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:current_sign_in_at) %>:</strong></dt>
-  <dd><%= @user.current_sign_in_at %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:last_sign_in_at) %>:</strong></dt>
-  <dd><%= @user.last_sign_in_at %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:current_sign_in_ip) %>:</strong></dt>
-  <dd><%= @user.current_sign_in_ip %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:last_sign_in_ip) %>:</strong></dt>
-  <dd><%= @user.last_sign_in_ip %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:first_name) %>:</strong></dt>
+  <dt><strong>First name:</strong></dt>
   <dd><%= @user.first_name %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:last_name) %>:</strong></dt>
+  <dt><strong>Last name:</strong></dt>
   <dd><%= @user.last_name %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:phone) %>:</strong></dt>
-  <dd><%= @user.phone %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:role) %>:</strong></dt>
-  <dd><%= @user.role %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:group_ids) %>:</strong></dt>
-  <dd><%= @user.group_ids %></dd>
+  <dt><strong>Phone:</strong></dt>  
+  <dd><%= number_to_phone(@user.phone, delimiter: ".") %></dd>
+  <br/>
+  
+  <dt><strong>User ID:</strong></dt>
+  <dd><%= @user.id %></dd>
+  <dt><strong>User Role:</strong></dt>
+  <dd><%= @user.role_str %></dd>
+  <dt><strong>Groups:</strong></dt>
+  <dd>
+    <% if @user.group_ids.present? %>
+      <%= @user.group_ids %>
+    <% else %>
+      None
+    <% end %>
+  </dd>
+  <br/>
+  
+  <dt><strong>Account Created:</strong></dt>
+  <dd><%= @user.created_at %></dd>
+  <dt><strong>Last Signed In:</strong></dt>
+  <dd><%= @user.last_sign_in_at %></dd>
+  <dt><strong>Last Signed In IP:</strong></dt>
+  <dd><%= @user.last_sign_in_ip %></dd>
+  <dt><strong>Last Password Reset:</strong></dt>
+  <dd>
+    <% if @user.reset_password_sent_at.present? %>
+      <%= @user.reset_password_sent_at %>
+    <% else %>
+      None sent
+    <% end %>
+  </dd>
+  <br/>
+
 </dl>
 
 <div class="form-actions">
@@ -45,5 +61,5 @@
               user_path(@user),
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
+              :class => 'btn btn-danger pull-right' %>
 </div>
