@@ -1,13 +1,48 @@
 <%- model_class = User -%>
 <div class="page-header">
-  <h1>User List</h1>
-  <p>
-  	The table below list all currently registered service users. To see
-  	more details about the user account, you can click on the account
-  	email or the 'show' button. If you want 'edit' or 'destroy', the 
-  	corresponding buttons are also availabe for each account record.
-  </p>
+  <div class='row-fluid'>
+    <h1>User List</h1>
+    <p>
+      The table below list all currently registered service users. To see
+      more details about the user account, you can click on the account
+      email or the 'show' button. If you want 'edit' or 'destroy', the 
+      corresponding buttons are also availabe for each account record.
+    </p>
+  </div>
+  
+  <div class='row-fluid'>
+    <div class='form-inline'>
+      <!-- Form for submitting a search request -->
+      <%= form_tag users_url, method: :get do %>
+        <div class='input-prepend'>
+
+            <%= select_tag(:stype, options_for_select(@search_options), 
+              class: 'btn span4') %>
+            <%= text_field_tag :search, nil, placeholder: "Search term" %>
+        </div>
+        
+        <label class='radio'>Filter results by: &nbsp&nbsp</label>
+       
+        
+        <%= radio_button_tag(:role_filter, :both, true, class: 'radio') %>
+        <label class='radio'>Both &nbsp&nbsp</label>
+        
+        <%= radio_button_tag(:role_filter, :customer, false, class: 'radio') %>
+        <label class='radio'>Customer &nbsp&nbsp</label>
+
+        <%= radio_button_tag(:role_filter, :service_admin, false, class: 'radio') %>
+        <label class='radio'>Service Admin</label>
+        
+        <%= submit_tag 'Search/Filter', class: 'btn pull-right' %>
+
+      <% end %>
+
+    </div> <!-- form inline -->
+    
+  </div> <!-- row -->
+  
 </div>
+
 <table class="table table-striped">
   <thead>
     <tr>
@@ -33,13 +68,13 @@
         <td><%= number_to_phone(user.phone, delimiter: ".") %></td>
         <td><%= user.role_str %></td>
         <% if user.group_ids.present? %>
-        	<td><%= user.group_ids %></td>
+          <td><%= user.group_ids %></td>
         <% else %>
-        	<td>None</td>
+          <td>None</td>
         <% end %>
 
         <td>
-        	<%= link_to t('.show', :default => t("helpers.links.show")),
+          <%= link_to t('.show', :default => t("helpers.links.show")),
                       user_path(user), :class => 'btn btn-mini' %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_user_path(user), :class => 'btn btn-mini' %>
@@ -55,6 +90,6 @@
 </table>
 
 <div class="form-actions">
-	<%= link_to t('.new', default: t("helpers.links.new")),
-		new_user_path, class: 'btn btn-primary' %>
+  <%= link_to t('.new', default: t("helpers.links.new")),
+    new_user_path, class: 'btn btn-primary' %>
 </div>

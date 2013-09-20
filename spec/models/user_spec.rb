@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 describe User do
-  before(:all) {
-		5.times.each { FactoryGirl.create(:user) }
+	include_context 'user_setup'
+	
+	before(:each) {
+		create_users
 	}
 	
-	after(:all) {
-		User.all.each do |user|
-			user.destroy
-		end
+	after(:each) {
+		delete_users
   }
   
   # METHOD CHECKS ------------------------------------------------------
@@ -191,6 +191,115 @@ describe User do
 			user = User.last
 			user.role = 99
 			user.role_str.should match(/Unknown/)		
+		end
+	end
+	
+	# DEFINED SCOPE TESTS ------------------------------------------------
+	describe "Scope tests" do
+	
+		describe "Search by email" do
+			it "Should find all records for broad email search" do
+				User.by_email("person").count.should eq(User.count)
+			end
+			
+			it "Should find a single record for full email address" do
+				user = User.last
+				User.by_email(user.email).first.email.should eq(user.email)
+			end
+			
+			it "Should not find any records, if email does not match" do
+				User.by_email("Mickey Mouse").count.should eq(0)
+			end
+			
+			it "Should find all records, if email is empty" do
+				User.by_email('').count.should eq(User.count)
+			end
+		end
+	
+		describe "Search by first name" do
+			it "Should find all records for broad first name search" do
+				User.by_first_name("John").count.should eq(User.count)
+			end
+			
+			it "Should find a single record for full first name" do
+				user = User.last
+				User.by_first_name(user.first_name).first.first_name.should eq(user.first_name)
+			end
+			
+			it "Should not find any records, if first name does not match" do
+				User.by_first_name("Mickey Mouse").count.should eq(0)
+			end
+			
+			it "Should find all records, if first_name is empty" do
+				User.by_first_name('').count.should eq(User.count)
+			end
+		end
+
+		describe "Search by last name" do
+			it "Should find all records for broad last name search" do
+				User.by_last_name("Smith").count.should eq(User.count)
+			end
+			
+			it "Should find a single record for full last name" do
+				user = User.first
+				User.by_last_name(user.last_name).first.last_name.should eq(user.last_name)
+			end
+			
+			it "Should not find any records, if last name does not match" do
+				User.by_first_name("Mickey Mouse").count.should eq(0)
+			end
+
+			it "Should find all records, if last_name is empty" do
+				User.by_last_name('').count.should eq(User.count)
+			end			
+		end
+		
+		describe "Search by role" do
+		  it "Should find all customer records" do
+		    create_service_admins
+		    customers = User.where(role: User::CUSTOMER)
+		    user = User.by_role(User::CUSTOMER)
+		    user.count.should eq(customers.count)
+		  end
+		  
+		  it "Should find no service admin records, if none exist" do
+		    user = User.by_role(User::SERVICE_ADMIN)
+		    user.count.should eq(0)
+		  end
+		  
+		  it "Should find no records, if no role specified" do
+		    user = User.by_role(nil)
+		    user.count.should eq(0)
+		  end
+		  
+		  it "Should find all service admin users" do
+		    create_service_admins
+		    admins = User.where(role: User::SERVICE_ADMIN)
+		    
+		    user = User.by_role(User::SERVICE_ADMIN)
+		    user.count.should eq(admins.count)
+		  end
+		  
+		  it "Should be able to chain a customer search onto all users" do
+		    users = User.all
+		    customers = User.where(role: User::CUSTOMER)
+		    users = users.by_role(User::CUSTOMER)
+		    users.count.should eq(customers.count)
+		  end
+		  
+		  it "Should be able to chain a service admin search onto all users" do
+		    users = User.all
+		    admins = User.where(role: User::SERVICE_ADMIN)
+		    users = users.by_role(User::SERVICE_ADMIN)
+		    users.count.should eq(admins.count)
+		  end
+		  
+		  it "Should be able to chain a nil search onto all users" do
+		    users = User.all
+		    admins = User.where(role: User::SERVICE_ADMIN)
+		    users = users.by_role(nil)
+		    users.count.should eq(0)
+		  end		  
 		end
 	end
 end

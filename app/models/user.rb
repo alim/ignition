@@ -71,7 +71,13 @@ class User
   ## Relationship items ------------------------------------------------
   has_and_belongs_to_many :groups, dependent: :destroy
   
-  ## INSTANCE METHODS --------------------------------------------------
+  ## QUERY SCOPES ------------------------------------------------------
+  scope :by_email, ->(email){ where(email: /^.*#{email}.*/i) }
+  scope :by_first_name, ->(name){ where(first_name: /^.*#{name}.*/i) }
+  scope	:by_last_name, ->(name){ where(last_name: /^.*#{name}.*/i) }
+  scope :by_role, ->(role){ where(role: role) }
+  
+  ## PUBLIC INSTANCE METHODS -------------------------------------------
   
   ######################################################################
   # The role_str returns the string representation of the role assigned
@@ -88,5 +94,6 @@ class User
 		end
   end
   
+  ## PUBLIC CLASS METHODS ----------------------------------------------
 end
 
