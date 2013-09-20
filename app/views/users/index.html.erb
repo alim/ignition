@@ -47,13 +47,13 @@
   <thead>
     <tr>
       <th>Email</th>
-      <th>Last Sign In</th>
-      <th>Last IP</th>
       <th>First Name</th>
       <th>Last Name</th>
       <th>Phone</th>
       <th>Role</th>
       <th>Groups</th>
+      <th>Last Sign In</th>
+      <th>Last IP</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -61,8 +61,6 @@
     <% @users.each do |user| %>
       <tr>
         <td><%= link_to user.email, user_path(user) %></td>
-        <td><%= user.last_sign_in_at %></td>
-        <td><%= user.last_sign_in_ip %></td>
         <td><%= user.first_name %></td>
         <td><%= user.last_name %></td>
         <td><%= number_to_phone(user.phone, delimiter: ".") %></td>
@@ -72,7 +70,9 @@
         <% else %>
           <td>None</td>
         <% end %>
-
+        <td><%= user.last_sign_in_at %></td>
+        <td><%= user.last_sign_in_ip %></td>
+        
         <td>
           <%= link_to t('.show', :default => t("helpers.links.show")),
                       user_path(user), :class => 'btn btn-mini' %>
