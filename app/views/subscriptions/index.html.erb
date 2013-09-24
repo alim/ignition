@@ -1,0 +1,53 @@
+<h1>Listing subscriptions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Plan</th>
+      <th>Stripe</th>
+      <th>Cancel at period end</th>
+      <th>Stripe customer</th>
+      <th>Quantity</th>
+      <th>Sub start</th>
+      <th>Sub end</th>
+      <th>Status</th>
+      <th>Canceled at</th>
+      <th>Current period start</th>
+      <th>Current period end</th>
+      <th>Ended at</th>
+      <th>Trial start</th>
+      <th>Trial end</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @subscriptions.each do |subscription| %>
+      <tr>
+        <td><%= subscription.plan_id %></td>
+        <td><%= subscription.stripe_id %></td>
+        <td><%= subscription.cancel_at_period_end %></td>
+        <td><%= subscription.stripe_customer_id %></td>
+        <td><%= subscription.quantity %></td>
+        <td><%= subscription.sub_start %></td>
+        <td><%= subscription.sub_end %></td>
+        <td><%= subscription.status %></td>
+        <td><%= subscription.canceled_at %></td>
+        <td><%= subscription.current_period_start %></td>
+        <td><%= subscription.current_period_end %></td>
+        <td><%= subscription.ended_at %></td>
+        <td><%= subscription.trial_start %></td>
+        <td><%= subscription.trial_end %></td>
+        <td><%= link_to 'Show', subscription %></td>
+        <td><%= link_to 'Edit', edit_subscription_path(subscription) %></td>
+        <td><%= link_to 'Destroy', subscription, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Subscription', new_subscription_path %>
