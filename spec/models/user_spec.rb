@@ -51,7 +51,9 @@ describe User do
 		it "Should not be valid without a first_name" do
 			get_first_name			
 			@user.first_name = nil
-			@user.should_not be_valid		
+			@user.should_not be_valid
+			@user.should have(1).error_on(:first_name)
+			@user.errors.full_messages[0].should match(/First name can't be blank/)
 		end
 	end
 	
@@ -80,7 +82,9 @@ describe User do
 		it "Should not be valid without a last_name" do
 			get_last_name			
 			@user.last_name = nil
-			@user.should_not be_valid		
+			@user.should_not be_valid
+			@user.should have(1).error_on(:last_name)
+			@user.errors.full_messages[0].should match(/Last name can't be blank/)
 		end
 	end	
 	
@@ -109,7 +113,9 @@ describe User do
 		it "Should not be valid without a phone" do
 			get_phone	
 			@user.phone = nil
-			@user.should_not be_valid		
+			@user.should_not be_valid
+			@user.should have(1).error_on(:phone)
+			@user.errors.full_messages[0].should match(/Phone can't be blank/)	
 		end
 	end
 	
@@ -139,7 +145,8 @@ describe User do
 			get_email	
 			@user.email = nil
 			@user.should_not be_valid		
-			@user.should have(2).error_on(:email)
+			@user.should have(1).error_on(:email)
+			@user.errors.full_messages[0].should match(/Email can't be blank/)
 		end
 		
 		it "Should not allow creation of User with existing email" do

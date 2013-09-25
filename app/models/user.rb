@@ -62,11 +62,11 @@ class User
   field :phone, type: String, default: ''
   validates_presence_of :phone
   
-  validates :email, presence: true, uniqueness: true
+  validates :email, uniqueness: true
   
   field :role, type: Integer, default: CUSTOMER
   validates :role, inclusion: { in: [CUSTOMER, SERVICE_ADMIN],
-    message: "User has an invalid role." }
+    message: "is invalid" }
   
   ## Relationship items ------------------------------------------------
   has_and_belongs_to_many :groups, dependent: :destroy

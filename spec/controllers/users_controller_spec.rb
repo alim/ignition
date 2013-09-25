@@ -3,6 +3,11 @@ require 'spec_helper'
 describe UsersController do
 	include_context 'user_setup'
 
+  let(:find_one_user) {
+    @customer = User.where(role: User::CUSTOMER).first
+    @admin = User.where(role: User::SERVICE_ADMIN).first
+  }
+
 	before(:each) {
 		create_users
 		create_service_admins
@@ -46,7 +51,7 @@ describe UsersController do
 			
 			it "should render index template" do	
 				get :index
-				response.should render_template("index")
+				response.should render_template :index
 			end	
 			
 			describe "Search by email address" do
@@ -297,11 +302,365 @@ describe UsersController do
   	  end
   	  
   	  it "Should not redirect to sign in, if not signed in" do
-  	    sign_out @user
+  	    sign_out @signed_in_user
   	    get :index
   	    response.should redirect_to new_user_session_url
   	  end
   	end # Other index test cases
   	
   end # Index tests
+  
+  # SHOW TESTS ---------------------------------------------------------
+  describe "Show action tests" do
+    
+    before(:each) {
+			signin_admin
+			subject.current_user.should_not be_nil
+			find_one_user
+  	}
+  	
+    describe "Valid examples" do
+      
+      it "Should return with success" do
+        get :show, {id: @customer.id }
+        response.should be_success
+      end
+      
+      it "Should use the show template" do
+        get :show, {id: @customer.id }
+        response.should render_template :show
+      end
+      
+      it "Should find matching user record" do
+        get :show, {id: @customer.id }
+        assigns(:user).id.should eq(@customer.id)
+      end
+      
+      it "Should be able to show an admin user record" do
+        get :show, {id: @admin.id }
+        assigns(:user).id.should eq(@admin.id)
+      end
+            
+    end # Valid show examples
+    
+    describe "Invalid examples" do
+      it "Should not succeed, if not logged in" do
+        sign_out @signed_in_user
+        get :show, {id: @admin.id }
+        response.should_not be_success
+      end
+      
+      it "Should redirect, if not logged in" do
+        sign_out @signed_in_user
+        get :show, {id: @admin.id }
+        response.should redirect_to new_user_session_url
+      end
+      
+      it "Should redirect to #index, if record not found" do
+        get :show, {id: '99999'}
+        response.should redirect_to users_url
+      end
+      
+      it "Should flash an error message, if record not found" do
+        get :show, {id: '99999'}
+        flash[:error].should match(/^We could not find the requested User record ID/)
+      end      
+    end
+  end # Show action
+  
+  # NEW TESTS ----------------------------------------------------------
+  describe "New tests" do
+    before(:each) {
+			signin_admin
+			subject.current_user.should_not be_nil
+  	}
+  	
+    describe "Valid examples" do
+      
+      it "Should return success" do
+        get :new
+        response.should be_success
+      end
+      
+      it "Should use the new template" do
+        get :new
+        response.should render_template :new
+      end
+      
+      it "Set a random passowrd" do
+        get :new
+        assigns(:user).password.should be_present
+      end
+      
+      it "Random passowrd and confirmation should match" do
+        get :new
+        assigns(:user).password.should eq(assigns(:user).password_confirmation)
+      end
+    end # Valid examples
+    
+    describe "Invalid examples" do
+    
+       it "Should redirect, if not logged in" do
+        sign_out @signed_in_user
+        get :new
+        response.should redirect_to new_user_session_url
+      end
+      
+    end # Invalid examples
+  
+  end # New tests
+  
+  # CREATE TESTS -------------------------------------------------------
+  describe "Create tests" do
+    let(:new_account_params){
+      { user: 
+        {
+          email: "mickey_mouse@example.com",
+          first_name: "Mickey",
+          last_name: "Mouse",
+          phone: "734.555.1212",
+          password: "somepassword",
+          password_confirmation: "somepassword"
+        }
+      }
+    }
+  
+    before(:each) {
+			signin_admin
+			subject.current_user.should_not be_nil
+  	}
+  	
+    describe "Valid examples" do
+      
+      it "Should create a new record with matching attributes" do      
+        post :create, new_account_params
+        assigns(:user).should be_present
+      end
+      
+      it "Should redirect to show new record" do
+        post :create, new_account_params
+        response.should redirect_to user_url(assigns(:user))
+      end
+      
+      it "Should increase the number of User records by 1" do
+        expect {
+          post :create, new_account_params
+        }.to change(User, :count).by(1)
+      end
+      
+    end # Valid examples
+    
+    describe "Invalid examples" do
+      it "Should not create a new User, if not logged in" do
+        sign_out @signed_in_user
+         expect {
+          post :create, new_account_params
+        }.to change(User, :count).by(0)
+      end
+      
+      it "Should redirect to sign_in, if not logged in" do
+        sign_out @signed_in_user
+        post :create, new_account_params
+        response.should redirect_to redirect_to new_user_session_url
+      end
+      
+      it "Should show a validation error if missing email" do
+        params = new_account_params
+        params[:user][:email] = nil
+        post :create, params
+        assigns(:verrors)[0].should match(/Email can't be blank/)
+      end
+      
+      it "Should show a validation error if missing first_name" do
+        params = new_account_params
+        params[:user][:first_name] = nil
+        post :create, params
+        assigns(:verrors)[0].should match(/First name can't be blank/)
+      end
+      
+      it "Should show a validation error if missing last_name" do
+        params = new_account_params
+        params[:user][:last_name] = nil
+        post :create, params
+        assigns(:verrors)[0].should match(/Last name can't be blank/)
+      end
+      
+      it "Should show a validation error if missing phone" do
+        params = new_account_params
+        params[:user][:phone] = nil
+        post :create, params
+        assigns(:verrors)[0].should match(/Phone can't be blank/)
+      end
+      
+      it "Should show a validation error if missing role" do
+        params = new_account_params
+        params[:user][:role] = nil
+        post :create, params
+        assigns(:verrors)[0].should match(/Role is invalid/)
+      end      
+    end # Invalid examples
+  
+  end # Create tests
+  
+  # EDIT TESTS ---------------------------------------------------------
+  describe "Edit tests" do
+  
+    before(:each) {
+			signin_admin
+			subject.current_user.should_not be_nil
+			find_one_user
+  	}
+  	
+
+    describe "Valid examples" do 
+      
+      it "Should return success" do
+        get :edit, {id: @customer.id}
+        response.should be_success
+      end
+      
+      it "Should find the correct User record" do
+        get :edit, {id: @customer.id}
+        assigns(:user).id.should eq(@customer.id)
+      end
+      
+    end # Valid examples
+    
+    describe "Invalid examples" do
+    
+      it "Should redirect you to sign_in, if not logged in" do
+        sign_out @signed_in_user
+        get :edit, {id: @customer.id}
+        response.should redirect_to new_user_session_url
+      end
+      
+      it "Should redirect to user#index, if record not found" do
+        get :edit, {id: '99999'}
+        response.should redirect_to users_url
+      end
+      
+      it "Should display an alert message, if record not found" do
+        get :edit, {id: '99999'}
+        flash[:alert].should match(/Could not find requested User account/)
+      end
+      
+    end # Invalid examples
+  end # Edit tests
+  
+  # UPDATE TESTS -------------------------------------------------------
+  
+  describe "Update tests" do
+  
+    before(:each) {
+			signin_admin
+			subject.current_user.should_not be_nil
+			find_one_user
+  	}
+  
+    let(:update_account_params){
+      {
+        email: "mickey_mouse@example.com",
+        first_name: "Mickey",
+        last_name: "Mouse",
+        phone: "734.555.1212",
+        password: "somepassword",
+        password_confirmation: "somepassword",
+        role: User::SERVICE_ADMIN
+      }
+    }
+  	
+    describe "Valid examples" do
+    
+      it "Should find the appropriate User account" do
+        put :update, {id: @customer.id, user: update_account_params}
+        assigns(:user).id.should eq(@customer.id)
+      end
+    
+      it "Should redirect to showing the updated record" do
+        put :update, {id: @customer.id, user: update_account_params}
+        response.should redirect_to user_url(@customer)
+      end
+      
+      it "Should update the user account attributes" do
+        put :update, {id: @customer.id, user: update_account_params}
+        params = update_account_params
+        assigns(:user).email.should eq(params[:email])
+        assigns(:user).first_name.should eq(params[:first_name])
+        assigns(:user).last_name.should eq(params[:last_name])
+        assigns(:user).phone.should eq(params[:phone])
+        assigns(:user).role.should eq(params[:role])
+      end
+      
+    end # Valid examples
+    
+    describe "Invalid examples" do
+      it "Should redirect to sign_in, if not logged in" do
+        sign_out @signed_in_user
+        put :update, {id: @customer.id, user: update_account_params}
+        response.should redirect_to new_user_session_url
+      end
+      
+      it "Should redirect to #index, if user not found" do
+        put :update, {id: '99999', user: update_account_params}
+        response.should redirect_to users_url
+      end
+      
+      it "Should flash error message, if user not found" do
+        put :update, {id: '99999', user: update_account_params}
+        flash[:alert].should match(/Could not find user account to update./)
+      end      
+    end # Invalid examples
+  
+  end # Update tests
+  
+  # DESTROY TESTS ------------------------------------------------------
+  describe "Destroy tests" do
+    let(:destroy_user){
+        @destroy_user = User.where(:id.ne => @signed_in_user.id).first
+    }
+    
+    before(:each) {
+			signin_customer
+			subject.current_user.should_not be_nil
+			destroy_user
+  	}
+  	
+    describe "Valid examples" do
+      
+      it "Should redirect to #index" do
+        delete :destroy, {id: @destroy_user.id}
+        response.should redirect_to users_url
+      end
+
+      it "Should display a success message" do
+        delete :destroy, {id: @destroy_user.id}
+        flash[:notice].should match(/User account/)
+      end
+      
+      it "Should reduce the number of user accounts by 1" do
+        expect {
+          delete :destroy, {id: @destroy_user.id}
+        }.to change(User, :count).by(-1)
+      end
+       
+    end
+    
+    describe "Invalid examples" do
+      it "Should redirect to sign_in, if not logged in" do
+        sign_out @signed_in_user
+        delete :destroy, {id: @destroy_user.id}
+        response.should redirect_to new_user_session_url
+      end
+      
+      it "Should redirect to #index, if user not found" do
+        delete :destroy, {id: '99999'}
+        response.should redirect_to users_url
+      end
+      
+      it "Should flash an error message, if user not found" do
+        delete :destroy, {id: '99999'}
+        flash[:alert].should match(/Could not find user account to destroy/)
+      end   
+    end
+  end
 end

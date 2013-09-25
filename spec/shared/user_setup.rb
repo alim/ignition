@@ -15,7 +15,12 @@ shared_context 'user_setup' do
 	}
 	
 	let(:signin_admin) {
-		@user = FactoryGirl.create(:adminuser)
-		sign_in @user
-	}	
+		@signed_in_user = FactoryGirl.create(:adminuser)
+		sign_in @signed_in_user
+	}
+	
+  let(:signin_customer) {
+		@signed_in_user = FactoryGirl.create(:user)
+		sign_in @signed_in_user
+	}
 end

@@ -59,7 +59,7 @@ class ApplicationController < ActionController::Base
   def layout_by_resource
     if self.is_a?(HomeController)
     	"home"
-    elsif self.is_a?(DeviseController)
+    elsif self.is_a?(DeviseController) && !user_signed_in?
 			"devise"
     else
       "admin"
