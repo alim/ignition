@@ -1,0 +1,74 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Plan:</strong>
+  <%= @subscription.plan_id %>
+</p>
+
+<p>
+  <strong>Stripe:</strong>
+  <%= @subscription.stripe_id %>
+</p>
+
+<p>
+  <strong>Cancel at period end:</strong>
+  <%= @subscription.cancel_at_period_end %>
+</p>
+
+<p>
+  <strong>Stripe customer:</strong>
+  <%= @subscription.stripe_customer_id %>
+</p>
+
+<p>
+  <strong>Quantity:</strong>
+  <%= @subscription.quantity %>
+</p>
+
+<p>
+  <strong>Sub start:</strong>
+  <%= @subscription.sub_start %>
+</p>
+
+<p>
+  <strong>Sub end:</strong>
+  <%= @subscription.sub_end %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @subscription.status %>
+</p>
+
+<p>
+  <strong>Canceled at:</strong>
+  <%= @subscription.canceled_at %>
+</p>
+
+<p>
+  <strong>Current period start:</strong>
+  <%= @subscription.current_period_start %>
+</p>
+
+<p>
+  <strong>Current period end:</strong>
+  <%= @subscription.current_period_end %>
+</p>
+
+<p>
+  <strong>Ended at:</strong>
+  <%= @subscription.ended_at %>
+</p>
+
+<p>
+  <strong>Trial start:</strong>
+  <%= @subscription.trial_start %>
+</p>
+
+<p>
+  <strong>Trial end:</strong>
+  <%= @subscription.trial_end %>
+</p>
+
+<%= link_to 'Edit', edit_subscription_path(@subscription) %> |
+<%= link_to 'Back', subscriptions_path %>
