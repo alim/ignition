@@ -1,3 +1,10 @@
+########################################################################
+# The User model is responsible for holding information associated with
+# a user account. This model is then used by the Devise GEM for user
+# user authentication and sign in. The model has been upgraded to 
+# include timestamps and strip_attributes for removing leading and
+# trailing whitespaces.
+########################################################################
 class User
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -68,8 +75,10 @@ class User
   validates :role, inclusion: { in: [CUSTOMER, SERVICE_ADMIN],
     message: "is invalid" }
   
-  ## Relationship items ------------------------------------------------
+  ## RELATIONSHIPS -----------------------------------------------------
   has_and_belongs_to_many :groups, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
+  
   
   ## QUERY SCOPES ------------------------------------------------------
   scope :by_email, ->(email){ where(email: /^.*#{email}.*/i) }
