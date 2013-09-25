@@ -1,0 +1,64 @@
+<%= render :partial => 'shared/validation_errors' %>
+
+<%= form_for @user, html: { class: 'form-horizontal' } do |f| %>
+
+  <div class="control-group">
+    <%= f.label :email, class: 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :email, class: 'text_field' %>
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <%= f.label :first_name, class: 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :first_name, class: 'text_field' %>
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <%= f.label :last_name, class: 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :last_name, class: 'text_field' %>
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <%= f.label :phone, class: 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :phone, class: 'text_field' %>
+    </div>
+  </div>
+  
+  <div class="control-group">
+	  <%= f.label :password, class: 'control-label' %>
+	  <div class="controls">
+		  <%= f.text_field :password, value: @user.password %>
+	  </div>
+  </div>
+
+  <div class="control-group">
+	  <%= f.label :password_confirmation, 'Confirm password', class: 'control-label' %>
+	  <div class='controls'>
+		  <%= f.text_field :password_confirmation, value: @user.password %>
+	  </div>
+  </div>
+
+  <div class='control-group'>
+    <%= f.label :role, class: 'control-label' %>
+    <div class='controls form-inline'>
+        <%= f.radio_button :role, User::CUSTOMER, class: 'radio' %>
+        <label class='radio'>Customer &nbsp&nbsp</label>
+      
+        <%= f.radio_button :role, User::SERVICE_ADMIN, class: 'radio' %>
+        <label class='radio'>Service Admin.</label>
+    </div>
+  </div>
+
+
+  <div class="form-actions">
+    <%= f.submit "Submit", class: 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                users_path, class: 'btn' %>
+  </div>
+<% end %>

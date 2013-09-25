@@ -7,14 +7,8 @@ class ApplicationController < ActionController::Base
 
 	before_filter :configure_permitted_parameters, if: :devise_controller?
 
-	######################################################################
-	# A Devise method override that redirects the user to the admin_url
-	# after they have signed into the system.
-	######################################################################
-	def after_sign_in_path_for(resource)
-		admin_url
-	end
-	
+	## INSTANCE METHODS --------------------------------------------------
+
 	######################################################################
 	# A Devise method override that redirects the user to the home_url
 	# after they have signed out the system.
@@ -22,6 +16,21 @@ class ApplicationController < ActionController::Base
 	def after_sign_out_path_for(resource)
 		root_url
 	end	
+
+	######################################################################
+	# The after_sign_in_path_for method will check to see if there the
+	# user needs to fill out their profile information. If yes, they are
+	# redirected to the edit page for the user information.
+	#####################################################################
+	def after_sign_in_path_for(resource)
+		if resource.is_a?(User) && (resource.first_name == '*None*' || 
+			resource.last_name == '*None*')
+			edit_user_registration_path
+		else
+			super
+			admin_url
+		end
+	end
 
 	## PROTECTED METHODS -------------------------------------------------
 	
@@ -50,7 +59,7 @@ class ApplicationController < ActionController::Base
   def layout_by_resource
     if self.is_a?(HomeController)
     	"home"
-    elsif self.is_a?(DeviseController)
+    elsif self.is_a?(DeviseController) && !user_signed_in?
 			"devise"
     else
       "admin"

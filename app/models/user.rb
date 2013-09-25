@@ -1,12 +1,16 @@
 class User
   include Mongoid::Document
   include Mongoid::Timestamps
+
+	# Add call to strip leading and trailing white spaces from all atributes
+	strip_attributes  # See strip_attributes for more information
   
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :trackable, :validatable,
+         :token_authenticatable
   
   ## Database authenticatable
   field :email,              :type => String, :default => ""
@@ -38,7 +42,7 @@ class User
   # field :locked_at,       :type => Time
 
   ## Token authenticatable
-  # field :authentication_token, :type => String
+  field :authentication_token, :type => String
  
   ## CONSTANTS ----------------------------------------------------------
 
@@ -58,9 +62,38 @@ class User
   field :phone, type: String, default: ''
   validates_presence_of :phone
   
-  field :role, type: Integer, default: User::CUSTOMER
+  validates :email, uniqueness: true
+  
+  field :role, type: Integer, default: CUSTOMER
+  validates :role, inclusion: { in: [CUSTOMER, SERVICE_ADMIN],
+    message: "is invalid" }
   
   ## Relationship items ------------------------------------------------
   has_and_belongs_to_many :groups, dependent: :destroy
+  
+  ## QUERY SCOPES ------------------------------------------------------
+  scope :by_email, ->(email){ where(email: /^.*#{email}.*/i) }
+  scope :by_first_name, ->(name){ where(first_name: /^.*#{name}.*/i) }
+  scope	:by_last_name, ->(name){ where(last_name: /^.*#{name}.*/i) }
+  scope :by_role, ->(role){ where(role: role) }
+  
+  ## PUBLIC INSTANCE METHODS -------------------------------------------
+  
+  ######################################################################
+  # The role_str returns the string representation of the role assigned
+  # to the user.
+  ######################################################################
+  def role_str
+  	case self.role
+		when CUSTOMER
+			"Customer"
+		when SERVICE_ADMIN
+			"Service Administrator"
+		else
+			"Unknown"
+		end
+  end
+  
+  ## PUBLIC CLASS METHODS ----------------------------------------------
 end
 

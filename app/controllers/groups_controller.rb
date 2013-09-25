@@ -395,11 +395,8 @@ class GroupsController < ApplicationController
   # We do the following actions:
   # * Try to lookup the resource
   # * Catch the error if not found and set instance variable to nil
-  # * Sets instance variable for CSS class active.
   ####################################################################
   def set_group
-  	@groups_active = "class=active" 
-  	
   	begin
     	@group = Group.find(params[:id])
     rescue Mongoid::Errors::DocumentNotFound
