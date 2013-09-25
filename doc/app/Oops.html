@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+<title>module Oops - Rails Application Documentation</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="module">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>lib/oops.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-display_alert">#display_alert</a>
+    
+    <li><a href="#method-i-display_error">#display_error</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./README_rdoc.html">README</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./AdminController.html">AdminController</a>
+  
+    <li><a href="./AdminHelper.html">AdminHelper</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Group.html">Group</a>
+  
+    <li><a href="./GroupMailer.html">GroupMailer</a>
+  
+    <li><a href="./GroupsController.html">GroupsController</a>
+  
+    <li><a href="./GroupsHelper.html">GroupsHelper</a>
+  
+    <li><a href="./HomeController.html">HomeController</a>
+  
+    <li><a href="./HomeHelper.html">HomeHelper</a>
+  
+    <li><a href="./Oops.html">Oops</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserMailer.html">UserMailer</a>
+  
+    <li><a href="./UsersController.html">UsersController</a>
+  
+    <li><a href="./UsersHelper.html">UsersHelper</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="module">module Oops</h1>
+
+  <div id="description" class="description">
+    
+<p>The <a href="Oops.html">Oops</a> module provides utility methods for
+handling redirection to an error page. The module can be used as a mixin by
+including it in the appropriate controllers. The module makes a couple of
+routing assumptions. They include:</p>
+<ul><li>
+<p>home_oops_url - is the path to the public facing error page.</p>
+</li><li>
+<p>admin_oops_url - is the path to the private facing error page.</p>
+</li></ul>
+
+<p>The module will set flash variables, so it assumes the error pages have the
+capability of display flash error and alert messages</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <!-- Constants -->
+    <section id="constants-list" class="section">
+      <h3 class="section-header">Constants</h3>
+      <dl>
+      
+        <dt id="ADMIN">ADMIN
+        
+        <dd class="description">
+        
+      
+        <dt id="HOME">HOME
+        
+        <dd class="description"><p>Constants for targeting the alert message to either the home or admin
+controller.</p>
+        
+      
+      </dl>
+    </section>
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-display_alert" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">display_alert</span><span
+            class="method-args">(args)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The <a href="Oops.html#method-i-display_alert">#display_alert</a> method
+will display an alert message to an error page. It takes a hash as an
+argument, that includes:</p>
+<ul><li>
+<p>message - the message to display</p>
+</li><li>
+<p>target - the target error page - Oops::ADMIN or Oops::HOME</p>
+</li><li>
+<p>resource - the resource that can contain the error messages</p>
+</li></ul>
+          
+
+          
+          <div class="method-source-code" id="display_alert-source">
+            <pre><span class="ruby-comment"># File lib/oops.rb, line 27</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">display_alert</span>(<span class="ruby-identifier">args</span>)
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">count</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">2</span>
+                      <span class="ruby-identifier">msg</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">:message</span>]
+                      <span class="ruby-identifier">target</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">:target</span>]
+                      <span class="ruby-identifier">resource</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">:resource</span>]
+                      
+                      <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+                              <span class="ruby-keyword">if</span> <span class="ruby-identifier">target</span> <span class="ruby-operator">==</span> <span class="ruby-constant">ADMIN</span>
+                                      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">admin_oops_url</span>, <span class="ruby-identifier">alert</span><span class="ruby-operator">:</span> <span class="ruby-identifier">msg</span> }
+                              <span class="ruby-keyword">else</span>
+                                      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">home_oops_url</span>, <span class="ruby-identifier">alert</span><span class="ruby-operator">:</span> <span class="ruby-identifier">msg</span> }
+                              <span class="ruby-keyword">end</span>
+                              
+                    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">json</span><span class="ruby-operator">:</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">errors</span>, 
+                            <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-value">:unprocessable_entity</span> } <span class="ruby-keyword">if</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">present?</span>
+                <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+      <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- display_alert-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- display_alert-method -->
+
+    
+      <div id="method-i-display_error" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">display_error</span><span
+            class="method-args">(msg)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The <a href="Oops.html#method-i-display_error">#display_error</a> method
+will display an error message to an error page. It takes a hash as an
+argument, that includes:</p>
+<ul><li>
+<p>message - the message to display</p>
+</li><li>
+<p>target - the target error page - Oops::ADMIN or Oops::HOME</p>
+</li><li>
+<p>resource - the resource that can contain the error messages</p>
+</li></ul>
+          
+
+          
+          <div class="method-source-code" id="display_error-source">
+            <pre><span class="ruby-comment"># File lib/oops.rb, line 55</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">display_error</span>(<span class="ruby-identifier">msg</span>)
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">count</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">2</span>
+                      <span class="ruby-identifier">msg</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">:message</span>]
+                      <span class="ruby-identifier">target</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">:target</span>]
+                      <span class="ruby-identifier">resource</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">:resource</span>]
+                      
+                      <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+                              <span class="ruby-identifier">flash</span>[<span class="ruby-value">:error</span>] = <span class="ruby-identifier">msg</span>
+                              
+                              <span class="ruby-keyword">if</span> <span class="ruby-identifier">target</span> <span class="ruby-operator">==</span> <span class="ruby-constant">ADMIN</span>
+                                      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">admin_oops_url</span> }
+                              <span class="ruby-keyword">else</span>
+                                      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">home_oops_url</span>, <span class="ruby-identifier">alert</span><span class="ruby-operator">:</span> <span class="ruby-identifier">msg</span> }
+                              <span class="ruby-keyword">end</span>
+                              
+                    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">json</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">errors</span>, 
+                            <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-value">:unprocessable_entity</span> } <span class="ruby-keyword">if</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">present?</span>
+                <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+      <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>           
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- display_error-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- display_error-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.2.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

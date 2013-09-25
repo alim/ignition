@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+<title>README - Rails Application Documentation</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body class="file">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./README_rdoc.html">README</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./AdminController.html">AdminController</a>
+  
+    <li><a href="./AdminHelper.html">AdminHelper</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Group.html">Group</a>
+  
+    <li><a href="./GroupMailer.html">GroupMailer</a>
+  
+    <li><a href="./GroupsController.html">GroupsController</a>
+  
+    <li><a href="./GroupsHelper.html">GroupsHelper</a>
+  
+    <li><a href="./HomeController.html">HomeController</a>
+  
+    <li><a href="./HomeHelper.html">HomeHelper</a>
+  
+    <li><a href="./Oops.html">Oops</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserMailer.html">UserMailer</a>
+  
+    <li><a href="./UsersController.html">UsersController</a>
+  
+    <li><a href="./UsersHelper.html">UsersHelper</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation" class="description">
+  
+<h1 id="label-Ignition">Ignition</h1>
+
+<p>The Ignition project is a small effort to provide a Quickstart framework
+for building online web-based subscription services. This particular
+project is targeted to support Openshift deployment.</p>
+
+<h1 id="label-Components">Components</h1>
+
+<p>The project is based on the following technology components:</p>
+<ul><li>
+<p>Ruby On Rails 4</p>
+</li><li>
+<p>MongoDB using Mongoid ORM</p>
+</li><li>
+<p>Twitter Bootstrap</p>
+</li><li>
+<p>Devise authentication</p>
+</li><li>
+<p>Cancan authorization</p>
+</li><li>
+<p>Figaro environment variable utility</p>
+</li><li>
+<p>Rspec testing</p>
+</li><li>
+<p>Stripe.com subscription billing</p>
+</li><li>
+<p>Openshift PaaS hosting integration scripts</p>
+</li></ul>
+
+<h1 id="label-Getting+Started">Getting Started</h1>
+
+<p>To get this web-based application framework up and running, you will need
+to do the following:</p>
+<ol><li>
+<p>Create an account on the <a href="http://www.openshift.com">Openshift</a>
+service.</p>
+</li><li>
+<p>Set up your local machine with the <a
+href="https://www.openshift.com/developers/rhc-client-tools-install">RedHat
+client</a> tools</p>
+</li><li>
+<p>Create a rails application and check the results. You can name the
+application whatever you want. In the example, we use “someapp”.</p>
+
+<pre>rhc app create someapp ruby-1.9 mongodb-2.2 rockmongo-1.1 --from-code https://github.com/alim/ignition.git
+rhc app show-app someapp</pre>
+</li><li>
+<p>Create a text file to hold environment varilables for setting up email and
+default administrator login. We will call this file ‘varaibles.txt’. This
+file should not be included in your git repository. Example file contents
+are below:</p>
+
+<pre>SMTP_HOST=smtpout.someserver.net
+SMTP_PORT=3535
+SMTP_DOMAIN=somedomain.com
+SMTP_USER=someuser@somedomain.com
+SMTP_PASSWORD=somepassword
+ADMIN_FIRST_NAME=Some
+ADMIN_LAST_NAME=Admin
+ADMIN_PHONE=800.555.1212
+ADMIN_EMAIL=sadmin@example.com
+ADMIN_PASSWORD=somepassword</pre>
+</li><li>
+<p>Run the rhc command to install these environment variables for your
+application. You can then destroy the text file you created in the previous
+step.</p>
+
+<pre>rhc set-env /path/to/variables.txt -a someapp</pre>
+</li><li>
+<p>Generate a new secret token and copy the output of the following command.</p>
+
+<pre>cd someapp
+rake secret</pre>
+</li><li>
+<p>Replace the secret token stored in the config/initializers/secret_token.rb
+file with the one generated from the rake secret command.</p>
+</li><li>
+<p>Commit the merged changes</p>
+
+<pre>git add --all
+git commit -m &quot;Put your commit message here&quot;</pre>
+</li><li>
+<p>Push the application</p>
+
+<pre>git push</pre>
+</li><li>
+<p>Point your browser to the applicatin URL. You should now be able to log
+into the application using the email and password that you entered in the
+application.yml file.</p>
+</li></ol>
+
+<h1 id="label-License">License</h1>
+
+<p>The Ignition project is available as GPLV3 licensed software. For more
+information on this license see <a
+href="http://www.gnu.org/licenses/gpl-3.0-standalone.html">here</a></p>
+
+</div>
+
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.2.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

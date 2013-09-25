@@ -27,5 +27,8 @@ module Ignition
      
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += %W(#{config.root}/lib)
+    
+    # Default local host for mailer - over ride in different environments
+    config.action_mailer.default_url_options = { host: "localhost:3000" }
   end
 end

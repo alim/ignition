@@ -79,6 +79,7 @@ Ignition::Application.configure do
   config.log_formatter = ::Logger::Formatter.new
   
   # Settings for email
+  config.action_mailer.default_url_options = { host: ENV["OPENSHIFT_GEAR_DNS"] }
   config.action_mailer.delivery_method = :smtp
 	config.action_mailer.smtp_settings = {
   	:address              => ENV["SMTP_HOST"],
