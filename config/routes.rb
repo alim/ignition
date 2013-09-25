@@ -1,4 +1,6 @@
 Ignition::Application.routes.draw do
+  resources :subscriptions
+
   resources :groups do
   	# Route for notifying and re-invite
 		member do
