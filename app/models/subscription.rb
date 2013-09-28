@@ -7,9 +7,9 @@ class Subscription
   include Mongoid::Document
   include Mongoid::Timestamps
 
-	# Add call to strip leading and trailing white spaces from all atributes
-	strip_attributes  # See strip_attributes for more information
-	
+  # Add call to strip leading and trailing white spaces from all atributes
+  strip_attributes  # See strip_attributes for more information
+  
   field :plan_id, type: String
   field :stripe_id, type: String
   field :cancel_at_period_end, type: Boolean

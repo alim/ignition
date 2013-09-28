@@ -1,0 +1,64 @@
+
+<%= render partial: 'shared/validation_errors' %>
+
+<div id='stripe_error' class="span10">
+	<noscript>JavaScript is not enabled and is required for this form.
+		First enable it in your web browser settings.</noscript>
+</div>
+
+<%= form_for @account, url: user_accounts_url, method: :post, 
+  html: {class: "form-horizontal stripe_form"} do |f| %>
+  
+	<div class="row-fluid">
+	
+		<!-- Setup hidden field for submitting the cc token -->
+		<%= f.hidden_field :stripe_cc_token %>
+
+		<div class="control-group">
+			<%= label_tag :card_name, "Cardholder Name", class: 'control-label'  %>
+			<div class="controls">
+				<!-- f.text_field :cardholder_name -->
+				<%= text_field_tag :cardholder_name, @account.cardholder_name, class: 'span6' %>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<%= label_tag :card_email, "Cardholder Email", class: 'control-label'  %>
+			<div class="controls">
+				<!-- f.email_field :cardholder_email -->
+				<%= email_field_tag :cardholder_email, @account.cardholder_email, class: 'span6' %>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<%= label_tag :card_number, "Credit Card Number", class: 'control-label'  %>
+			<div class="controls">
+				<%= text_field_tag :card_number, nil, name: nil, class: 'span6' %>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<%= label_tag :card_month, "Card Expiration", class: 'control-label' %>
+			<div class="controls">
+				<%= select_month nil, {}, {name: nil, id: "card_month", class: 'span2'} %>
+				<%= select_year nil, {start_year: Date.today.year, 
+				  end_year: Date.today.year+10}, {name: nil, id: "card_year",
+				  class: 'span2'} %>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<%= label_tag :card_code, "Security Code (CVV)", class: 'control-label' %>
+			<div class="controls">
+				<%= text_field_tag :card_code, nil, name: nil %>
+			</div>
+		</div>
+		
+   <div class="control-group">
+			<div class="controls">
+				<%= f.submit 'Add Credit Card', :class => 'btn btn-primary' %>
+			</div>
+		</div>
+	</div> <!-- row -->
+
+<% end %>

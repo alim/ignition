@@ -308,5 +308,28 @@ describe User do
 		    users.count.should eq(0)
 		  end		  
 		end
+	end # Defined scope tests
+	
+	# Nested / embedded Account Tests ------------------------------------
+	
+	describe "Nested/embedded Account Tests" do
+	  before(:each) {
+	    create_users_with_account
+	    @user = User.where(:account.exists => true).last
+	  }
+	  
+	  describe "Valid tests" do
+	    it "Should be valid to have an embedded account" do
+	      @user.should be_valid
+	    end
+	    
+	    it "Should have an account customer_id" do
+	      @user.account.customer_id.should be_present
+	    end
+	    
+	    it "Should have an account status ACTIVE" do
+	      @user.account.status.should eq(Account::ACTIVE)
+	    end
+	  end
 	end
 end

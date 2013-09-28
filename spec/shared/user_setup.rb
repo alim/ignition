@@ -8,6 +8,10 @@ shared_context 'user_setup' do
 	  5.times.each { FactoryGirl.create(:adminuser) }
 	}
 	
+	let(:create_users_with_account) {
+	  5.times.each { FactoryGirl.create(:user_with_account) }
+	}
+	
 	let(:delete_users) {
 		User.all.each do |user|
 			user.destroy

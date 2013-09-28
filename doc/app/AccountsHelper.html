@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 
-<title>class UserMailer - Rails Application Documentation</title>
+<title>module AccountsHelper - Rails Application Documentation</title>
 
 <link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
 
@@ -20,7 +20,7 @@
 <script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
 
 
-<body id="top" class="class">
+<body id="top" class="module">
 <nav id="metadata">
   <nav id="home-section" class="section">
   <h3 class="section-header">
@@ -47,7 +47,7 @@
     <nav id="file-list-section" class="section">
   <h3 class="section-header">Defined In</h3>
   <ul>
-    <li>app/mailers/user_mailer.rb
+    <li>app/helpers/accounts_helper.rb
   </ul>
 </nav>
 
@@ -56,25 +56,9 @@
 
   <div id="class-metadata">
     
-    <nav id="parent-class-section" class="section">
-  <h3 class="section-header">Parent</h3>
-  
-  <p class="link">ActionMailer::Base
-  
-</nav>
-
     
-    <!-- Method Quickref -->
-<nav id="method-list-section" class="section">
-  <h3 class="section-header">Methods</h3>
-
-  <ul class="link-list">
     
-    <li><a href="#method-i-new_account">#new_account</a>
     
-  </ul>
-</nav>
-
   </div>
 
   <div id="project-metadata">
@@ -142,7 +126,7 @@
 </nav>
 
 <div id="documentation">
-  <h1 class="class">class UserMailer</h1>
+  <h1 class="module">module AccountsHelper</h1>
 
   <div id="description" class="description">
     
@@ -162,47 +146,6 @@
 
     <!-- Methods -->
     
-     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
-      <h3 class="section-header">Public Instance Methods</h3>
-
-    
-      <div id="method-i-new_account" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new_account</span><span
-            class="method-args">(user)</span>
-          <span class="method-click-advice">click to toggle source</span>
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>Email for new user account. It will email the user their login, password, a
-login link, and a link to change their password.</p>
-          
-
-          
-          <div class="method-source-code" id="new_account-source">
-            <pre><span class="ruby-comment"># File app/mailers/user_mailer.rb, line 8</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">new_account</span>(<span class="ruby-identifier">user</span>)
-  <span class="ruby-ivar">@user</span> = <span class="ruby-identifier">user</span>
-  <span class="ruby-ivar">@login_url</span> =  <span class="ruby-identifier">new_user_session_url</span>
-  <span class="ruby-ivar">@new_password_url</span> =  <span class="ruby-identifier">edit_user_password_url</span>
-  
-  <span class="ruby-identifier">mail</span>(<span class="ruby-identifier">to</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">email</span>, <span class="ruby-identifier">subject</span><span class="ruby-operator">:</span> <span class="ruby-string">'New Account'</span>)
-<span class="ruby-keyword">end</span></pre>
-          </div><!-- new_account-source -->
-          
-        </div>
-
-        
-
-        
-      </div><!-- new_account-method -->
-
-    
-    </section><!-- public-instance-method-details -->
-  
   </section><!-- 5Buntitled-5D -->
 
 </div><!-- documentation -->

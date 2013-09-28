@@ -10,13 +10,11 @@ Ignition::Application.routes.draw do
 	end
 
   devise_for :users 
-#  devise_scope :user do
-#  	# Send user to admin index after updating the profile, really should
-#  	# add users controller for managing users.
-# 		get 'users', to: 'admin#index', as: :user_root
-#	end
+
   scope :admin do
-  	resources :users
+  	resources :users do
+  	  resources :accounts # Account is an embedded document for a user
+  	end
 	end
 	
   get "home/index"

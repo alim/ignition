@@ -9,8 +9,8 @@ class User
   include Mongoid::Document
   include Mongoid::Timestamps
 
-	# Add call to strip leading and trailing white spaces from all atributes
-	strip_attributes  # See strip_attributes for more information
+  # Add call to strip leading and trailing white spaces from all atributes
+  strip_attributes  # See strip_attributes for more information
   
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
@@ -75,15 +75,17 @@ class User
   validates :role, inclusion: { in: [CUSTOMER, SERVICE_ADMIN],
     message: "is invalid" }
   
+  
   ## RELATIONSHIPS -----------------------------------------------------
   has_and_belongs_to_many :groups, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
   
+  embeds_one :account
   
   ## QUERY SCOPES ------------------------------------------------------
   scope :by_email, ->(email){ where(email: /^.*#{email}.*/i) }
   scope :by_first_name, ->(name){ where(first_name: /^.*#{name}.*/i) }
-  scope	:by_last_name, ->(name){ where(last_name: /^.*#{name}.*/i) }
+  scope  :by_last_name, ->(name){ where(last_name: /^.*#{name}.*/i) }
   scope :by_role, ->(role){ where(role: role) }
   
   ## PUBLIC INSTANCE METHODS -------------------------------------------
@@ -93,14 +95,14 @@ class User
   # to the user.
   ######################################################################
   def role_str
-  	case self.role
-		when CUSTOMER
-			"Customer"
-		when SERVICE_ADMIN
-			"Service Administrator"
-		else
-			"Unknown"
-		end
+    case self.role
+    when CUSTOMER
+      "Customer"
+    when SERVICE_ADMIN
+      "Service Administrator"
+    else
+      "Unknown"
+    end
   end
   
   ## PUBLIC CLASS METHODS ----------------------------------------------

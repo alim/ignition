@@ -109,6 +109,12 @@
 
   <ul class="link-list">
   
+    <li><a href="./Account.html">Account</a>
+  
+    <li><a href="./AccountsController.html">AccountsController</a>
+  
+    <li><a href="./AccountsHelper.html">AccountsHelper</a>
+  
     <li><a href="./AdminController.html">AdminController</a>
   
     <li><a href="./AdminHelper.html">AdminHelper</a>
@@ -219,16 +225,16 @@ representation of the role assigned to the user.</p>
 
           
           <div class="method-source-code" id="role_str-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 95</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 97</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">role_str</span>
-      <span class="ruby-keyword">case</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">role</span>
-              <span class="ruby-keyword">when</span> <span class="ruby-constant">CUSTOMER</span>
-                      <span class="ruby-string">&quot;Customer&quot;</span>
-              <span class="ruby-keyword">when</span> <span class="ruby-constant">SERVICE_ADMIN</span>
-                      <span class="ruby-string">&quot;Service Administrator&quot;</span>
-              <span class="ruby-keyword">else</span>
-                      <span class="ruby-string">&quot;Unknown&quot;</span>
-              <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">case</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">role</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">CUSTOMER</span>
+    <span class="ruby-string">&quot;Customer&quot;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">SERVICE_ADMIN</span>
+    <span class="ruby-string">&quot;Service Administrator&quot;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-string">&quot;Unknown&quot;</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- role_str-source -->
           

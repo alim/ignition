@@ -99,6 +99,12 @@
 
   <ul class="link-list">
   
+    <li><a href="./Account.html">Account</a>
+  
+    <li><a href="./AccountsController.html">AccountsController</a>
+  
+    <li><a href="./AccountsHelper.html">AccountsHelper</a>
+  
     <li><a href="./AdminController.html">AdminController</a>
   
     <li><a href="./AdminHelper.html">AdminHelper</a>
@@ -146,6 +152,12 @@
 
   <div id="description" class="description">
     
+<p>The <a href="HomeController.html">HomeController</a> is responsible for
+presenting the public interface to the web service. Most web services will
+have a public facing site that presents the customer with a series of pages
+that describe the the service and gives them access to public information.
+This  controller is designed to support this feature.</p>
+
   </div><!-- description -->
 
   
@@ -177,12 +189,13 @@
 
         <div class="method-description">
           
-          
+          <p>The about page will present a page for telling the customer about your web
+service or company.</p>
           
 
           
           <div class="method-source-code" id="about-source">
-            <pre><span class="ruby-comment"># File app/controllers/home_controller.rb, line 16</span>
+            <pre><span class="ruby-comment"># File app/controllers/home_controller.rb, line 38</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">about</span>
       <span class="ruby-ivar">@about_active</span>=<span class="ruby-string">&quot;active&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -207,12 +220,14 @@
 
         <div class="method-description">
           
-          
+          <p>The contact action will present a contact form and email a copy of the
+contents to the configured address. See the corresponding the
+application.yml for configuring the contact reply_to address.</p>
           
 
           
           <div class="method-source-code" id="contact-source">
-            <pre><span class="ruby-comment"># File app/controllers/home_controller.rb, line 8</span>
+            <pre><span class="ruby-comment"># File app/controllers/home_controller.rb, line 23</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">contact</span>
       <span class="ruby-ivar">@contact_active</span>=<span class="ruby-string">&quot;active&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -237,12 +252,13 @@
 
         <div class="method-description">
           
-          
+          <p>The index action will present the user with the primary landing page for
+the service.</p>
           
 
           
           <div class="method-source-code" id="index-source">
-            <pre><span class="ruby-comment"># File app/controllers/home_controller.rb, line 4</span>
+            <pre><span class="ruby-comment"># File app/controllers/home_controller.rb, line 14</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">index</span>
       <span class="ruby-ivar">@home_active</span>=<span class="ruby-string">&quot;active&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -267,12 +283,12 @@
 
         <div class="method-description">
           
-          
+          <p>The support acction will present a support page to the customer.</p>
           
 
           
           <div class="method-source-code" id="support-source">
-            <pre><span class="ruby-comment"># File app/controllers/home_controller.rb, line 12</span>
+            <pre><span class="ruby-comment"># File app/controllers/home_controller.rb, line 30</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">support</span> 
       <span class="ruby-ivar">@support_active</span>=<span class="ruby-string">&quot;active&quot;</span>
 <span class="ruby-keyword">end</span></pre>
