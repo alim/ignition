@@ -13,8 +13,11 @@ Ignition::Application.routes.draw do
 
   scope :admin do
   	resources :users do
-  	  resources :accounts # Account is an embedded document for a user
-  	end
+  	
+  	  # Account is an embedded document for a user with limited actions
+  	  resources :accounts, only: [:show, :new, :create, :edit, :update, :destroy]
+  	  
+  	end # users
 	end
 	
   get "home/index"

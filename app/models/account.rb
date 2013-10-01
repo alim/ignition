@@ -100,7 +100,6 @@ class Account
           self.status = NO_STRIPE
         else
           load_customer_info(customer)
-puts "\n\nLoaded customer data - card_last4 = #{self.last4}\n\n"          
           if customer.delinquent == true
             self.status = INACTIVE
           end
@@ -130,7 +129,7 @@ puts "\n\nLoaded customer data - card_last4 = #{self.last4}\n\n"
   # * stripe_cc_token
   # * cardholder_email
   #####################################################################
-  def save_with_stripe(params, current_user)
+  def save_with_stripe(params)
     account_valid = true
 
     begin
@@ -170,7 +169,7 @@ puts "\n\nLoaded customer data - card_last4 = #{self.last4}\n\n"
   # The update_with_stripe method takes the standard params hash that is
   # passed to the create and update methods.
   #####################################################################
-  def update_with_stripe(params, current_user)
+  def update_with_stripe(params)
     account_valid = true
 
     begin
