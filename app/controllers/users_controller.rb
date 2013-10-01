@@ -71,7 +71,9 @@ class UsersController < ApplicationController
   ######################################################################
   def show
     if @user.present?
-      @user.account.get_customer
+      if @user.account.present?
+        @user.account.get_customer  if @user.account.customer_id.present?
+      end
     else
       flash[:error] = "We could not find the requested User record ID ##{params[:id]}"
       redirect_to users_url
