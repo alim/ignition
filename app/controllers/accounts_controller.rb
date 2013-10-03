@@ -38,7 +38,6 @@ class AccountsController < ApplicationController
         @user.account = Account.new if @user.account.nil?
          
         if @user.account.save_with_stripe(params)
-          
           # We saved the account, now redirect to the show page
           format.html { redirect_to user_url(@user), notice: 'Account was successfully created.' }
 
@@ -97,7 +96,12 @@ class AccountsController < ApplicationController
   def set_user
     begin
       @user = User.find(params[:user_id])
-      @account = @user.account if @user.account.present?
+   
+      if @user.account.present? && @user.account.id.to_s == params[:id]
+        @account = @user.account 
+      else
+        @account = nil
+      end
     rescue Mongoid::Errors::DocumentNotFound
       @user = nil
     end

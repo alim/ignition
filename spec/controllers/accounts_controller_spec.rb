@@ -171,15 +171,16 @@ describe AccountsController do
       }
     }
     
-    describe "Valid edit action examples" do
-      let(:customer_account_params){
-        {
-          user_id: @customer_account.id,
-			    cardholder_name: name,
-			    cardholder_email: email,
-			    account: {stripe_cc_token: token.id}
-		    }
+    let(:customer_account_params){
+      {
+        user_id: @customer_account.id,
+        cardholder_name: name,
+        cardholder_email: email,
+        account: {stripe_cc_token: token.id}
       }
+    }    
+    
+    describe "Valid edit action examples" do
       
       it "Should return success" do
         get :edit, edit_params
@@ -208,8 +209,97 @@ describe AccountsController do
     end # Valid edit action examples
     
     describe "Invalid edit action examples" do
-      pending
+      it "Should redirect you to sign_in, if not logged in" do
+        sign_out @signed_in_user
+        get :edit, edit_params
+        response.should redirect_to new_user_session_url
+      end
+      
+      it "Should redirect to admin_oops, if account record not found" do
+        params = edit_params
+        params[:id] = '99999'
+        get :edit, params
+        response.should redirect_to admin_oops_url
+      end
+      
+      it "Should display an alert message, if account record not found" do
+        params = edit_params
+        params[:id] = '99999'
+        get :edit, params
+        flash[:alert].should match(/We could not find the requested account for User/)
+      end
+      
+     it "Should redirect to admin_oops, if user record not found" do
+        params = edit_params
+        params[:user_id] = '99999'
+        get :edit, params
+        response.should redirect_to admin_oops_url
+      end
+      
+      it "Should display an alert message, if user record not found" do
+        params = edit_params
+        params[:user_id] = '99999'
+        get :edit, params
+        flash[:alert].should match(/We could not find the requested User account/)
+      end      
     end # Invalid edit action examples
   
   end # Edit
+    
+  # UPDATE TESTS -------------------------------------------------------
+  describe "Update tests" do
+    let(:customer_account_params){
+      {
+        user_id: @customer_account.id,
+        cardholder_name: name,
+        cardholder_email: email,
+        account: {stripe_cc_token: token.id}
+      }
+    }
+    
+    let(:create_customer_account){
+      # Create valid account to update
+      post :create, customer_account_params 
+    }
+    
+    let(:updated_email) {"janesmith@example.com"}
+    let(:updated_name) {"Jane Smith"}
+    
+    let(:update_account_params){
+      {
+        cardholder_name: updated_name,
+        cardholder_email: updated_email,
+        account: {stripe_cc_token: token.id}
+      }
+    }
+    
+#    let(:update_params){
+#      {
+#        user_id: @customer_account.id,
+#        id: @customer_account.account.id
+#        account: {
+#          cardholder_name: updated_name,
+#          cardholder_email: updated_email,
+#          account: {stripe_cc_token: token.id}
+#        }
+#      }
+#    }
+    
+    describe "Valid update examples" do
+      it "Should redirect to User#show path" do
+        create_customer_account
+puts "Customer.id = #{@customer_account.id} and Account.id = #{@customer_account.account.id}"              
+        put :update, user_id: @customer_account.id, 
+          id: @customer_account.account.id, 
+          account: update_account_params
+          
+        response.should redirect_to user_url(@customer_account)
+      end
+    end # Valid update examples
+    
+    describe "Invalid update examples" do
+      pending
+    end # Invalid update examples
+  end # Update
+
 end
