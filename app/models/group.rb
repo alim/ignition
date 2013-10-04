@@ -4,7 +4,7 @@ class Group
   
   field :name, type: String
   field :description, type: String
-  field :owner_id, type: Moped::BSON::ObjectId
+  field :owner_id, type: BSON::ObjectId
   
   # Relationship items
   has_and_belongs_to_many :users
@@ -12,6 +12,7 @@ class Group
   # Validations
   validate :members_list
   validates_presence_of :name
+  validates_presence_of :description
   
   ## PUBLIC INSTANCE METHODS -------------------------------------------
   
