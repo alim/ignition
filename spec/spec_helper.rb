@@ -43,4 +43,6 @@ RSpec.configure do |config|
   # Include devise helpers for testing controllers
   config.include Devise::TestHelpers, type: :controller
   
+  # Include Stripe.com test helpers
+  config.include StripeTestHelpers  
 end

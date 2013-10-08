@@ -1,20 +1,25 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
 FactoryGirl.define do
+  sequence :customer_id do |n|
+    "#{n}"
+  end
+
   factory :subscription do
-    plan_id 1
-    stripe_id "MyString"
+    plan_id {rand(1..10000)}
+    stripe_id {"#{rand(100000..10000000)}"}
     cancel_at_period_end "MyString"
-    stripe_customer_id "MyString"
-    quantity 1
-    sub_start "2013-09-17 20:07:39"
-    sub_end "2013-09-17 20:07:39"
-    status "MyString"
-    canceled_at "2013-09-17 20:07:39"
-    current_period_start "2013-09-17 20:07:39"
-    current_period_end "2013-09-17 20:07:39"
-    ended_at "2013-09-17 20:07:39"
-    trial_start "2013-09-17 20:07:39"
-    trial_end "2013-09-17 20:07:39"
+    stripe_customer_id { generate(:customer_id) }
+    quantity {1}
+    sub_start { DateTime.now + 1.month }
+    sub_end  { DateTime.now + 12.months }
+    status "active"
+    canceled_at { DateTime.now + 10.months }
+    current_period_start { DateTime.now + 1.month }
+    current_period_end { DateTime.now + 2.months }
+    ended_at { DateTime.now + 10.months }
+    trial_start { DateTime.now }
+    trial_end { DateTime.now + 1.month }
+    user_id {rand(1..100000)}
   end
 end

@@ -38,4 +38,19 @@ FactoryGirl.define do
     # required if the Devise Confirmable module is used
     # confirmed_at Time.now
   end
+  
+  factory :user_with_account, class: User do
+    first_name { generate(:firstname) }
+    last_name { generate(:lastname) }
+    email { generate(:email) }
+    phone '734.645.8000'
+    role User::CUSTOMER
+
+    password 'somepassword'
+    password_confirmation 'somepassword'
+    # required if the Devise Confirmable module is used
+    # confirmed_at Time.now
+    account { FactoryGirl.build(:active_account) }
+  end
+  
 end
