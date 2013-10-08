@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= content_for?(:title) ? yield(:title) : "Ignition" %></title>
     <%= csrf_meta_tags %>
-
+		<%= javascript_include_tag "https://js.stripe.com/v2/" %>
+		<%= tag :meta, name: "pub_key", content: ENV['PUB_KEY'] %>
+		
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
       <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>

@@ -1,17 +1,36 @@
+########################################################################
+# The Subcription model holds information about a subscription plan
+# that will be created on the Stripe.com service. The model includes
+# enhancements for timestamps and white space stripping.
+######################################################################## 
 class Subscription
   include Mongoid::Document
-  field :plan_id, type: Integer
+  include Mongoid::Timestamps
+
+  # Add call to strip leading and trailing white spaces from all atributes
+  strip_attributes  # See strip_attributes for more information
+  
+  field :plan_id, type: String
   field :stripe_id, type: String
-  field :cancel_at_period_end, type: String
+  field :cancel_at_period_end, type: Boolean
   field :stripe_customer_id, type: String
   field :quantity, type: Integer
-  field :sub_start, type: Time
-  field :sub_end, type: Time
+  field :sub_start, type: DateTime
+  field :sub_end, type: DateTime
   field :status, type: String
-  field :canceled_at, type: Time
-  field :current_period_start, type: Time
-  field :current_period_end, type: Time
-  field :ended_at, type: Time
-  field :trial_start, type: Time
-  field :trial_end, type: Time
+  field :canceled_at, type: DateTime
+  field :current_period_start, type: DateTime
+  field :current_period_end, type: DateTime
+  field :ended_at, type: DateTime
+  field :trial_start, type: DateTime
+  field :trial_end, type: DateTime
+  
+  # Need to add field for relationship to a user account
+  field :user_id, type: String
+  
+  # VALIDATIONS --------------------------------------------------------
+  validates_presence_of :plan_id
+  
+  # RELATIONSHIPS ------------------------------------------------------
+  belongs_to :user
 end

@@ -34,7 +34,7 @@ describe SubscriptionsController do
     it "assigns all subscriptions as @subscriptions" do
       subscription = Subscription.create! valid_attributes
       get :index, {}, valid_session
-      assigns(:subscriptions).should eq([subscription])
+      assigns(:subscriptions).should be_present
     end
   end
 
@@ -77,7 +77,7 @@ describe SubscriptionsController do
 
       it "redirects to the created subscription" do
         post :create, {:subscription => valid_attributes}, valid_session
-        response.should redirect_to(Subscription.last)
+        response.should redirect_to subscription_url(assigns(:subscription))
       end
     end
 
