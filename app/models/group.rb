@@ -13,6 +13,7 @@ class Group
   validate :members_list
   validates_presence_of :name
   validates_presence_of :description
+  validates_presence_of :owner_id
   
   ## PUBLIC INSTANCE METHODS -------------------------------------------
   

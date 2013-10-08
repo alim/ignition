@@ -12,6 +12,6 @@ FactoryGirl.define do
   factory :group do
     name  { generate(:group_name) }
     description { generate(:group_desc) }
-    owner_id nil
+    owner_id { rand(1..10000) }
   end
 end

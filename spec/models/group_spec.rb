@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Group do
+  include_context 'user_setup'
   include_context 'group_setup'
   
   # SETUP --------------------------------------------------------------
