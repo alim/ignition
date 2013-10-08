@@ -32,23 +32,21 @@ class GroupsController < ApplicationController
   def show
   	
 		if @group.present?
-		
-			@user = User.find(@group.owner_id)
-			@owner_email = @user.email
+		  begin
+			  @user = User.find(@group.owner_id)
+			  @owner_email = @user.email
 			
-			# Build hash of users assoicated with the group
-			@users = []
-			@group.users.each do |user_id|
-				begin
-					user = User.find(user_id)
-					@users << user
-				rescue Mongoid::Errors::DocumentNotFound
-					groups_alert("Unable to find User information for group - #{@gruop.name}.")
-				end
+			  # Build hash of users assoicated with the group
+			  @users = []
+			  @group.users.each do |user_id|
+				  user = User.find(user_id)
+				  @users << user
+			  end
+			rescue Mongoid::Errors::DocumentNotFound
+			  groups_alert("Unable to find User member information for group - #{@group.name}.")
 			end
-			
 		else
-			groups_alert('Unable to find Group information.')
+			groups_alert('Unable to find group information for group ##{params[:id]}.')
 		end
   	
   end
@@ -69,9 +67,17 @@ class GroupsController < ApplicationController
 
 	######################################################################
   # GET /groups/1/edit
+  #
+  # This action present the edit view with the list of resources that
+  # are currently owned by the signed in user. These resources can be
+  # selected by the user for sharing with the group.
   ######################################################################
   def edit
-  	owned_resources
+    if @group.present?
+  	  owned_resources
+  	else
+  	  groups_alert("We could not find the requested group - ##{params[:id]}")
+  	end
   end
 
 	######################################################################
@@ -118,23 +124,28 @@ class GroupsController < ApplicationController
   # remove group members and add new group members.
   ######################################################################
   def update
-    respond_to do |format|
-      if @group.update_attributes(group_params)
-				# Relate resources
-				# relate_resources
+    if @group.present?
+      respond_to do |format|
+        if @group.update_attributes(group_params)
+				  # Relate resources
+				  # relate_resources
 				
-				# Lookup membership list to see if they already exists
-				@members = lookup_users(@group)
+				  # Lookup membership list to see if they already exists
+				  @members = lookup_users(@group)
 			
-				# Create and notify group members of their inclusion into the group
-				create_notify(@members, @group) if @members.present?      
-      
-        format.html { redirect_to @group, notice: 'Group was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @group.errors, status: :unprocessable_entity }
+				  # Create and notify group members of their inclusion into the group
+				  create_notify(@members, @group) if @members.present?      
+        
+          format.html { redirect_to @group, notice: 'Group was successfully updated.' }
+          format.json { head :no_content }
+        else
+          @verrors = @group.errors.full_messages
+          format.html { render action: 'edit' }
+          format.json { render json: @group.errors, status: :unprocessable_entity }
+        end
       end
+    else
+      groups_alert("We could not find the requested group to update - group ##{params[:id]}")
     end
   end
 
@@ -154,11 +165,11 @@ class GroupsController < ApplicationController
   	
 		  @group.destroy
 		  respond_to do |format|
-		    format.html { redirect_to groups_url }
+		    format.html { redirect_to groups_url, notice: "Group was successfully deleted." }
 		    format.json { head :no_content }
 		  end
     else
-    	groups_redirect("Could not find requeted Group to delete.")
+    	groups_alert("Could not find requeted group to delete.")
     end
   end
 
@@ -171,28 +182,32 @@ class GroupsController < ApplicationController
 	# to a single group member and re-display the show template.
 	######################################################################
 	def notify
-	
-		respond_to do |format|	
+
+		if @group.present?
+		  
+		  begin
+		    respond_to do |format|	
+  #		  	authorize! :notify, @group, message: "You are not authorized to invite requested Group members."
+			    @user = @group.users.find(params[:uid])
 			
-			if @group.present?
-				begin
-	#		  	authorize! :notify, @group, message: "You are not authorized to invite requested Group members."
-					@user = @group.users.find(params[:uid])
-					
-					if invite_member(@group, @user)
-						format.html { redirect_to @group, notice: "Group invite resent to #{@user.email}."}
-						format.json { head :no_content }
-					else
-						format.html { redirect_to @group, alert: "Group invite faild to #{@user.email}."}
-						format.json { head :no_content }
-					end
-				rescue Mongoid::Errors::DocumentNotFound
-					groups_alert("We could not find the requested Group member.")
-		  	end
-	  	else
-	  		groups_alert("We could not find the requested Group.")
-	  	end
-    end
+			    if invite_member(@group, @user)			
+				    format.html { redirect_to @group, 
+				      notice: "Group invite resent to #{@user.email}."}
+				    format.json { head :no_content }
+			    else
+				    format.html { redirect_to @group, 
+				      alert: "Group invite faild to #{@user.email}."}
+				    format.json { head :no_content }
+			    end
+			  end
+		  rescue Mongoid::Errors::DocumentNotFound
+			  groups_alert("We could not find the requested group member.")
+    	end
+	  	
+  	else
+  		groups_alert("We could not find the requested group.")
+  	end
+    
 	end
 
 	######################################################################
@@ -201,27 +216,26 @@ class GroupsController < ApplicationController
 	# The remove_member method will remove one group member.
 	######################################################################
 	def remove_member
-
-		respond_to do |format|	
-			if @group.present?
-				begin
-
-#		  	authorize! :remove_member, @group, 
-#		  		message: "You are not authorized to remove requested Group members."
-		  	
-		  	# Delete the user association
-		  	user = User.find(params[:uid])
-		  	@group.users.delete(user)
-				
-	  		format.html { redirect_to edit_group_url(@group), notice: "Group member has been removed from the group, but NOT deleted from the system."}
-	  		format.json { head :no_content }
-		  	
-				rescue Mongoid::Errors::DocumentNotFound
-					groups_alert("We could not find the requested Group member." )
-				end
-		  else
-		  	groups_alert("We could not find the requested Group.")
+	  if @group.present?
+		  begin
+        respond_to do |format|	
+  #		  	authorize! :remove_member, @group, 
+  #		  		message: "You are not authorized to remove requested Group members."
+        	
+        	# Delete the user association
+        	user = User.find(params[:uid])
+        	@group.users.delete(user)
+        	@group.reload
+		      
+      		format.html { redirect_to edit_group_url(@group), 
+      		  notice: "Group member #{user.email} has been removed from the group, but NOT deleted from the system."}
+      		format.json { head :no_content }
+    	  end
+		  rescue Mongoid::Errors::DocumentNotFound
+			  groups_alert("We could not find the requested group member." )
 		  end
+    else
+    	groups_alert("We could not find the requested group.")
     end
 	end
 
@@ -283,10 +297,10 @@ class GroupsController < ApplicationController
 		if user.sign_in_count == 0
     	# Create a new password
   		new_password = Devise.friendly_token.first(plen)
-  	
+
 			# Email user
 			GroupMailer.member_email(user, new_password, group).deliver
-  	else 			
+  	else 		
 			# Notify current user that they are now a member of the group
 			GroupMailer.member_email(user, nil, group).deliver
   	end

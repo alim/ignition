@@ -301,7 +301,7 @@ describe UsersController do
   	    assigns(:users).count.should eq(0)
   	  end
   	  
-  	  it "Should not redirect to sign in, if not signed in" do
+  	  it "Should redirect to sign in, if not signed in" do
   	    sign_out @signed_in_user
   	    get :index
   	    response.should redirect_to new_user_session_url
