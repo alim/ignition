@@ -8,7 +8,7 @@ gem 'rails', '~>4.0.0'
 gem 'sass-rails', '~> 4.0.0'
 
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+gem 'uglifier', '~> 1.3.0'
 
 # Use CoffeeScript for .js.coffee assets and views
 gem 'coffee-rails', '~> 4.0.0'
@@ -33,7 +33,7 @@ end
 # Gems needed for our applications ------------------------------------
 
 # Mongodb support - using master, since 3.0.5 does not support Rails 4
-gem 'mongoid', git: 'git://github.com/mongoid/mongoid.git'
+gem 'mongoid', "~> 4.0", git: 'git://github.com/mongoid/mongoid.git'
 gem 'bson_ext'
 
 # UI Related Gems
@@ -44,7 +44,7 @@ gem 'less-rails'
 gem 'strip_attributes'
 
 # Authentication and Authorization
-gem 'devise', ">= 3.0.1"
+gem 'devise', "~> 3.0.1"
 gem 'cancan'
 
 # Paperclip GEM for handling file attachments
