@@ -199,7 +199,6 @@ class Account
     rescue Stripe::StripeError => stripe_error
       logger.debug("[Account.update_with_stripe] stripe error = #{stripe_error.message}")
       errors[:customer_id] << stripe_error.message
-
       self.status = INACTIVE
       account_valid = false
     end
@@ -213,16 +212,19 @@ class Account
   # with the stored customer_id.
   #####################################################################
   def destroy
-
+    
     # Destroy the customer account on Stripe.com if the id is present.
     if self.customer_id.present?
       begin
-         Stripe.api_key = ENV['API_KEY']
-         customer = Stripe::Customer.retrieve("#{self.customer_id}")
-         customer.delete
-       rescue Stripe::StripeError => stripe_error
+        Stripe.api_key = ENV['API_KEY']
+        customer = Stripe::Customer.retrieve("#{self.customer_id}")
+        customer.delete
+      rescue Stripe::StripeError => stripe_error
         logger.debug("[Account.delete] stripe error = #{stripe_error.message}")
         errors[:customer_id] << stripe_error.message
+        
+        # continue to raise the exception
+        raise Stripe::StripeError, stripe_error.message
       end
      end
 
@@ -241,7 +243,7 @@ class Account
     self.cardholder_email = customer.email
     
     customer_card = get_default_card(customer)
-    
+
     self.cardholder_name = customer_card.name
     self.card_type = customer_card.type
     self.last4 = customer_card.last4
@@ -275,17 +277,17 @@ class Account
     account_valid = true
 
     if params[:cardholder_name].blank?
-      errors[:cardholder_name] << "Cardholder name cannot be blank."
+      errors[:cardholder_name] << "cannot be blank."
       account_valid = false
     end
 
     if params[:cardholder_email].blank?
-      errors[:cardholder_email] << "Cardholder email cannot be blank."
+      errors[:cardholder_email] << "cannot be blank."
       account_valid = false
     end
 
     if params[:account][:stripe_cc_token].blank?
-      errors[:base] << "Could not get a valid response from Stripe.com"
+      errors[:base] << "- Could not get a valid response from Stripe.com"
       account_valid = false
     end
 

@@ -15,7 +15,7 @@ Ignition::Application.routes.draw do
   	resources :users do
   	
   	  # Account is an embedded document for a user with limited actions
-  	  resources :accounts, only: [:show, :new, :create, :edit, :update, :destroy]
+  	  resources :accounts, only: [:new, :create, :edit, :update, :destroy]
   	  
   	end # users
 	end
