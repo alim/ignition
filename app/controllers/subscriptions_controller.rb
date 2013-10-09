@@ -1,6 +1,18 @@
+########################################################################
+# The SubscriptionsController is responsible for subscribing a customer
+# to our web service. It depends on the account resource which should
+# hold a customer_id associated witht the Stripe.com service. It will
+# also depend on the existance of one or more subscription plans being
+# setup on the Stripe.com service for charging.
+########################################################################
 class SubscriptionsController < ApplicationController
+  # Before filters & actions -------------------------------------------
+  before_filter :authenticate_user!
+  
   before_action :set_subscription, only: [:show, :edit, :update, :destroy]
 
+  before_action :set_active # Sets the variable for active CSS class
+  
   # GET /subscriptions
   # GET /subscriptions.json
   def index
@@ -12,9 +24,23 @@ class SubscriptionsController < ApplicationController
   def show
   end
 
+  ######################################################################
   # GET /subscriptions/new
+  #
+  # This method will present the customer with a new subscription for,
+  # if the customer does not already have a subscription associated
+  # with their account. If they do have a subscription, they will be
+  # directed to the Subscriptions#show action.
+  ######################################################################
   def new
     @subscription = Subscription.new
+    
+    # Check to see if the logged in user has a subscription already
+    @subplan = Subscription.where(user_id: current_user.id).first
+    
+    if @subplan.present?
+      redirect_to subscription_url(@subplan)
+    end
   end
 
   # GET /subscriptions/1/edit
@@ -70,5 +96,13 @@ class SubscriptionsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def subscription_params
       params.require(:subscription).permit(:plan_id, :stripe_id, :cancel_at_period_end, :stripe_customer_id, :quantity, :sub_start, :sub_end, :status, :canceled_at, :current_period_start, :current_period_end, :ended_at, :trial_start, :trial_end)
+    end
+    
+    ####################################################################
+    # Little helper method to set an instance varialble that is used
+    # to flag menu items with an active CSS class for highlighting.
+    ####################################################################
+    def set_active
+      @subscriptions_active="class=active"
     end
 end

@@ -30,7 +30,7 @@
 @navbarLinkColor:  #FF3500;
 @navbarLinkColorHover: #ffffff;
 @navbarLinkColorActive: #ffffff;
-@navbarLinkBackgroundHover: #FF6840;
+@navbarLinkBackgroundHover: #BBBBBB;
 @navbarLinkBackgroundActive: #FF3500;
 // @navbarSearchBackground
 // @navbarSearchBackgroundFocus
@@ -64,4 +64,15 @@ footer .widget {
 
 
 // General Tweaks ------------------------------------------------------
-@linkColor: #086FA1;
+@linkColor: @navbarLinkColor;
+
+// Setup hover color for nav-list menu items
+.nav-list > li > a:hover {
+  background-color: @navbarLinkBackgroundHover;
+  color: @navbarLinkColorHover;
+}
+
+// Align icons with text using baseline alignment
+[class^="icon-"], [class*=" icon-"] {
+  vertical-align: baseline;
+}
