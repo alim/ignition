@@ -37,7 +37,7 @@ gem 'mongoid', "~> 4.0", git: 'git://github.com/mongoid/mongoid.git'
 gem 'bson_ext'
 
 # UI Related Gems
-gem 'twitter-bootstrap-rails'
+gem 'twitter-bootstrap-rails', '~> 2.2.0'
 gem 'will_paginate'
 gem 'less-rails'
 

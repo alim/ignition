@@ -2,11 +2,8 @@
 @import "twitter/bootstrap/responsive";
 
 // Set the correct sprite paths
-// @iconSpritePath: image-url("twitter/bootstrap/glyphicons-halflings.png");
-// @iconWhiteSpritePath: image-url("twitter/bootstrap/glyphicons-halflings-white.png");
-
-@iconSpritePath: asset-path("twitter/bootstrap/glyphicons-halflings");
-@iconWhiteSpritePath: asset-path("twitter/bootstrap/glyphicons-halflings-white");
+@iconSpritePath: image-url("twitter/bootstrap/glyphicons-halflings.png");
+@iconWhiteSpritePath: image-url("twitter/bootstrap/glyphicons-halflings-white.png");
 
 // Set the Font Awesome (Font Awesome is default. You can disable by commenting below lines)
 @fontAwesomeEotPath: asset-url("fontawesome-webfont.eot");
@@ -18,18 +15,16 @@
 // Font Awesome
 @import "fontawesome/font-awesome";
 
-// Glyphicons - is only needed if you disable Font Awesome
-// @import "twitter/bootstrap/sprites.less";
+// Glyphicons
+//@import "twitter/bootstrap/sprites.less";
 
 // Your custom LESS stylesheets goes here
 //
 // Since bootstrap was imported above you have access to its mixins which
 // you may use and inherit here
 //
-// If you'd like to override bootstrap's own variables, you can do so 
-// here as well. 
-// See http://twitter.github.com/bootstrap/customize.html#variables for
-// their names and documentation
+// If you'd like to override bootstrap's own variables, you can do so here as well
+// See http://twitter.github.com/bootstrap/customize.html#variables for their names and documentation
 //
 // Example:
 // @linkColor: #ff0000;
@@ -88,7 +83,7 @@ footer .widget {
 
 // Align icons with text using baseline alignment
 [class^="icon-"], [class*=" icon-"] {
-  font-family: FontAwesome;
+//  font-family: FontAwesome;
   vertical-align: baseline;
 }
 
