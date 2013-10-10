@@ -7,6 +7,8 @@ class ApplicationController < ActionController::Base
 
 	before_filter :configure_permitted_parameters, if: :devise_controller?
 
+  before_filter :set_menu_active
+
 	## INSTANCE METHODS --------------------------------------------------
 
 	######################################################################
@@ -30,6 +32,19 @@ class ApplicationController < ActionController::Base
 			super
 			admin_url
 		end
+	end
+	
+	######################################################################
+	# This before_filter method is responsible for setting a menu item
+	# to active. We can add multiple check blocks to determine which
+	# controller and which action is active. We can then set an instance
+	# variable for toggling the a CSS class to active.
+	######################################################################
+	def set_menu_active
+	  if self.is_a?(Devise::RegistrationsController) && user_signed_in? && 
+	    params[:action] == 'edit'
+	    @account_active="class=active" 
+	  end
 	end
 
 	## PROTECTED METHODS -------------------------------------------------

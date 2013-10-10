@@ -219,7 +219,7 @@ will be notified by email.</p>
 
           
           <div class="method-source-code" id="create-source">
-            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 86</span>
+            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 92</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>
       <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
                 <span class="ruby-ivar">@group</span> = <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">groups</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">group_params</span>)
@@ -278,7 +278,7 @@ might not be needed.</p>
 
           
           <div class="method-source-code" id="destroy-source">
-            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 150</span>
+            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 161</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
       <span class="ruby-keyword">if</span> <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">present?</span>
               <span class="ruby-comment"># Unrelate the group resources</span>
@@ -286,11 +286,11 @@ might not be needed.</p>
       
                 <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">destroy</span>
                 <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
-                  <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">groups_url</span> }
+                  <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">groups_url</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;Group was successfully deleted.&quot;</span> }
                   <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">head</span> <span class="ruby-value">:no_content</span> }
                 <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">groups_redirect</span>(<span class="ruby-string">&quot;Could not find requeted Group to delete.&quot;</span>)
+      <span class="ruby-identifier">groups_alert</span>(<span class="ruby-string">&quot;Could not find requeted group to delete.&quot;</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- destroy-source -->
@@ -315,13 +315,21 @@ might not be needed.</p>
         <div class="method-description">
           
           <p>GET /groups/1/edit</p>
+
+<p>This action present the edit view with the list of resources that are
+currently owned by the signed in user. These resources can be selected by
+the user for sharing with the group.</p>
           
 
           
           <div class="method-source-code" id="edit-source">
-            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 73</span>
+            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 75</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">edit</span>
-      <span class="ruby-identifier">owned_resources</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">present?</span>
+        <span class="ruby-identifier">owned_resources</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">groups_alert</span>(<span class="ruby-node">&quot;We could not find the requested group - ##{params[:id]}&quot;</span>)
+      <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- edit-source -->
           
@@ -388,7 +396,7 @@ user.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 65</span>
+            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 63</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@group</span> = <span class="ruby-constant">Group</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-identifier">owned_resources</span>
@@ -422,31 +430,35 @@ single group member and re-display the show template.</p>
 
           
           <div class="method-source-code" id="notify-source">
-            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 173</span>
-    <span class="ruby-keyword">def</span> <span class="ruby-identifier">notify</span>
-    
-            <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>        
-                    
-                    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">present?</span>
-                            <span class="ruby-keyword">begin</span>
-    <span class="ruby-comment">#                  authorize! :notify, @group, message: &quot;You are not authorized to invite requested Group members.&quot;</span>
-                                    <span class="ruby-ivar">@user</span> = <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">users</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:uid</span>])
-                                    
-                                    <span class="ruby-keyword">if</span> <span class="ruby-identifier">invite_member</span>(<span class="ruby-ivar">@group</span>, <span class="ruby-ivar">@user</span>)
-                                            <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@group</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-node">&quot;Group invite resent to #{@user.email}.&quot;</span>}
-                                            <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">head</span> <span class="ruby-value">:no_content</span> }
-                                    <span class="ruby-keyword">else</span>
-                                            <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@group</span>, <span class="ruby-identifier">alert</span><span class="ruby-operator">:</span> <span class="ruby-node">&quot;Group invite faild to #{@user.email}.&quot;</span>}
-                                            <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">head</span> <span class="ruby-value">:no_content</span> }
-                                    <span class="ruby-keyword">end</span>
-                            <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Mongoid</span><span class="ruby-operator">::</span><span class="ruby-constant">Errors</span><span class="ruby-operator">::</span><span class="ruby-constant">DocumentNotFound</span>
-                                    <span class="ruby-identifier">groups_alert</span>(<span class="ruby-string">&quot;We could not find the requested Group member.&quot;</span>)
-                  <span class="ruby-keyword">end</span>
-           <span class="ruby-keyword">else</span>
-                   <span class="ruby-identifier">groups_alert</span>(<span class="ruby-string">&quot;We could not find the requested Group.&quot;</span>)
-           <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">end</span></pre>
+            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 184</span>
+      <span class="ruby-keyword">def</span> <span class="ruby-identifier">notify</span>
+
+              <span class="ruby-keyword">if</span> <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">present?</span>
+                
+                <span class="ruby-keyword">begin</span>
+                  <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>    
+<span class="ruby-comment">#                authorize! :notify, @group, message: &quot;You are not authorized to invite requested Group members.&quot;</span>
+                          <span class="ruby-ivar">@user</span> = <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">users</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:uid</span>])
+                      
+                          <span class="ruby-keyword">if</span> <span class="ruby-identifier">invite_member</span>(<span class="ruby-ivar">@group</span>, <span class="ruby-ivar">@user</span>)                  
+                                  <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@group</span>, 
+                                    <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-node">&quot;Group invite resent to #{@user.email}.&quot;</span>}
+                                  <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">head</span> <span class="ruby-value">:no_content</span> }
+                          <span class="ruby-keyword">else</span>
+                                  <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@group</span>, 
+                                    <span class="ruby-identifier">alert</span><span class="ruby-operator">:</span> <span class="ruby-node">&quot;Group invite faild to #{@user.email}.&quot;</span>}
+                                  <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">head</span> <span class="ruby-value">:no_content</span> }
+                          <span class="ruby-keyword">end</span>
+                        <span class="ruby-keyword">end</span>
+                <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Mongoid</span><span class="ruby-operator">::</span><span class="ruby-constant">Errors</span><span class="ruby-operator">::</span><span class="ruby-constant">DocumentNotFound</span>
+                        <span class="ruby-identifier">groups_alert</span>(<span class="ruby-string">&quot;We could not find the requested group member.&quot;</span>)
+      <span class="ruby-keyword">end</span>
+             
+      <span class="ruby-keyword">else</span>
+              <span class="ruby-identifier">groups_alert</span>(<span class="ruby-string">&quot;We could not find the requested group.&quot;</span>)
+      <span class="ruby-keyword">end</span>
+  
+      <span class="ruby-keyword">end</span></pre>
           </div><!-- notify-source -->
           
         </div>
@@ -477,31 +489,30 @@ method will remove one group member.</p>
 
           
           <div class="method-source-code" id="remove_member-source">
-            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 203</span>
-        <span class="ruby-keyword">def</span> <span class="ruby-identifier">remove_member</span>
-
-                <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>        
-                        <span class="ruby-keyword">if</span> <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">present?</span>
-                                <span class="ruby-keyword">begin</span>
-
-<span class="ruby-comment">#                    authorize! :remove_member, @group, </span>
-<span class="ruby-comment">#                            message: &quot;You are not authorized to remove requested Group members.&quot;</span>
-                      
-                      <span class="ruby-comment"># Delete the user association</span>
-                      <span class="ruby-identifier">user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:uid</span>])
-                      <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">users</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">user</span>)
-                                
-                       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">edit_group_url</span>(<span class="ruby-ivar">@group</span>), <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;Group member has been removed from the group, but NOT deleted from the system.&quot;</span>}
-                       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">head</span> <span class="ruby-value">:no_content</span> }
-                      
-                                <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Mongoid</span><span class="ruby-operator">::</span><span class="ruby-constant">Errors</span><span class="ruby-operator">::</span><span class="ruby-constant">DocumentNotFound</span>
-                                        <span class="ruby-identifier">groups_alert</span>(<span class="ruby-string">&quot;We could not find the requested Group member.&quot;</span> )
-                                <span class="ruby-keyword">end</span>
-                  <span class="ruby-keyword">else</span>
-                      <span class="ruby-identifier">groups_alert</span>(<span class="ruby-string">&quot;We could not find the requested Group.&quot;</span>)
-                  <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">end</span>
-        <span class="ruby-keyword">end</span></pre>
+            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 218</span>
+      <span class="ruby-keyword">def</span> <span class="ruby-identifier">remove_member</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">present?</span>
+                <span class="ruby-keyword">begin</span>
+      <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>  
+<span class="ruby-comment">#                authorize! :remove_member, @group, </span>
+<span class="ruby-comment">#                        message: &quot;You are not authorized to remove requested Group members.&quot;</span>
+              
+              <span class="ruby-comment"># Delete the user association</span>
+              <span class="ruby-identifier">user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:uid</span>])
+              <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">users</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">user</span>)
+              <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">reload</span>
+                    
+              <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">edit_group_url</span>(<span class="ruby-ivar">@group</span>), 
+                <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-node">&quot;Group member #{user.email} has been removed from the group, but NOT deleted from the system.&quot;</span>}
+              <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">head</span> <span class="ruby-value">:no_content</span> }
+        <span class="ruby-keyword">end</span>
+                <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Mongoid</span><span class="ruby-operator">::</span><span class="ruby-constant">Errors</span><span class="ruby-operator">::</span><span class="ruby-constant">DocumentNotFound</span>
+                        <span class="ruby-identifier">groups_alert</span>(<span class="ruby-string">&quot;We could not find the requested group member.&quot;</span> )
+                <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">groups_alert</span>(<span class="ruby-string">&quot;We could not find the requested group.&quot;</span>)
+  <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span></pre>
           </div><!-- remove_member-source -->
           
         </div>
@@ -535,23 +546,21 @@ you to re-send the group invite to a given user.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">show</span>
       
               <span class="ruby-keyword">if</span> <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">present?</span>
-              
-                      <span class="ruby-ivar">@user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-ivar">@group</span>.<span class="ruby-identifier">owner_id</span>)
-                      <span class="ruby-ivar">@owner_email</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">email</span>
+                <span class="ruby-keyword">begin</span>
+                        <span class="ruby-ivar">@user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-ivar">@group</span>.<span class="ruby-identifier">owner_id</span>)
+                        <span class="ruby-ivar">@owner_email</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">email</span>
                       
-                      <span class="ruby-comment"># Build hash of users assoicated with the group</span>
-                      <span class="ruby-ivar">@users</span> = []
-                      <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">users</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">user_id</span><span class="ruby-operator">|</span>
-                              <span class="ruby-keyword">begin</span>
-                                      <span class="ruby-identifier">user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">user_id</span>)
-                                      <span class="ruby-ivar">@users</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">user</span>
-                              <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Mongoid</span><span class="ruby-operator">::</span><span class="ruby-constant">Errors</span><span class="ruby-operator">::</span><span class="ruby-constant">DocumentNotFound</span>
-                                      <span class="ruby-identifier">groups_alert</span>(<span class="ruby-node">&quot;Unable to find User information for group - #{@gruop.name}.&quot;</span>)
-                              <span class="ruby-keyword">end</span>
+                        <span class="ruby-comment"># Build hash of users assoicated with the group</span>
+                        <span class="ruby-ivar">@users</span> = []
+                        <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">users</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">user_id</span><span class="ruby-operator">|</span>
+                                <span class="ruby-identifier">user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">user_id</span>)
+                                <span class="ruby-ivar">@users</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">user</span>
+                        <span class="ruby-keyword">end</span>
+                      <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Mongoid</span><span class="ruby-operator">::</span><span class="ruby-constant">Errors</span><span class="ruby-operator">::</span><span class="ruby-constant">DocumentNotFound</span>
+                        <span class="ruby-identifier">groups_alert</span>(<span class="ruby-node">&quot;Unable to find User member information for group - #{@group.name}.&quot;</span>)
                       <span class="ruby-keyword">end</span>
-                      
               <span class="ruby-keyword">else</span>
-                      <span class="ruby-identifier">groups_alert</span>(<span class="ruby-string">'Unable to find Group information.'</span>)
+                      <span class="ruby-identifier">groups_alert</span>(<span class="ruby-string">'Unable to find group information for group ##{params[:id]}.'</span>)
               <span class="ruby-keyword">end</span>
       
 <span class="ruby-keyword">end</span></pre>
@@ -584,25 +593,30 @@ group members and add new group members.</p>
 
           
           <div class="method-source-code" id="update-source">
-            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 120</span>
+            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 126</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>
-  <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">update_attributes</span>(<span class="ruby-identifier">group_params</span>)
-                              <span class="ruby-comment"># Relate resources</span>
-                              <span class="ruby-comment"># relate_resources</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">present?</span>
+    <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">update_attributes</span>(<span class="ruby-identifier">group_params</span>)
+                                <span class="ruby-comment"># Relate resources</span>
+                                <span class="ruby-comment"># relate_resources</span>
                               
-                              <span class="ruby-comment"># Lookup membership list to see if they already exists</span>
-                              <span class="ruby-ivar">@members</span> = <span class="ruby-identifier">lookup_users</span>(<span class="ruby-ivar">@group</span>)
+                                <span class="ruby-comment"># Lookup membership list to see if they already exists</span>
+                                <span class="ruby-ivar">@members</span> = <span class="ruby-identifier">lookup_users</span>(<span class="ruby-ivar">@group</span>)
                       
-                              <span class="ruby-comment"># Create and notify group members of their inclusion into the group</span>
-                              <span class="ruby-identifier">create_notify</span>(<span class="ruby-ivar">@members</span>, <span class="ruby-ivar">@group</span>) <span class="ruby-keyword">if</span> <span class="ruby-ivar">@members</span>.<span class="ruby-identifier">present?</span>      
-    
-      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@group</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">'Group was successfully updated.'</span> }
-      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">head</span> <span class="ruby-value">:no_content</span> }
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">action</span><span class="ruby-operator">:</span> <span class="ruby-string">'edit'</span> }
-      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">json</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-value">:unprocessable_entity</span> }
+                                <span class="ruby-comment"># Create and notify group members of their inclusion into the group</span>
+                                <span class="ruby-identifier">create_notify</span>(<span class="ruby-ivar">@members</span>, <span class="ruby-ivar">@group</span>) <span class="ruby-keyword">if</span> <span class="ruby-ivar">@members</span>.<span class="ruby-identifier">present?</span>      
+      
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@group</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">'Group was successfully updated.'</span> }
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">head</span> <span class="ruby-value">:no_content</span> }
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-ivar">@verrors</span> = <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">full_messages</span>
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">action</span><span class="ruby-operator">:</span> <span class="ruby-string">'edit'</span> }
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">json</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-value">:unprocessable_entity</span> }
+      <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">groups_alert</span>(<span class="ruby-node">&quot;We could not find the requested group to update - group ##{params[:id]}&quot;</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- update-source -->
@@ -652,7 +666,7 @@ user</p>
 
           
           <div class="method-source-code" id="create_notify-source">
-            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 244</span>
+            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 258</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create_notify</span>(<span class="ruby-identifier">members</span>, <span class="ruby-identifier">group</span>)
       <span class="ruby-identifier">plen</span> = <span class="ruby-value">12</span>
 
@@ -716,17 +730,17 @@ user</p>
 
           
           <div class="method-source-code" id="invite_member-source">
-            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 280</span>
+            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 294</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">invite_member</span>(<span class="ruby-identifier">group</span>, <span class="ruby-identifier">user</span>)
       <span class="ruby-identifier">plen</span> = <span class="ruby-value">12</span>
 
               <span class="ruby-keyword">if</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">sign_in_count</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
       <span class="ruby-comment"># Create a new password</span>
               <span class="ruby-identifier">new_password</span> = <span class="ruby-constant">Devise</span>.<span class="ruby-identifier">friendly_token</span>.<span class="ruby-identifier">first</span>(<span class="ruby-identifier">plen</span>)
-      
+
                       <span class="ruby-comment"># Email user</span>
                       <span class="ruby-constant">GroupMailer</span>.<span class="ruby-identifier">member_email</span>(<span class="ruby-identifier">user</span>, <span class="ruby-identifier">new_password</span>, <span class="ruby-identifier">group</span>).<span class="ruby-identifier">deliver</span>
-      <span class="ruby-keyword">else</span>                         
+      <span class="ruby-keyword">else</span>                 
                       <span class="ruby-comment"># Notify current user that they are now a member of the group</span>
                       <span class="ruby-constant">GroupMailer</span>.<span class="ruby-identifier">member_email</span>(<span class="ruby-identifier">user</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">group</span>).<span class="ruby-identifier">deliver</span>
       <span class="ruby-keyword">end</span>
@@ -764,7 +778,7 @@ as the parameter. It assumes that group.members holds the  email list.</p>
 
           
           <div class="method-source-code" id="lookup_users-source">
-            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 306</span>
+            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 320</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">lookup_users</span>(<span class="ruby-identifier">group</span>)
       <span class="ruby-identifier">users</span> = {}           <span class="ruby-comment"># Hash for returning results</span>
 
@@ -824,7 +838,7 @@ to share with the group.</p>
 
           
           <div class="method-source-code" id="owned_resources-source">
-            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 351</span>
+            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 365</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">owned_resources</span>
 
         <span class="ruby-comment"># Dummy resource name for demonstration purposes</span>
@@ -871,7 +885,7 @@ to use.</p>
 
           
           <div class="method-source-code" id="relate_resources-source">
-            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 374</span>
+            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 388</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">relate_resources</span>(<span class="ruby-identifier">resources</span>)
         <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
 <span class="ruby-keyword">end</span></pre>
@@ -908,7 +922,7 @@ to use.</p>
 
           
           <div class="method-source-code" id="unrelate_resources-source">
-            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 385</span>
+            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 399</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">unrelate_resources</span>
         <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
 <span class="ruby-keyword">end</span></pre>

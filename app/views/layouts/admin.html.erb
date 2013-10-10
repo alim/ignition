@@ -46,46 +46,67 @@
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span2">
-          <div class="well sidebar-nav">
           
-            <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
-              <li class="nav-header">Service Menu</li>
-              <li <%= @admin_active %>><%= link_to "Dashboard", admin_url  %></li>
-              <li <%= @help_admin_active%>><%= link_to "Help", admin_help_url  %></li>
-              <% if false %>
-              <li><%= link_to "Edit User", edit_user_registration_url  %></li>
-              <li class="<%= @logout_active %>"><%= link_to "Logout", destroy_user_session_path, :method => :delete  %></li>
-            	<% end %>
-            </ul>
+          <!-- Main menu section -->
+          <ul class="well nav nav-list">
+            <li class="nav-header">Main Menu</li>
+            <li <%= @admin_active %>>
+              <%= link_to '<i class="icon-home"></i> Dashboard'.html_safe, admin_url  %></li>
+            
+            <!-- accordion menu item -->
 
-						<!-- Collapse Menu
-						================================================== -->
+         		<li <%= @settings_active %> >
+         			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
+         			  <i class="icon-list-alt"></i> Settings <b class="icon-angle-down pull-right"></b></a>
+         		</li>
 
-            <div class="accordion" id="accordion1">
-           		<div class="accordion-heading">
-           			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne"> Menu  <i class="icon-chevron-right"></i></a>
-           		</div>
-               
-							<div id="collapseOne" class="accordion-body collapse out">
-             		<ul class="accordion-inner">
-                  <li><%= link_to "Home", home_index_url  %></li>
-                  <li <%= @help_admin_active %>><%= link_to "Help", admin_help_url  %></li>
-             		</ul>
-              </div>
-             </div> <!-- accordion -->
-             
-          </div><!--/.well -->
+						<div id="collapseOne" class="accordion-body collapse out">
+           		<ul class="accordion-inner nav nav-list">
+           		
+           		  <!-- User account profile -->
+                <li <%= @account_active %> >
+                  <%= link_to '<i class="icon-user"></i> Profile'.html_safe,
+                    edit_user_registration_url %>
+                </li>
+                
+                <!-- User groups -->
+                <li <%= @groups_active %>>
+                  <%= link_to '<i class="icon-th"></i> Groups'.html_safe, 
+                    groups_url  %>
+                </li>
+
+                <!-- Subscription -->
+                <li <%= @subscriptions_active %> >
+                  <%= link_to '<i class="icon-repeat"></i> Subscription'.html_safe,
+                    new_subscription_url %>
+                </li>
+           		</ul>
+            </div> <!-- collapsible section -->
+          </ul> <!-- Main menu -->
+
+          <br/>
           
           <!-- Service Administration Menu ========================= -->
-		      <div class="well sidebar-nav">
-		        <ul class="nav nav-list">
-		          <li class="nav-header">Administration</li>
-		          <li <%= @users_active %> ><%= link_to "Users", users_url  %></li>
-		          <li <%= @groups_active %> ><%= link_to "Groups", groups_url  %></li>
+          <% if current_user.role == User::SERVICE_ADMIN %>
+		    
+		        <ul class="well nav nav-list">
+		          <li class="nav-header">Service Admin.</li>
+		          
+		          <li <%= @users_active %> >
+		            <%= link_to '<i class="icon-user"></i> Users'.html_safe, 
+		              users_url %>
+		          </li>
+		          
+		          <li <%= @groups_active %> >
+		            <%= link_to '<i class="icon-th"></i> Groups'.html_safe, 
+		              groups_url %>
+		          </li>
+		          
 		        </ul>
-		      </div><!--/.well -->
+		     
+		      <% end %>
 		      
-        </div><!--/span-->
+        </div> <!-- span for sidebar -->
         
         <div class="span10">
           <%= bootstrap_flash %>

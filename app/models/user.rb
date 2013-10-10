@@ -85,7 +85,7 @@ class User
   ## QUERY SCOPES ------------------------------------------------------
   scope :by_email, ->(email){ where(email: /^.*#{email}.*/i) }
   scope :by_first_name, ->(name){ where(first_name: /^.*#{name}.*/i) }
-  scope  :by_last_name, ->(name){ where(last_name: /^.*#{name}.*/i) }
+  scope :by_last_name, ->(name){ where(last_name: /^.*#{name}.*/i) }
   scope :by_role, ->(role){ where(role: role) }
   
   ## PUBLIC INSTANCE METHODS -------------------------------------------

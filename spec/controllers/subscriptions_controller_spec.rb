@@ -19,7 +19,8 @@ require 'spec_helper'
 # that an instance is receiving a specific message.
 
 describe SubscriptionsController do
-
+  include_context 'user_setup'
+  
   # This should return the minimal set of attributes required to create a valid
   # Subscription. As you add validations to Subscription, be sure to
   # adjust the attributes here as well.
@@ -29,6 +30,15 @@ describe SubscriptionsController do
   # in order to pass any filters (e.g. authentication) defined in
   # SubscriptionsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
+
+  before(:each){
+    signin_customer
+		subject.current_user.should_not be_nil
+  }
+
+	after(:each) {
+		delete_users
+  }
 
   describe "GET index" do
     it "assigns all subscriptions as @subscriptions" do

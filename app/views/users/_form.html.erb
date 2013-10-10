@@ -1,4 +1,4 @@
-<%= render :partial => 'shared/validation_errors' %>
+<%= render partial: 'shared/validation_errors' %>
 
 <%= form_for @user, html: { class: 'form-horizontal' } do |f| %>
 
@@ -56,25 +56,15 @@
   </div>
 
   <% if controller.action_name == 'edit' %>
-  <div id="credit_card_area">
-    <dl class="dl-horizontal">
-      <dt></dt>
-      <dd>
-        <% if !@user.account.present?  %>
-          <%= link_to 'Add Credit Card', new_user_account_url(@user), 
-		        class: 'btn btn-info' %>
-		    <% else %>
-		      <% if @user.account.customer_id.present? %>
-		        <%= link_to 'Update Credit Card', edit_user_account_url(@user, @user.account), 
-		          class: 'btn btn-info' %>
-		      <% else %>
-		        <%= link_to 'Add Credit Card', new_user_account_url(@user), 
-		          class: 'btn btn-primary' %>
-		      <% end %>
-        <% end %>
-      </dd>
-    </dl>
-  </div>
+    <div id="credit_card_area">
+      <dl class="dl-horizontal">
+        <dt></dt>
+        <dd>
+          <%= render partial: 'shared/account_button_link',
+            locals: {user: @user}  %>
+        </dd>
+      </dl>
+    </div>
   <% end %>
   
   <div class="form-actions">

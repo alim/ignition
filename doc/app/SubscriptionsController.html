@@ -158,6 +158,12 @@
 
   <div id="description" class="description">
     
+<p>The <a href="SubscriptionsController.html">SubscriptionsController</a> is
+responsible for subscribing a customer to our web service. It depends on
+the account resource which should hold a customer_id associated witht the
+Stripe.com service. It will also depend on the existance of one or more
+subscription plans being setup on the Stripe.com service for charging.</p>
+
   </div><!-- description -->
 
   
@@ -194,7 +200,7 @@
 
           
           <div class="method-source-code" id="create-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 26</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 49</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>
   <span class="ruby-ivar">@subscription</span> = <span class="ruby-constant">Subscription</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">subscription_params</span>)
 
@@ -234,7 +240,7 @@
 
           
           <div class="method-source-code" id="destroy-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 56</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 79</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
   <span class="ruby-ivar">@subscription</span>.<span class="ruby-identifier">destroy</span>
   <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
@@ -268,7 +274,7 @@
 
           
           <div class="method-source-code" id="edit-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 21</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 44</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">edit</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- edit-source -->
@@ -297,7 +303,7 @@
 
           
           <div class="method-source-code" id="index-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 6</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 15</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">index</span>
   <span class="ruby-ivar">@subscriptions</span> = <span class="ruby-constant">Subscription</span>.<span class="ruby-identifier">all</span>
 <span class="ruby-keyword">end</span></pre>
@@ -323,13 +329,25 @@
         <div class="method-description">
           
           <p>GET /subscriptions/new</p>
+
+<p>This method will present the customer with a new subscription for, if the
+customer does not already have a subscription associated with their
+account. If they do have a subscription, they will be directed to the
+Subscriptions#show action.</p>
           
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 16</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 32</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@subscription</span> = <span class="ruby-constant">Subscription</span>.<span class="ruby-identifier">new</span>
+  
+  <span class="ruby-comment"># Check to see if the logged in user has a subscription already</span>
+  <span class="ruby-ivar">@subplan</span> = <span class="ruby-constant">Subscription</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">user_id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span>).<span class="ruby-identifier">first</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@subplan</span>.<span class="ruby-identifier">present?</span>
+    <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">subscription_url</span>(<span class="ruby-ivar">@subplan</span>)
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- new-source -->
           
@@ -357,7 +375,7 @@
 
           
           <div class="method-source-code" id="show-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 12</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 21</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">show</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- show-source -->
@@ -386,7 +404,7 @@
 
           
           <div class="method-source-code" id="update-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 42</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 65</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>
   <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">if</span> <span class="ruby-ivar">@subscription</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">subscription_params</span>)
