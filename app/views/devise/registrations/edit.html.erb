@@ -56,18 +56,8 @@
           <dl class="dl-horizontal">
             <dt></dt>
             <dd>
-              <% if !@user.account.present?  %>
-                <%= link_to 'Add Credit Card', new_user_account_url(@user), 
-		              class: 'btn btn-info' %>
-		          <% else %>
-		            <% if @user.account.customer_id.present? %>
-		              <%= link_to 'Update Credit Card', edit_user_account_url(@user, @user.account), 
-		                class: 'btn btn-info' %>
-		            <% else %>
-		              <%= link_to 'Add Credit Card', new_user_account_url(@user), 
-		                class: 'btn btn-info' %>
-		            <% end %>
-              <% end %>
+              <%= render partial: 'shared/account_button_link',
+                locals: {user: @user}  %>
             </dd>
           </dl>
         </div>

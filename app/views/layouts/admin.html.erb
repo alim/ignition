@@ -105,41 +105,8 @@
 		        </ul>
 		     
 		      <% end %>
-		               
-          <% if false %>
-          <div class="well sidebar-nav">
-
-            
-            <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
-              <li class="nav-header">Main Menu</li>
-              <li <%= @admin_active %>><%= link_to "Dashboard", admin_url  %></li>
-
-              <% if false %>
-              <li><%= link_to "Edit User", edit_user_registration_url  %></li>
-              <li class="<%= @logout_active %>"><%= link_to "Logout", destroy_user_session_path, :method => :delete  %></li>
-            	<% end %>
-            </ul>
-
-						<!-- Collapse Menu
-						================================================== -->
-
-            <div class="accordion active" id="accordion1">
-           		<div class="accordion-heading">
-           			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">Settings <i class="icon-chevron-right"></i></a>
-           		</div>
-
-							<div id="collapseOne" class="accordion-body collapse out">
-             		<ul class="accordion-inner">
-                  <li><%= link_to "Account", edit_user_registration_url  %></li>
-                  <li <%= @help_admin_active %>><%= link_to "Help", admin_help_url  %></li>
-             		</ul>
-              </div>
-             </div> <!-- accordion -->
-             
-          </div><!--/.well -->
-          <% end %>
 		      
-        </div><!--/span-->
+        </div> <!-- span for sidebar -->
         
         <div class="span10">
           <%= bootstrap_flash %>
