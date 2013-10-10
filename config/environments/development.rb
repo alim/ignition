@@ -27,7 +27,7 @@ Ignition::Application.configure do
   
   # Setup precompiling of assets. Normally set to false for development
   # but enable it for debugging production issues in development
-  # config.assets.enabled = true
+  # config.assets.enabled = false
   
   # Settings for email
   config.action_mailer.delivery_method = :smtp
