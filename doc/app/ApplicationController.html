@@ -70,6 +70,8 @@
 
   <ul class="link-list">
     
+    <li><a href="#method-i-admin_alert">#admin_alert</a>
+    
     <li><a href="#method-i-after_sign_in_path_for">#after_sign_in_path_for</a>
     
     <li><a href="#method-i-after_sign_out_path_for">#after_sign_out_path_for</a>
@@ -77,6 +79,8 @@
     <li><a href="#method-i-configure_permitted_parameters">#configure_permitted_parameters</a>
     
     <li><a href="#method-i-layout_by_resource">#layout_by_resource</a>
+    
+    <li><a href="#method-i-set_menu_active">#set_menu_active</a>
     
   </ul>
 </nav>
@@ -172,6 +176,42 @@
       <h3 class="section-header">Public Instance Methods</h3>
 
     
+      <div id="method-i-admin_alert" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">admin_alert</span><span
+            class="method-args">(msg)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The <a
+href="ApplicationController.html#method-i-admin_alert">#admin_alert</a>
+method will display an alert message and redirect the user to the adminoops
+view.</p>
+          
+
+          
+          <div class="method-source-code" id="admin_alert-source">
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 88</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">admin_alert</span>(<span class="ruby-identifier">msg</span>)
+      <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span> 
+              <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">admin_oops_url</span>, <span class="ruby-identifier">alert</span><span class="ruby-operator">:</span> <span class="ruby-identifier">msg</span> }
+              <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">head</span> <span class="ruby-value">:no_content</span> }
+      <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- admin_alert-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- admin_alert-method -->
+
+    
       <div id="method-i-after_sign_in_path_for" class="method-detail ">
         
         <div class="method-heading">
@@ -192,7 +232,7 @@ information.</p>
 
           
           <div class="method-source-code" id="after_sign_in_path_for-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 25</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 27</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">after_sign_in_path_for</span>(<span class="ruby-identifier">resource</span>)
         <span class="ruby-keyword">if</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">User</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">resource</span>.<span class="ruby-identifier">first_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">'*None*'</span> <span class="ruby-operator">||</span> 
                 <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">last_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">'*None*'</span>)
@@ -229,7 +269,7 @@ have signed out the system.</p>
 
           
           <div class="method-source-code" id="after_sign_out_path_for-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 16</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 18</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">after_sign_out_path_for</span>(<span class="ruby-identifier">resource</span>)
         <span class="ruby-identifier">root_url</span>
 <span class="ruby-keyword">end</span></pre>
@@ -261,7 +301,7 @@ href="README_rdoc.html">README</a> file for more details.</p>
 
           
           <div class="method-source-code" id="configure_permitted_parameters-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 44</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 59</span>
       <span class="ruby-keyword">def</span> <span class="ruby-identifier">configure_permitted_parameters</span>
   <span class="ruby-identifier">devise_parameter_sanitizer</span>.<span class="ruby-identifier">for</span>(<span class="ruby-value">:account_update</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">permit</span>(
       <span class="ruby-value">:email</span>, <span class="ruby-value">:password</span>, <span class="ruby-value">:password_confirmation</span>, <span class="ruby-value">:current_password</span>,
@@ -299,7 +339,7 @@ use.</p>
 
           
           <div class="method-source-code" id="layout_by_resource-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 59</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 74</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">layout_by_resource</span>
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">HomeController</span>)
       <span class="ruby-string">&quot;home&quot;</span>
@@ -317,6 +357,42 @@ use.</p>
 
         
       </div><!-- layout_by_resource-method -->
+
+    
+      <div id="method-i-set_menu_active" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">set_menu_active</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>This before_filter method is responsible for setting a menu item to active.
+We can add multiple check blocks to determine which controller and which
+action is active. We can then set an instance variable for toggling the a
+CSS class to active.</p>
+          
+
+          
+          <div class="method-source-code" id="set_menu_active-source">
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 43</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">set_menu_active</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Devise</span><span class="ruby-operator">::</span><span class="ruby-constant">RegistrationsController</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">user_signed_in?</span> <span class="ruby-operator">&amp;&amp;</span> 
+    <span class="ruby-identifier">params</span>[<span class="ruby-value">:action</span>] <span class="ruby-operator">==</span> <span class="ruby-string">'edit'</span>
+    <span class="ruby-ivar">@account_active</span>=<span class="ruby-string">&quot;class=active&quot;</span> 
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- set_menu_active-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- set_menu_active-method -->
 
     
     </section><!-- public-instance-method-details -->

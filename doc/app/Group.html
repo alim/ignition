@@ -206,7 +206,7 @@ membership list in the form of a list of individual email address.</p>
 
           
           <div class="method-source-code" id="members-source">
-            <pre><span class="ruby-comment"># File app/models/group.rb, line 25</span>
+            <pre><span class="ruby-comment"># File app/models/group.rb, line 27</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">members</span>
   <span class="ruby-ivar">@members</span>
 <span class="ruby-keyword">end</span></pre>
@@ -236,7 +236,7 @@ membership list in the form of a list of individual email address.</p>
 
           
           <div class="method-source-code" id="members-3D-source">
-            <pre><span class="ruby-comment"># File app/models/group.rb, line 29</span>
+            <pre><span class="ruby-comment"># File app/models/group.rb, line 31</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">members=</span>(<span class="ruby-identifier">value</span>)
   <span class="ruby-ivar">@members</span>=<span class="ruby-identifier">value</span>
 <span class="ruby-keyword">end</span></pre>
@@ -268,7 +268,7 @@ email format.</p>
 
           
           <div class="method-source-code" id="members_list-source">
-            <pre><span class="ruby-comment"># File app/models/group.rb, line 39</span>
+            <pre><span class="ruby-comment"># File app/models/group.rb, line 41</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">members_list</span>
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">members</span>.<span class="ruby-identifier">present?</span>
     <span class="ruby-identifier">email_list</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">members</span>.<span class="ruby-identifier">split</span>

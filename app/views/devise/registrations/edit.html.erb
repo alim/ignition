@@ -1,3 +1,4 @@
+
 <div class="row">
 	<div class="span1">
 	</div>
@@ -49,7 +50,19 @@
 			<div class='control-label'><%= f.label :current_password %></div>
 			<div class='controls'><%= f.password_field :current_password %></div>
 			<br />
-			
+
+      <% if controller.action_name == 'edit' %>
+        <div id="credit_card_area">
+          <dl class="dl-horizontal">
+            <dt></dt>
+            <dd>
+              <%= render partial: 'shared/account_button_link',
+                locals: {user: @user}  %>
+            </dd>
+          </dl>
+        </div>
+      <% end %>
+  			
 			<div class='form-actions'>
 				<%= f.submit "Update", class: 'btn btn-primary' -%>
 				<%= link_to "Back", :back, class: 'btn' %>
