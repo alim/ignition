@@ -5,9 +5,11 @@
 @iconSpritePath: image-url("twitter/bootstrap/glyphicons-halflings.png");
 @iconWhiteSpritePath: image-url("twitter/bootstrap/glyphicons-halflings-white.png");
 
+
 // Set the Font Awesome (Font Awesome is default. You can disable by commenting below lines)
 @fontAwesomeEotPath: asset-url("fontawesome-webfont.eot");
-@fontAwesomeEotPath_iefix: asset-url("fontawesome-webfont.eot?#iefix");
+@fontAwesomeEotPath_iefix: asset-url("fontawesome-webfont.eot#iefix");
+// @fontAwesomeEotPath_iefix: asset-url("fontawesome-webfont.eot?#iefix");
 @fontAwesomeWoffPath: asset-url("fontawesome-webfont.woff");
 @fontAwesomeTtfPath: asset-url("fontawesome-webfont.ttf");
 @fontAwesomeSvgPath: asset-url("fontawesome-webfont.svg#fontawesomeregular");
@@ -15,7 +17,7 @@
 // Font Awesome
 @import "fontawesome/font-awesome";
 
-// Glyphicons
+// Glyphicons - is only needed if you disable Font Awesome
 // @import "twitter/bootstrap/sprites.less";
 
 // Your custom LESS stylesheets goes here
@@ -84,6 +86,5 @@ footer .widget {
 // Align icons with text using baseline alignment
 [class^="icon-"], [class*=" icon-"] {
   vertical-align: baseline;
-  // background:none;
 }
 
