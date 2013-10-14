@@ -3,7 +3,6 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~>4.0.0'
 
-
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 
@@ -37,9 +36,10 @@ gem 'mongoid', "~> 4.0", git: 'git://github.com/mongoid/mongoid.git'
 gem 'bson_ext'
 
 # UI Related Gems
-gem 'twitter-bootstrap-rails'
+gem 'twitter-bootstrap-rails', '~> 2.2.0'
 gem 'will_paginate'
 gem 'less-rails'
+
 
 gem 'strip_attributes'
 
