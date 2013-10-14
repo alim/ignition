@@ -8,7 +8,8 @@
 
 // Set the Font Awesome (Font Awesome is default. You can disable by commenting below lines)
 @fontAwesomeEotPath: asset-url("fontawesome-webfont.eot");
-@fontAwesomeEotPath_iefix: asset-url("fontawesome-webfont.eot?#iefix");
+//@fontAwesomeEotPath_iefix: asset-url("fontawesome-webfont.eot?#iefix");
+@fontAwesomeEotPath_iefix: asset-url("fontawesome-webfont.eot#iefix");
 @fontAwesomeWoffPath: asset-url("fontawesome-webfont.woff");
 @fontAwesomeTtfPath: asset-url("fontawesome-webfont.ttf");
 @fontAwesomeSvgPath: asset-url("fontawesome-webfont.svg#fontawesomeregular");
@@ -84,7 +85,6 @@ footer .widget {
 
 // Align icons with text using baseline alignment
 [class^="icon-"], [class*=" icon-"] {
-//  font-family: FontAwesome;
   vertical-align: baseline;
 }
 
