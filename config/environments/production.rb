@@ -60,7 +60,7 @@ Ignition::Application.configure do
   # Precompile additional assets.
   # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
   # config.assets.precompile += %w( search.js )
-#  config.assests.precompile += %w( .svg, .eot, .woff, .ttf )
+  config.assests.precompile += %w( *.svg, *.png, *.gif, *.eot, *.woff, *.ttf )
 
                          
   # Ignore bad email addresses and do not raise email delivery errors.
