@@ -65,7 +65,11 @@ Ignition::Application.configure do
 #    fontawesome-webfont.woff,
 #    fontawesome-webfont.ttf
 #  )
-  
+  config.assets.precompile += ["fontawesome-webfont.ttf",
+                         "fontawesome-webfont.eot",
+                         "fontawesome-webfont.svg",
+                         "fontawesome-webfont.woff"]
+                         
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
