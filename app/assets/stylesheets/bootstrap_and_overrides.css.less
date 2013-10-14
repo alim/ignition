@@ -1,6 +1,20 @@
 @import "twitter/bootstrap/bootstrap";
 @import "twitter/bootstrap/responsive";
 
+// ---------------------------------------------------------------------
+// Rails 4.0 and Openshift notes: 
+//
+// At the time of this project, the Rails 4.0 release changed the
+// way assets are pre-compiled. The helper methods below image-url and
+// asset-url do not seem to append the MD5 hash to the file names.
+//
+// As a work around, we moved the files for font awesome to the 
+// public/assets directory as static assets. If we wanted to use the 
+// glyphicons, we would also move the glyphyicons to the public/assets/
+// twitter/bootstrp directory. These fils or static assets would NOT
+// have an MD5 hash appended to thier names.
+// ---------------------------------------------------------------------
+
 // Set the correct sprite paths - based on twitter-bootstrap-rails 2.2.8
 // This path was not working in production running on Openshift.
 @iconSpritePath: image-url("twitter/bootstrap/glyphicons-halflings.png");
