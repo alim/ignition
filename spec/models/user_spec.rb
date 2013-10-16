@@ -23,6 +23,7 @@ describe User do
 		it { should respond_to(:authentication_token) }
 		it { should respond_to(:role) }
 		it { should respond_to(:role_str) }
+		it { should respond_to(:sign_in_count) } # added by Fred
 	end
 	
 	# ACCESSOR TESTS -----------------------------------------------------
