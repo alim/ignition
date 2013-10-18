@@ -7,12 +7,22 @@
 ########################################################################
 class UsersController < ApplicationController
 
+  # RESCUE SETTINGS ----------------------------------------------------
+	rescue_from Mongoid::Errors::DocumentNotFound, with: :missing_document
+  rescue_from CanCan::AccessDenied, with: :access_denied 
+  
   # Before filters -----------------------------------------------------
   before_filter :authenticate_user!
   
   before_action :set_user, only: [:show, :edit, :update, :destroy]
   before_action :set_users_class
-    
+
+  # CANCAN AUTHORIZATION -----------------------------------------------
+  # This helper assumes that the instance variable @group is loaded
+  # or checks Class permissions
+  authorize_resource
+  
+  
   ######################################################################
   # GET /admin/users
   #
@@ -70,13 +80,8 @@ class UsersController < ApplicationController
   # It does not show first login time, ip address, and token. 
   ######################################################################
   def show
-    if @user.present?
-      if @user.account.present?
-        @user.account.get_customer  if @user.account.customer_id.present?
-      end
-    else
-      flash[:error] = "We could not find the requested User record ID ##{params[:id]}"
-      redirect_to users_url
+    if @user.account.present?
+      @user.account.get_customer if @user.account.customer_id.present?
     end
   end
   
@@ -86,9 +91,7 @@ class UsersController < ApplicationController
   # The edit action will display a standard edit form for user account.
   ######################################################################
   def edit
-    if !@user.present?
-      redirect_to users_url, alert: "Could not find requested User account"
-    end
+
   end
   
   ######################################################################
@@ -100,22 +103,17 @@ class UsersController < ApplicationController
   def update
     @verrors = nil
     
-    if @user.present?
-      # Delete the password parameters if they have been submitted blank
-      params[:user].delete(:password) if params[:user][:password].blank?
-      params[:user].delete(:password_confirmation) if 
-        params[:user][:password].blank? and 
-        params[:user][:password_confirmation].blank?
-        
-      if @user.update_attributes(user_params)
-        redirect_to user_url(@user), notice: "User account succesfully updated."
-      else
-        @verrors = @user.errors.full_messages
-        render :edit
-      end
+    # Delete the password parameters if they have been submitted blank
+    params[:user].delete(:password) if params[:user][:password].blank?
+    params[:user].delete(:password_confirmation) if 
+      params[:user][:password].blank? and 
+      params[:user][:password_confirmation].blank?
+      
+    if @user.update_attributes(user_params)
+      redirect_to user_url(@user), notice: "User account succesfully updated."
     else
-      flash[:alert] = "Could not find user account to update."
-      redirect_to users_url
+      @verrors = @user.errors.full_messages
+      render :edit
     end
   end
   
@@ -146,11 +144,9 @@ class UsersController < ApplicationController
       
     @user = User.new(user_params)
     if @user.save
-      
       # Email user the account information
       UserMailer.new_account(@user).deliver    
       redirect_to @user, notice: "New user account created and user email sent."
-      
     else
       @verrors = @user.errors.full_messages
       render action: 'new'
@@ -165,13 +161,8 @@ class UsersController < ApplicationController
   # include any dependent destroy specifications.
   ######################################################################
   def destroy
-    if @user.present?
-      @user.destroy
-      redirect_to users_url, notice: "User account - #{@user.email} - deleted."
-    else
-      flash[:alert] = "Could not find user account to destroy."
-      redirect_to users_url
-    end
+    @user.destroy
+    redirect_to users_url, notice: "User account - #{@user.email} - deleted."
   end
   
   ## PRIVATE INSTANCE METHODS ------------------------------------------
@@ -184,11 +175,7 @@ class UsersController < ApplicationController
   # * Catch the error if not found and set instance variable to nil
   ####################################################################
   def set_user
-    begin
-      @user = User.find(params[:id])
-    rescue Mongoid::Errors::DocumentNotFound
-      @user = nil
-    end
+    @user = User.find(params[:id])
   end
 
   
@@ -214,5 +201,18 @@ class UsersController < ApplicationController
       :password,
       :password_confirmation
     )
-  end  
+  end
+  
+  ######################################################################
+  # The missing_document method is the controller method for catching
+  # a Mongoid Mongoid::Errors::DocumentNotFound exception across all
+  # controller actions.
+  ######################################################################
+#  def missing_document(exception)
+#	  respond_to do |format| 
+#	    msg = "We are unable to find the requested User - ID ##{exception.params[0]}"
+#  		format.html { redirect_to admin_oops_url, alert: msg }
+#  		format.json { head :no_content }
+#  	end  
+#  end  
 end

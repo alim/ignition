@@ -11,14 +11,32 @@ describe GroupsController do
   }
   
   let(:find_one_group) {
-    @group = Group.where(:owner_id.exists => true).first
+    @group = Group.where(owner_id: @owner.id).first
   }
   
+  let(:login_admin) {
+    sign_out @signed_in_user
+    signin_admin
+    subject.current_user.should_not be_nil
+  }
+  
+  let(:login_as_group_owner){
+    sign_in @owner
+    @signed_in_user = @owner
+    subject.current_user.should_not be_nil
+  }
+  
+  let(:login_nonowner) {
+    sign_out @signed_in_user
+    @signed_in_user = User.where(:id.ne => @owner.id).first
+    sign_in @signed_in_user
+  }
+    
   before(:each) {
 		multi_groups_multi_users
 		find_one_user
 		find_one_group
-		signin_customer
+		login_as_group_owner
 		subject.current_user.should_not be_nil
 	}
 	
@@ -44,6 +62,7 @@ describe GroupsController do
       it "Should return the complete list of groups" do
         ids = @groups.pluck(:id).sort
         get :index
+        assigns(:groups).count.should_not eq(0)
         assigns(:groups).pluck(:id).sort.should eq(ids)
       end
       
@@ -67,6 +86,36 @@ describe GroupsController do
   	    assigns(:groups).count.should eq(0)
   	  end
     end
+    
+    describe "Authorization examples" do   
+      it "Should return success as a customer" do
+        get :index
+        response.should be_success
+      end
+      
+      it "Should only access groups that user owns" do
+        get :index
+        assigns(:groups).count.should_not eq(0)
+        assigns(:groups).each do |group|
+          group.owner_id.should eq(@owner.id)
+        end
+      end
+      
+      it "Should not access any groups, if not group owner" do
+        login_nonowner
+        get :index
+        assigns(:groups).count.should eq(0)
+      end
+      
+      it "Should return all groups, if service admin" do
+        login_admin
+        get :index
+        response.should be_success
+        assigns(:groups).count.should_not eq(0)
+        assigns(:groups).count.should eq(Group.count)
+      end    
+    end # Index authorization
+    
   end
 
 
@@ -132,7 +181,7 @@ describe GroupsController do
       
       it "Should flash an alert message, if record not found" do
         get :show, {id: '99999'}
-        flash[:alert].should match(/^Unable to find group information for group #/)
+        flash[:alert].should match(/^We are unable to find the requested Group/)
       end 
       
       it "Should flash an alert if we cannot find a group owner" do
@@ -140,9 +189,67 @@ describe GroupsController do
         @group.save
         
         get :show, show_params
-        flash[:alert].should match(/Unable to find User member information for group/)
+        flash[:alert].should match(/You are not authorized to access the requested Group/)
       end
     end
+    
+    describe "Authorization examples" do  
+      it "Return success for a group owned by the user" do
+        login_as_group_owner
+        group = Group.where(owner_id: @owner.id).first
+        get :show, {id: group.id}
+        response.should be_success
+      end
+      
+      it "Find the requested group owned by the user" do
+        login_as_group_owner
+        group = Group.where(owner_id: @owner.id).first
+        get :show, {id: group.id}
+        assigns(:group).id.should eq(group.id)
+      end 
+      
+      it "Group owner_id should match requested group owner_id" do
+        login_as_group_owner
+        group = Group.where(owner_id: @owner.id).first
+        get :show, {id: group.id}
+        assigns(:group).owner_id.should eq(@owner.id)
+      end  
+
+      it "Return success for a group with different owner than admin" do
+        login_admin
+        group = Group.where(owner_id: @owner.id).first
+        get :show, {id: group.id}
+        response.should be_success
+      end
+      
+      it "Find the requested group with different owner than admin" do
+        login_admin
+        group = Group.where(owner_id: @owner.id).first
+        get :show, {id: group.id}
+        assigns(:group).id.should eq(group.id)
+      end 
+
+      it "Group should have different owner than admin" do
+        login_admin
+        group = Group.where(owner_id: @owner.id).first
+        get :show, {id: group.id}
+        assigns(:group).owner_id.should_not eq(@signed_in_user.id)
+      end 
+      
+      it "Redirect to admin_oops for a group NOT owned by the user" do
+        login_nonowner
+        group = Group.where(owner_id: @owner.id).first
+        get :show, {id: group.id}
+        response.should redirect_to admin_oops_url
+      end
+      
+      it "Flash alert message for a group NOT owned by the user" do
+        login_nonowner
+        get :show, {id: @group.id}
+        flash[:alert].should match(/You are not authorized to access the requested #{@group.class}/)
+      end        
+    end # Show authorization examples
+    
   end
 
   # NEW TESTS ----------------------------------------------------------
@@ -181,7 +288,22 @@ describe GroupsController do
         get :new
         response.should redirect_to new_user_session_url
       end
-		end
+		end # Invalid examples
+		
+		describe "Authorization examples" do
+     it "Return success for a new group owned by the current_user" do
+        get :new
+        response.should be_success
+        response.should render_template :new
+      end
+      
+      it "Return success for a new group logged in as admin" do
+        login_admin
+        get :new
+        response.should be_success
+        response.should render_template :new
+      end      		
+		end # New authorization examples
 		
   end
 
@@ -232,9 +354,65 @@ describe GroupsController do
 
       it "Should flash alert message for invalid group id" do
         get :edit, {id: '090909'}
-        flash[:alert].should match(/We could not find the requested group/)
+        flash[:alert].should match(/We are unable to find the requested Group/)
       end      
-		end
+		end # Invalid tests
+		
+    describe "Authorization examples" do
+      it "Return success for a group owned by the user" do
+        login_as_group_owner
+        group = Group.where(owner_id: @owner.id).first
+        get :edit, {id: group.id}
+        response.should be_success
+      end
+      
+      it "Find the requested group owned by the user" do
+        login_as_group_owner
+        group = Group.where(owner_id: @owner.id).first
+        get :edit, {id: group.id}
+        assigns(:group).id.should eq(group.id)
+      end      
+      
+      it "Group owner_id should match requested group owner_id" do
+        login_as_group_owner
+        group = Group.where(owner_id: @owner.id).first
+        get :edit, {id: group.id}
+        assigns(:group).owner_id.should eq(@owner.id)
+      end
+      
+      it "Return success for a group with different owner than admin" do
+        login_admin
+        group = Group.where(owner_id: @owner.id).first
+        get :edit, {id: group.id}
+        response.should be_success
+      end
+      
+      it "Find the requested group with different owner than admin" do
+        login_admin
+        group = Group.where(owner_id: @owner.id).first
+        get :edit, {id: group.id}
+        assigns(:group).id.should eq(group.id)
+      end 
+
+      it "Group should have different owner than admin" do
+        login_admin
+        group = Group.where(owner_id: @owner.id).first
+        get :edit, {id: group.id}
+        assigns(:group).owner_id.should_not eq(@signed_in_user.id)
+      end 
+
+      it "Redirect to admin_oops for a group NOT owned by the user" do
+        login_nonowner
+        get :edit, {id: @group.id}
+        response.should redirect_to admin_oops_url
+      end
+      
+      it "Flash alert message for a group NOT owned by the user" do
+        login_nonowner
+        get :edit, {id: @group.id}
+        flash[:alert].should match(/You are not authorized to access the requested #{@group.class}/)
+      end        
+    end # Edit authorization examples		
   end
 
   # CREATE ACTION TESTS ------------------------------------------------
@@ -322,6 +500,20 @@ describe GroupsController do
       end
         
     end # Invalid create examples
+    
+    describe "Authorization examples" do
+      it "Return success for a group owned by the user" do
+        login_as_group_owner
+        post :create, valid_group_params
+        response.should redirect_to group_url(assigns(:group))
+      end
+      
+      it "New group should be owned by the user" do
+        login_as_group_owner
+        post :create, valid_group_params
+        assigns(:group).owner_id.should eq(@owner.id)
+      end 
+    end # Edit authorization examples		   
   end
 
   # UPDATE ACTION TESTS ------------------------------------------------
@@ -397,7 +589,7 @@ describe GroupsController do
         params = update_params
         params[:id] = '99999'
         put :update, params
-        flash[:alert].should match(/We could not find the requested group to update/)
+        flash[:alert].should match(/We are unable to find the requested Group/)
       end
       
       it "Should render the edit template, if group could not save" do
@@ -425,6 +617,67 @@ describe GroupsController do
       end
           
     end # Invalid update examples
+    
+    describe "Authorization examples" do
+      let(:set_group_owner) {
+        @group.owner_id = @owner.id
+        @group.save
+      }
+      
+      it "Return success for a group owned by the user" do
+        login_as_group_owner
+        set_group_owner
+        put :update, update_params
+        response.should redirect_to group_url(@group)
+      end
+      
+      it "Find the requested group owned by the user" do
+        login_as_group_owner
+        set_group_owner
+        put :update, update_params
+        assigns(:group).id.should eq(@group.id)
+      end      
+      
+      it "Group owner_id should match requested group owner_id" do
+        login_as_group_owner
+        set_group_owner
+        put :update, update_params
+        assigns(:group).owner_id.should eq(@owner.id)
+      end
+      
+      it "Return success for a group with different owner than admin" do
+        login_admin
+        set_group_owner
+        put :update, update_params
+        response.should redirect_to group_url(@group)
+      end
+      
+      it "Find the requested group with different owner than admin" do
+        login_admin
+        set_group_owner
+        put :update, update_params
+        assigns(:group).id.should eq(@group.id)
+      end 
+
+      it "Group should have different owner than admin" do
+        login_admin
+        set_group_owner
+        put :update, update_params
+        assigns(:group).owner_id.should_not eq(@signed_in_user.id)
+      end 
+
+      it "Redirect to admin_oops for a group NOT owned by the user" do
+        login_nonowner
+        put :update, update_params
+        response.should redirect_to admin_oops_url
+      end
+      
+      it "Flash alert message for a group NOT owned by the user" do
+        login_nonowner
+        put :update, update_params
+        flash[:alert].should match(/You are not authorized to access the requested #{@group.class}/)
+      end       
+    end # Update authorization examples
   end
 
   # DELETE ACTION CREATE -----------------------------------------------
@@ -452,6 +705,10 @@ describe GroupsController do
           delete :destroy, destroy_params
         }.to change(Group, :count).by(-1)
       end
+      
+      it "Should unrelate all group resources" do
+        pending "Resource development"
+      end
     end # Valid examples
     
     describe "Invalid examples" do
@@ -472,9 +729,45 @@ describe GroupsController do
         params = destroy_params
         params[:id] = '00999'
         delete :destroy, params
-        flash[:alert].should match(/Could not find requeted group to delete./)      
+        flash[:alert].should match(/We are unable to find the requested Group/)      
       end          
     end # Invalid examples
+    
+    describe "Authorization examples" do
+      it "Should redirect to groups_url, upon succesfull deletion of owned group" do
+        delete :destroy, destroy_params
+        response.should redirect_to groups_url
+      end
+      
+      it "Deleted group should have same owner id as login" do
+        delete :destroy, destroy_params
+        assigns(:group).owner_id.should eq(@signed_in_user.id)
+      end
+      
+      it "Should redirect to groups_url, upon succesfull deletion of group as admin" do
+        login_admin
+        delete :destroy, destroy_params
+        response.should redirect_to groups_url
+      end
+      
+      it "Deleted group should have different owner id from admin" do
+        login_admin
+        delete :destroy, destroy_params
+        assigns(:group).owner_id.should_not eq(@signed_in_user.id)
+      end      
+      
+      it "Should redirect to admin oops for non-owner access" do
+        login_nonowner
+        delete :destroy, destroy_params
+        response.should redirect_to admin_oops_url
+      end
+      
+      it "Should flash alert for non-owner access" do
+        login_nonowner
+        delete :destroy, destroy_params
+        flash[:alert].should match(/You are not authorized to access the requested #{@group.class}/)
+      end          
+    end # Authorization examples for delete
   end
 
   # NOTIFY ACTION TESTS ------------------------------------------------
@@ -526,7 +819,7 @@ describe GroupsController do
       it "Should flash an alert message if bad group id" do
         notify_params[:id] = '99999'
         put :notify, notify_params
-        flash[:alert].should match(/We could not find the requested group/)
+        flash[:alert].should match(/We are unable to find the requested Group/)
       end
 
       it "Should redirect to groups_url if bad user id" do
@@ -538,7 +831,7 @@ describe GroupsController do
       it "Should flash an alert message if bad user id" do
         notify_params[:uid] = '99999'
         put :notify, notify_params
-        flash[:alert].should match(/We could not find the requested group member./)
+        flash[:alert].should match(/We are unable to find the requested User/)
       end
       
       it "Should redirect to group_url if invite fails" do
@@ -553,6 +846,42 @@ describe GroupsController do
         flash[:alert].should match(/Group invite faild to/)
       end      
     end # Invalid examples
+    
+    describe "Authorization examples" do
+      it "Should redirect to group_url, upon succesfull notification of owned group" do
+        put :notify, notify_params      
+        response.should redirect_to group_url(assigns(:group))
+      end
+      
+      it "Notified group should have same owner id as login" do
+        put :notify, notify_params      
+        assigns(:group).owner_id.should eq(@signed_in_user.id)
+      end
+      
+      it "Should redirect to group_url, upon succesfull notification of group as admin" do
+        login_admin
+        put :notify, notify_params      
+        response.should redirect_to group_url(assigns(:group))
+      end
+      
+      it "Notified group should have different owner id from admin" do
+        login_admin
+        put :notify, notify_params      
+        assigns(:group).owner_id.should_not eq(@signed_in_user.id)
+      end      
+      
+      it "Should redirect to admin oops for non-owner access" do
+        login_nonowner
+        put :notify, notify_params      
+        response.should redirect_to admin_oops_url
+      end
+      
+      it "Should flash alert for non-owner access" do
+        login_nonowner
+        put :notify, notify_params      
+        flash[:alert].should match(/You are not authorized to access the requested #{@group.class}/)
+      end          
+    end # Authorization examples for notify    
   end # Notify
 
   # REMOVE_MEMBER ACTION TESTS -----------------------------------------
@@ -604,7 +933,7 @@ describe GroupsController do
       it "Should flash an alert message if bad group id" do
         remove_params[:id] = '99999'
         put :remove_member, remove_params 
-        flash[:alert].should match(/We could not find the requested group/)
+        flash[:alert].should match(/We are unable to find the requested Group/)
       end
 
       it "Should redirect to groups_url if bad user id" do
@@ -616,9 +945,47 @@ describe GroupsController do
       it "Should flash an alert message if bad user id" do
         remove_params[:uid] = '99999'
         put :remove_member, remove_params
-        flash[:alert].should match(/We could not find the requested group member./)
+        flash[:alert].should match(/We are unable to find the requested User/)
       end
        
     end # Invalid examples
+    
+    describe "Authorization examples" do
+      it "Should redirect to group_url, upon succesfull removal of owned group" do
+        put :remove_member, remove_params      
+        response.should redirect_to edit_group_url(assigns(:group))
+      end
+      
+      it "Notified group should have same owner id as login" do
+        put :remove_member, remove_params      
+        assigns(:group).owner_id.should eq(@signed_in_user.id)
+      end
+      
+      it "Should redirect to group_url, upon succesfull removal of group as admin" do
+        login_admin
+        put :remove_member, remove_params      
+        response.should redirect_to edit_group_url(assigns(:group))
+      end
+      
+      it "Removal group should have different owner id from admin" do
+        login_admin
+        put :remove_member, remove_params      
+        assigns(:group).owner_id.should_not eq(@signed_in_user.id)
+      end      
+      
+      it "Should redirect to admin oops for non-owner access" do
+        login_nonowner
+        put :remove_member, remove_params      
+        response.should redirect_to admin_oops_url
+      end
+      
+      it "Should flash alert for non-owner access" do
+        login_nonowner
+        put :remove_member, remove_params      
+        flash[:alert].should match(/You are not authorized to access the requested #{@group.class}/)
+      end          
+    end # Authorization examples for notify        
+    
   end # Remove_member
+
 end

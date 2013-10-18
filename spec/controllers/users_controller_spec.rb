@@ -8,6 +8,11 @@ describe UsersController do
     @admin = User.where(role: User::SERVICE_ADMIN).first
   }
 
+  let(:login_customer) {
+    sign_out @signed_in_user
+    signin_customer
+  } 
+
 	before(:each) {
 		create_users
 		create_service_admins
@@ -28,7 +33,8 @@ describe UsersController do
   describe "Index action examples" do
   
     before(:each) {
-			signin_admin
+      # Signing in as service admin, since index action is restricted
+			signin_admin   
 			subject.current_user.should_not be_nil
   	}
   
@@ -308,6 +314,16 @@ describe UsersController do
   	  end
   	end # Other index test cases
   	
+    describe "Authorization examples" do  
+
+      it "Should redirect to admin_oops as a customer" do
+        login_customer
+        get :index
+        response.should redirect_to admin_oops_url
+      end
+       
+    end # Index authorization  	
+  	
   end # Index tests
   
   # SHOW TESTS ---------------------------------------------------------
@@ -356,16 +372,92 @@ describe UsersController do
         response.should redirect_to new_user_session_url
       end
       
-      it "Should redirect to #index, if record not found" do
+      it "Should redirect to admin_oops_url, if record not found" do
         get :show, {id: '99999'}
-        response.should redirect_to users_url
+        response.should redirect_to admin_oops_url
       end
       
-      it "Should flash an error message, if record not found" do
+      it "Should flash an alert message, if record not found" do
         get :show, {id: '99999'}
-        flash[:error].should match(/^We could not find the requested User record ID/)
+        flash[:alert].should match(/^We are unable to find the requested User - ID/)
       end      
     end
+
+    describe "Authorization examples" do  
+    
+      describe "As a customer role" do
+      
+        before(:each) {
+          login_customer
+        }
+        
+        it "Return success for a users own record" do
+          get :show, {id: @signed_in_user.id}
+          response.should be_success
+        end
+        
+        it "Find the requested user record owned by the user" do
+          get :show, {id: @signed_in_user.id}
+          assigns(:user).id.should eq(@signed_in_user.id)
+        end 
+        
+        it "Render the show template" do
+          get :show, {id: @signed_in_user.id}
+          response.should render_template :show
+        end
+        
+        it "Should redirect to admin_oops if user requests another's record" do
+          user = User.where(:id.ne => @signed_in_user.id).first
+          get :show, {id: user.id}
+          response.should redirect_to admin_oops_url
+        end
+        
+        it "Should flash alert if user requests another's record" do
+          user = User.where(:id.ne => @signed_in_user.id).first
+          get :show, {id: user.id}
+          flash[:alert].should match(/You are not authorized to access the requested/)
+        end        
+      end # As a customer role
+      
+      describe "As a service administrator" do
+        before(:each) {
+          # current signed_in user is a service admin
+          @user_record = User.where(:id.ne => @signed_in_user.id).first
+        }
+        
+        it "Return success for a users own record" do
+          get :show, {id: @signed_in_user.id}
+          response.should be_success
+        end
+        
+        it "Find the requested user record owned by the user" do
+          get :show, {id: @signed_in_user.id}
+          assigns(:user).id.should eq(@signed_in_user.id)
+        end 
+        
+        it "Render the show template" do
+          get :show, {id: @signed_in_user.id}
+          response.should render_template :show
+        end 
+        
+        it "Return success for another users record" do
+          get :show, {id: @user_record.id}
+          response.should be_success
+        end
+        
+        it "Find the requested user record owned by another user" do
+          get :show, {id: @user_record.id}
+          assigns(:user).id.should eq(@user_record.id)
+        end 
+        
+        it "Render the show template" do
+          get :show, {id: @user_record.id}
+          response.should render_template :show
+        end          
+
+      end # As a service administrator    
+    end # Show authorization examples    
+    
   end # Show action
   
   # NEW TESTS ----------------------------------------------------------
@@ -408,6 +500,24 @@ describe UsersController do
       
     end # Invalid examples
   
+    describe "Authorization examples" do
+      
+      before(:each) {
+        login_customer
+      }
+      
+      describe "Customer login" do
+        it "Should redirect to admin_oops" do
+          get :new
+          response.should redirect_to admin_oops_url
+        end
+        
+        it "Should flash an alert message" do
+          get :new
+          flash[:alert].should match(/You are not authorized to access the requested/)
+        end
+      end
+    end # Authorization examples
   end # New tests
   
   # CREATE TESTS -------------------------------------------------------
@@ -500,6 +610,25 @@ describe UsersController do
       end      
     end # Invalid examples
   
+    describe "Authorization examples" do
+      
+      before(:each) {
+        login_customer
+      }
+      
+      describe "Customer login" do
+        it "Should redirect to admin_oops" do
+          post :create, new_account_params
+          response.should redirect_to admin_oops_url
+        end
+        
+        it "Should flash an alert message" do
+          post :create, new_account_params
+          flash[:alert].should match(/You are not authorized to access the requested/)
+        end
+      end
+    end # Authorization examples
+  
   end # Create tests
   
   # EDIT TESTS ---------------------------------------------------------
@@ -534,17 +663,93 @@ describe UsersController do
         response.should redirect_to new_user_session_url
       end
       
-      it "Should redirect to user#index, if record not found" do
+      it "Should redirect to admin_oops_url, if record not found" do
         get :edit, {id: '99999'}
-        response.should redirect_to users_url
+        response.should redirect_to admin_oops_url
       end
       
       it "Should display an alert message, if record not found" do
         get :edit, {id: '99999'}
-        flash[:alert].should match(/Could not find requested User account/)
+        flash[:alert].should match(/We are unable to find the requested User - ID/)
       end
       
     end # Invalid examples
+    
+    describe "Authorization examples" do  
+    
+      describe "As a customer role" do
+      
+        before(:each) {
+          login_customer
+        }
+        
+        it "Return success for a users own record" do
+          get :edit, {id: @signed_in_user.id}
+          response.should be_success
+        end
+        
+        it "Find the requested user record owned by the user" do
+          get :edit, {id: @signed_in_user.id}
+          assigns(:user).id.should eq(@signed_in_user.id)
+        end 
+        
+        it "Render the edit template" do
+          get :edit, {id: @signed_in_user.id}
+          response.should render_template :edit
+        end
+        
+        it "Should redirect to admin_oops if user requests another's record" do
+          user = User.where(:id.ne => @signed_in_user.id).first
+          get :edit, {id: user.id}
+          response.should redirect_to admin_oops_url
+        end
+        
+        it "Should flash alert if user requests another's record" do
+          user = User.where(:id.ne => @signed_in_user.id).first
+          get :edit, {id: user.id}
+          flash[:alert].should match(/You are not authorized to access the requested/)
+        end        
+      end # As a customer role
+      
+      describe "As a service administrator" do
+        before(:each) {
+          # current signed_in user is a service admin
+          @user_record = User.where(:id.ne => @signed_in_user.id).first
+        }
+        
+        it "Return success for a users own record" do
+          get :edit, {id: @signed_in_user.id}
+          response.should be_success
+        end
+        
+        it "Find the requested user record owned by the user" do
+          get :edit, {id: @signed_in_user.id}
+          assigns(:user).id.should eq(@signed_in_user.id)
+        end 
+        
+        it "Render the edit template" do
+          get :edit, {id: @signed_in_user.id}
+          response.should render_template :edit
+        end 
+        
+        it "Return success for another users record" do
+          get :edit, {id: @user_record.id}
+          response.should be_success
+        end
+        
+        it "Find the requested user record owned by another user" do
+          get :edit, {id: @user_record.id}
+          assigns(:user).id.should eq(@user_record.id)
+        end 
+        
+        it "Render the edit template" do
+          get :edit, {id: @user_record.id}
+          response.should render_template :edit
+        end          
+
+      end # As a service administrator    
+    end # Edit authorization examples        
+    
   end # Edit tests
   
   # UPDATE TESTS -------------------------------------------------------
@@ -602,14 +807,85 @@ describe UsersController do
       
       it "Should redirect to #index, if user not found" do
         put :update, {id: '99999', user: update_account_params}
-        response.should redirect_to users_url
+        response.should redirect_to admin_oops_url
       end
       
       it "Should flash error message, if user not found" do
         put :update, {id: '99999', user: update_account_params}
-        flash[:alert].should match(/Could not find user account to update./)
+        flash[:alert].should match(/We are unable to find the requested User - ID/)
       end      
     end # Invalid examples
+
+   describe "Authorization examples" do  
+    
+      describe "As a customer role" do
+      
+        before(:each) {
+          login_customer
+        }
+        
+        it "Return success for a users own record" do
+          put :update, {id: @signed_in_user.id, user: update_account_params}
+          response.should redirect_to user_url(assigns(:user))
+        end
+        
+        it "Find the requested user record owned by the user" do
+          put :update, {id: @signed_in_user.id, user: update_account_params}
+          assigns(:user).id.should eq(@signed_in_user.id)
+        end 
+               
+        it "Flash success message after update" do
+          put :update, {id: @signed_in_user.id, user: update_account_params}
+          flash[:notice].should match(/User account succesfully updated/)
+        end 
+                
+        it "Should redirect to admin_oops if user requests another's record" do
+          user = User.where(:id.ne => @signed_in_user.id).first
+          put :update, {id: user.id, user: update_account_params}
+          response.should redirect_to admin_oops_url
+        end
+        
+        it "Should flash alert if user requests another's record" do
+          user = User.where(:id.ne => @signed_in_user.id).first
+          put :update, {id: user.id, user: update_account_params}
+          flash[:alert].should match(/You are not authorized to access the requested/)
+        end    
+            
+      end # As a customer role
+      
+      describe "As a service administrator" do
+        before(:each) {
+          # current signed_in user is a service admin
+          @user_record = User.where(:id.ne => @signed_in_user.id).first
+        }
+        
+        it "Return success for a users own record" do
+          put :update, {id: @signed_in_user.id, user: update_account_params}
+          response.should redirect_to user_url(assigns(:user))
+        end
+        
+        it "Find the requested user record owned by the user" do
+          put :update, {id: @signed_in_user.id, user: update_account_params}
+          assigns(:user).id.should eq(@signed_in_user.id)
+        end 
+        
+        it "Return success for another users record" do
+          put :update, {id: @user_record.id, user: update_account_params}
+          response.should redirect_to user_url(assigns(:user))
+        end
+        
+        it "Find the requested user record owned by another user" do
+          put :update, {id: @user_record.id, user: update_account_params}
+          assigns(:user).id.should eq(@user_record.id)
+        end 
+        
+        it "Flash success message after update" do
+          put :update, {id: @user_record.id, user: update_account_params}
+          flash[:notice].should match(/User account succesfully updated/)
+        end          
+
+      end # As a service administrator  
+    end # Authorization examples for update
   
   end # Update tests
   
@@ -620,7 +896,7 @@ describe UsersController do
     }
     
     before(:each) {
-			signin_customer
+			signin_admin
 			subject.current_user.should_not be_nil
 			destroy_user
   	}
@@ -628,7 +904,7 @@ describe UsersController do
     describe "Valid examples" do
       
       it "Should redirect to #index" do
-        delete :destroy, {id: @destroy_user.id}
+        delete :destroy, {id: @destroy_user.id}      
         response.should redirect_to users_url
       end
 
@@ -654,13 +930,35 @@ describe UsersController do
       
       it "Should redirect to #index, if user not found" do
         delete :destroy, {id: '99999'}
-        response.should redirect_to users_url
+        response.should redirect_to admin_oops_url
       end
       
       it "Should flash an error message, if user not found" do
         delete :destroy, {id: '99999'}
-        flash[:alert].should match(/Could not find user account to destroy/)
+        flash[:alert].should match(/We are unable to find the requested User - ID/)
       end   
-    end
-  end
+    end # Invalid examples
+    
+    describe "Authorization examples" do  
+    
+      describe "As a customer role" do
+        before(:each) {
+          login_customer
+        }
+        
+        it "Should redirect to admin_oops" do
+          delete :destroy, {id: @destroy_user.id}
+          response.should redirect_to admin_oops_url
+        end
+        
+        it "Should flash an alert message" do
+          delete :destroy, {id: @destroy_user.id}
+          flash[:alert].should match(/You are not authorized to access the requested/)
+        end
+            
+      end # As a customer role
+ 
+    end # Authorization examples for delete    
+    
+  end # Delete tests
 end
