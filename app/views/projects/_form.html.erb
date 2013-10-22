@@ -1,0 +1,48 @@
+<%= render partial: 'shared/validation_errors' %>
+
+<%= form_for @project, :html => { class: 'form-horizontal' } do |f| %>
+  <div class="control-group">
+    <%= f.label :name, class: 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :name, class: 'text_field span6' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :description, class: 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :description, rows: 4, class: 'text_area span6' %>
+    </div>
+  </div>
+
+  
+	<!-- Generate a checkbox list of Events that can be related to the group -->
+	<% @owned_groups = group_list(user: current_user, resource: @project) %>
+	<% if @owned_groups.present? %>
+		<h3>Group Access</h3>
+		<p>
+			Group members will be able to access the above project. You select
+			the groups that can have access to this project using the list of
+			groups below. Please note that access to the above project
+		  will also give them access to other items related to
+			the records.
+		</p>
+	
+		<div class="control-group">
+			<%= f.label @list_name, class: 'control-label' %>
+				<% @owned_groups.each do |group| %>
+					<div class="controls">
+						<div class="checkbox">
+							<%= check_box_tag "group_ids", group[:id], group[:related] %>
+							<%= group[:label] %>
+				  	</div>
+		    	</div>
+				<% end %>
+		</div>
+		<br/>
+	<% end %>	
+  <div class="form-actions">
+    <%= f.submit nil, class: 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                projects_path, class: 'btn' %>
+  </div>
+<% end %>

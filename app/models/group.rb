@@ -1,3 +1,9 @@
+########################################################################
+# The Group class allows us to authorize a group of users to access
+# a primary resource, such as a Project. Group access to a primary
+# resource enables the group to access all records related to the 
+# primary resource.
+########################################################################
 class Group
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -6,14 +12,21 @@ class Group
   field :description, type: String
   field :owner_id, type: BSON::ObjectId
   
-  # Relationship items
+  ## RELATIONSHIPS -----------------------------------------------------
   has_and_belongs_to_many :users
+  has_and_belongs_to_many :projects   # Sample primary resource relation
   
-  # Validations
+  ## VALIDATIONS -------------------------------------------------------
   validate :members_list
   validates_presence_of :name
   validates_presence_of :description
   validates_presence_of :owner_id
+  
+  ## SCOPE DEFINITIONS -------------------------------------------------
+  scope :owned_groups, ->(owner){
+    owner.present? ? where(owner_id: owner.id) : scoped
+  } 
+  
   
   ## PUBLIC INSTANCE METHODS -------------------------------------------
   
