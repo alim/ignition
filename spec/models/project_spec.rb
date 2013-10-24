@@ -23,7 +23,7 @@ describe Project do
 		it { should respond_to(:name) }
 		it { should respond_to(:description) }
 		it { should respond_to(:user_id) }
-		it { should respond_to(:group_id) }
+		it { should respond_to(:group_ids) }
 	end
 	
 	## VALIDATION CHECKS -------------------------------------------------

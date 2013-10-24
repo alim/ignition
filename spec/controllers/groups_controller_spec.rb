@@ -269,13 +269,7 @@ describe GroupsController do
       it "Should set a new group record" do
         get :new
         assigns(:group).should be_present
-      end
-      
-      it "Should set a resources list" do
-        get :new
-        assigns(:resources).should be_present
-        assigns(:resources).class.should eq(Array)
-      end      
+      end     
     
       it "should set the menu active flag for admin menu" do
 				get :new
@@ -328,12 +322,6 @@ describe GroupsController do
         get :edit, edit_params
         assigns(:group).id.should eq(@group.id)
       end
-      
-      it "Should set a resources list" do
-        get :edit, edit_params
-        assigns(:resources).should be_present
-        assigns(:resources).class.should eq(Array)
-      end      
     
       it "should set the menu active flag for admin menu" do
 				get :edit, edit_params
