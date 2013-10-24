@@ -1,4 +1,7 @@
 class ApplicationController < ActionController::Base
+  # Include module for displaying alert messages
+  include Oops
+
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
@@ -80,4 +83,25 @@ class ApplicationController < ActionController::Base
       "admin"
     end
   end
+  
+  ######################################################################
+  # The access_denied method is the controller method for catching
+  # a CanCan exception for an unauthorized action. The user will be
+  # redirected to the admin_oops_url
+  ######################################################################
+  def access_denied(exception)
+    msg = "You are not authorized to access the requested #{exception.subject.class}."
+    display_alert(message: msg, target: Oops::ADMIN)
+  end
+  
+  
+  ######################################################################
+  # The missing_document method is the controller method for catching
+  # a Mongoid Mongoid::Errors::DocumentNotFound exception across all
+  # controller actions. User will be redirected to the groups#index view
+  ######################################################################
+  def missing_document(exception)
+    msg = "We are unable to find the requested #{exception.klass} - ID ##{exception.params[0]}"
+    display_alert(message: msg, target: Oops::ADMIN)
+  end  
 end

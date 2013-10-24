@@ -1,4 +1,3 @@
-<%= render partial: 'shared/flash', locals: { flash: flash } %>
 <%= render partial: 'shared/validation_errors' %>
 
 <%= form_for @group, :html => { class: 'form-horizontal' } do |f| %>
@@ -52,9 +51,16 @@
 	</table>
 	<% end %>	
 	
-	<!-- Generate a checkbox list of Events that can be related to the group -->
+	<!-- -----------------------------------------------------------------
+	  Generate a checkbox list of resources that can be related to 
+	  the group. The resource_list method below is defined in the 
+	  group_helper.rb file.
+	------------------------------------------------------------------ -->
+	<% @resources = resource_list(user_id: current_user.id, 
+	  group: @group, class: Group::RESOURCE_CLASS) %>
+	  
 	<% if @resources.present? %>
-		<h3>Shared Resources</h3>
+		<h3><%= Group::RESOURCE_CLASS %> Access</h3>
 		<p>
 			Group members will be able to access those resources that you
 			indicate in the checklist below. Please note that access to these
@@ -63,7 +69,8 @@
 		</p>
 	
 		<div class="control-group">
-			<%= f.label @resource_name, class: 'control-label' %>
+		  <label class='control-label'><%= @list_name %></label>
+
 				<% @resources.each do |resource| %>
 					<div class="controls">
 						<div class="checkbox">
@@ -73,9 +80,10 @@
 		    	</div>
 				<% end %>
 		</div>
-		
-	<% end %>	
+		<br/>
+	<% end %>		
 	
+
 	<h3>Add New Members</h3>	
 	<p>
 		Please list the email address of each new group member on separate line

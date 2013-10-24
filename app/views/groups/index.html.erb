@@ -8,6 +8,7 @@
   	ability to edit and delete groups that you own.
   </p>
 </div>
+<%= render partial: 'shared/flash', locals: { flash: flash } %>
 
 <% if @groups.present? %>
 	<table class="table table-striped">

@@ -89,6 +89,8 @@
 
   <ul class="link-list">
   
+    <li><a href="./Ability.html">Ability</a>
+  
     <li><a href="./Account.html">Account</a>
   
     <li><a href="./AccountsController.html">AccountsController</a>
@@ -107,6 +109,8 @@
   
     <li><a href="./GroupMailer.html">GroupMailer</a>
   
+    <li><a href="./GroupRelations.html">GroupRelations</a>
+  
     <li><a href="./GroupsController.html">GroupsController</a>
   
     <li><a href="./GroupsHelper.html">GroupsHelper</a>
@@ -116,6 +120,12 @@
     <li><a href="./HomeHelper.html">HomeHelper</a>
   
     <li><a href="./Oops.html">Oops</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectsController.html">ProjectsController</a>
+  
+    <li><a href="./ProjectsHelper.html">ProjectsHelper</a>
   
     <li><a href="./Subscription.html">Subscription</a>
   
@@ -254,7 +264,7 @@ argument, that includes:</p>
         
         <div class="method-heading">
           <span class="method-name">display_error</span><span
-            class="method-args">(msg)</span>
+            class="method-args">(args)</span>
           <span class="method-click-advice">click to toggle source</span>
         </div>
         
@@ -276,7 +286,7 @@ argument, that includes:</p>
           
           <div class="method-source-code" id="display_error-source">
             <pre><span class="ruby-comment"># File lib/oops.rb, line 55</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">display_error</span>(<span class="ruby-identifier">msg</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">display_error</span>(<span class="ruby-identifier">args</span>)
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">count</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">2</span>
                       <span class="ruby-identifier">msg</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">:message</span>]
                       <span class="ruby-identifier">target</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">:target</span>]

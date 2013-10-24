@@ -9,7 +9,7 @@
       corresponding buttons are also availabe for each account record.
     </p>
   </div>
-  
+
   <div class='row-fluid'>
     <div class='form-inline'>
       <!-- Form for submitting a search request -->
@@ -42,6 +42,7 @@
   </div> <!-- row -->
   
 </div>
+<%= render partial: 'shared/flash', locals: { flash: flash } %>  
 
 <table class="table table-striped">
   <thead>
@@ -65,8 +66,12 @@
         <td><%= user.last_name %></td>
         <td><%= number_to_phone(user.phone, delimiter: ".") %></td>
         <td><%= user.role_str %></td>
-        <% if user.group_ids.present? %>
-          <td><%= user.group_ids %></td>
+        <% if user.groups.present? %>
+          <td>
+            <% user.groups.each do |group| %>
+              <%= group.name %><br/>
+            <% end %>
+          </td>
         <% else %>
           <td>None</td>
         <% end %>

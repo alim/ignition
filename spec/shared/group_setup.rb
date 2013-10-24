@@ -9,18 +9,24 @@ shared_context 'group_setup' do
 		User.all.each {|user| @group.users << user}
 	}
 	
-	# Multiple groups, but now users
+	# Multiple groups, but no users
 	let(:multiple_groups) {
 	  5.times.each { FactoryGirl.create(:group) }
 	}
 	
 	# Multiple groups with overlapping user groups
 	let(:multi_groups_multi_users) {
-	  5.times.each { FactoryGirl.create(:group) }
-	  @groups = Group.all
+	  @group_count = 5
+	  @groups = []
+
+	  @group_count.times.each { @groups << FactoryGirl.create(:group) }
+
+	  @group_ids = []
 	  @groups.each do |group|
 	    5.times.each {group.users << FactoryGirl.create(:user_with_account)}
+	    @group_ids << group.id
 	  end
+	
 	  @owner = FactoryGirl.create(:user)
 	  @groups.each do |group| 
 	    group.owner_id = @owner.id

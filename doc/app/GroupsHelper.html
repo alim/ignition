@@ -66,6 +66,10 @@
     
     <li><a href="#method-i-get_owner_email">#get_owner_email</a>
     
+    <li><a href="#method-i-group_list">#group_list</a>
+    
+    <li><a href="#method-i-resource_list">#resource_list</a>
+    
   </ul>
 </nav>
 
@@ -87,6 +91,8 @@
 
   <ul class="link-list">
   
+    <li><a href="./Ability.html">Ability</a>
+  
     <li><a href="./Account.html">Account</a>
   
     <li><a href="./AccountsController.html">AccountsController</a>
@@ -105,6 +111,8 @@
   
     <li><a href="./GroupMailer.html">GroupMailer</a>
   
+    <li><a href="./GroupRelations.html">GroupRelations</a>
+  
     <li><a href="./GroupsController.html">GroupsController</a>
   
     <li><a href="./GroupsHelper.html">GroupsHelper</a>
@@ -114,6 +122,12 @@
     <li><a href="./HomeHelper.html">HomeHelper</a>
   
     <li><a href="./Oops.html">Oops</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectsController.html">ProjectsController</a>
+  
+    <li><a href="./ProjectsHelper.html">ProjectsHelper</a>
   
     <li><a href="./Subscription.html">Subscription</a>
   
@@ -193,6 +207,149 @@ address of the group owner or “None”.</p>
 
         
       </div><!-- get_owner_email-method -->
+
+    
+      <div id="method-i-group_list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">group_list</span><span
+            class="method-args">(params)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The <a href="GroupsHelper.html#method-i-group_list">#group_list</a> method
+will return a list of groups that are owned by the user. If no groups are
+found for the user then nil will be returned. The group list will return an
+array of hashes. Each array element will contain a hash of the form:</p>
+
+<p><a href="http://0">group_list</a> = { id: 1, related: true, label: 'name'}</p>
+
+<p>The id: will be the group.id. The related: key will be either true or false
+depending on whether the group is already related to the resource. The
+label: key will hold the name of the group.</p>
+
+<p>The method takes a parameter hash with the following keys:</p>
+<ul><li>
+<p>user: The owner of the groups</p>
+</li><li>
+<p>resource: The resource to which we want to relate the groups. This
+parameter will be used to see if the group is already related.</p>
+</li></ul>
+          
+
+          
+          <div class="method-source-code" id="group_list-source">
+            <pre><span class="ruby-comment"># File app/helpers/groups_helper.rb, line 32</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">group_list</span>(<span class="ruby-identifier">params</span>)
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-identifier">owned_groups</span> = <span class="ruby-constant">Group</span>.<span class="ruby-identifier">owned_groups</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:user</span>])
+<span class="ruby-identifier">resource</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:resource</span>]
+
+            <span class="ruby-ivar">@list_name</span> = <span class="ruby-string">'Available groups'</span>  
+            <span class="ruby-identifier">group_ids</span> = <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">group_ids</span>
+            <span class="ruby-identifier">group_list</span> = []
+            <span class="ruby-identifier">owned_groups</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">group</span><span class="ruby-operator">|</span>  
+              <span class="ruby-identifier">group_list</span> <span class="ruby-operator">&lt;&lt;</span> {<span class="ruby-identifier">id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">group</span>.<span class="ruby-identifier">id</span>, <span class="ruby-identifier">related</span><span class="ruby-operator">:</span> <span class="ruby-identifier">group_ids</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">group</span>.<span class="ruby-identifier">id</span>) , 
+                <span class="ruby-identifier">label</span><span class="ruby-operator">:</span> <span class="ruby-identifier">group</span>.<span class="ruby-identifier">name</span>}
+            <span class="ruby-keyword">end</span>
+            
+            <span class="ruby-keyword">return</span> <span class="ruby-identifier">group_list</span>       
+      
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Mongoid</span><span class="ruby-operator">::</span><span class="ruby-constant">Errors</span><span class="ruby-operator">::</span><span class="ruby-constant">DocumentNotFound</span>
+                  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+          <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span></pre>
+          </div><!-- group_list-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- group_list-method -->
+
+    
+      <div id="method-i-resource_list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">resource_list</span><span
+            class="method-args">(params)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The <a href="GroupsHelper.html#method-i-resource_list">#resource_list</a>
+method will set an instance variable called  @resources to hold an array of
+hashes. Each array element holds resource information in a hash. The user
+can select multiple  resources to share with the group. This instance
+variable is used  by the form partial. The example array of hash values are
+shown below:</p>
+
+<p>@<a href="http://0">resources</a> = { id: 1, related: true, label: ‘name’}</p>
+
+<p>The ‘related’ key/value is used to indicae whether the resource  is already
+related to the group. Its value can either be true or  false. The ‘label’
+key/value is text choice that will be displayed to the user.</p>
+
+<p>This method takes a parameter hash with the following key/value pairs</p>
+<ul><li>
+<p>class: A text value with the name of the resource class to list</p>
+</li><li>
+<p>group: The group object to which we want to relate the resource</p>
+</li><li>
+<p>user_id: The user_id to which the resource and group should belong</p>
+</li></ul>
+
+<p>You will need to customize this method to list the resources that you want
+to share with the group.</p>
+          
+
+          
+          <div class="method-source-code" id="resource_list-source">
+            <pre><span class="ruby-comment"># File app/helpers/groups_helper.rb, line 76</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">resource_list</span>(<span class="ruby-identifier">params</span>)
+  <span class="ruby-identifier">rclass</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:class</span>]
+  <span class="ruby-identifier">user_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_id</span>]
+  <span class="ruby-identifier">group</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:group</span>]
+  
+  <span class="ruby-ivar">@list_name</span> = <span class="ruby-node">&quot;Available #{rclass.capitalize.pluralize}&quot;</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">resources</span> = <span class="ruby-constant">Object</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">rclass</span>).<span class="ruby-identifier">where</span>(<span class="ruby-identifier">user_id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">user_id</span>)
+
+    <span class="ruby-comment"># Get list of resource ids assoicated with the group</span>
+    <span class="ruby-comment"># We construct the call to specify the resource class using</span>
+    <span class="ruby-comment"># the send and Object.const_get methods.</span>
+    <span class="ruby-identifier">related_resource_ids</span> = <span class="ruby-identifier">group</span>.<span class="ruby-identifier">send</span>(
+      <span class="ruby-constant">Object</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">rclass</span>).<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">+</span> <span class="ruby-string">'_ids'</span>)
+
+    <span class="ruby-identifier">resource_list</span> = []
+    <span class="ruby-identifier">resources</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">resource_label</span> = <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:name</span>) <span class="ruby-operator">?</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">id</span>.<span class="ruby-identifier">to_s</span>
+      
+      <span class="ruby-identifier">resource_list</span> <span class="ruby-operator">&lt;&lt;</span> {<span class="ruby-identifier">id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">id</span>, 
+        <span class="ruby-identifier">related</span><span class="ruby-operator">:</span> <span class="ruby-identifier">related_resource_ids</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">resource</span>.<span class="ruby-identifier">id</span>),
+        <span class="ruby-identifier">label</span><span class="ruby-operator">:</span> <span class="ruby-identifier">resource_label</span> }
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">resource_list</span>
+    
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Mongoid</span><span class="ruby-operator">::</span><span class="ruby-constant">Errors</span><span class="ruby-operator">::</span><span class="ruby-constant">DocumentNotFound</span>
+                <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- resource_list-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- resource_list-method -->
 
     
     </section><!-- public-instance-method-details -->

@@ -4,22 +4,38 @@
 # to a subset of system resources. 
 ########################################################################
 class GroupsController < ApplicationController
+  include GroupRelations
+  
+  # RESCUE SETTINGS ----------------------------------------------------
+	rescue_from Mongoid::Errors::DocumentNotFound, with: :missing_document
+  rescue_from CanCan::AccessDenied, with: :access_denied
 	
+	# BEFORE CALLBACKS ---------------------------------------------------
 	before_filter :authenticate_user!
 	
   before_action :set_group, only: [:show, :edit, :update, :notify, 
   	:remove_member, :destroy]
+  	
   before_action :set_group_class
 
+  # CANCAN AUTHORIZATION -----------------------------------------------
+  # This helper assumes that the instance variable @group is loaded
+  # or checks Class permissions
+  authorize_resource
+  
+  
 	######################################################################
   # GET /groups
   # GET /groups.json
   #
   # Standard listing of user groups and membership.
   ######################################################################
-  def index
-    @groups = Group.all
-
+  def index 
+    if current_user.role == User::SERVICE_ADMIN
+      @groups = Group.all
+    else
+      @groups = Group.where(owner_id: current_user.id)
+    end
   end
 
 	######################################################################
@@ -30,25 +46,12 @@ class GroupsController < ApplicationController
   # allows you to re-send the group invite to a given user.
   ######################################################################
   def show
-  	
-		if @group.present?
-		  begin
-			  @user = User.find(@group.owner_id)
-			  @owner_email = @user.email
-			
-			  # Build hash of users assoicated with the group
-			  @users = []
-			  @group.users.each do |user_id|
-				  user = User.find(user_id)
-				  @users << user
-			  end
-			rescue Mongoid::Errors::DocumentNotFound
-			  groups_alert("Unable to find User member information for group - #{@group.name}.")
-			end
-		else
-			groups_alert('Unable to find group information for group ##{params[:id]}.')
-		end
-  	
+	  @user = User.find(@group.owner_id)
+	  @owner_email = @user.email
+	
+	  # Get list of associated users and resources
+	  @users = @group.users
+	  @resources = @group.send(Group::RESOURCE_CLASS.downcase.pluralize)
   end
 
 	######################################################################
@@ -62,7 +65,6 @@ class GroupsController < ApplicationController
   ######################################################################
   def new
     @group = Group.new
-    owned_resources
   end
 
 	######################################################################
@@ -73,11 +75,6 @@ class GroupsController < ApplicationController
   # selected by the user for sharing with the group.
   ######################################################################
   def edit
-    if @group.present?
-  	  owned_resources
-  	else
-  	  groups_alert("We could not find the requested group - ##{params[:id]}")
-  	end
   end
 
 	######################################################################
@@ -95,8 +92,6 @@ class GroupsController < ApplicationController
 			@group.owner_id = current_user.id
 
 			if @group.save
-				# Relate selected resources
-				# relate_resources
 			
 				# Lookup membership list to see if they already exists
 				@members = lookup_users(@group)
@@ -104,7 +99,10 @@ class GroupsController < ApplicationController
 				# Create and notify group members of their inclusion into the group
 				create_notify(@members, @group) if @members.present?
 	          	  		
-	      relate_resources(params[:resource_ids])
+	      # Relate resources from injected methods in GroupRelations 
+			  # module. It relates the current set of resources to the group
+	      relate_resources(resource_ids: params[:group][:resource_ids],
+	        group: @group, class: Group::RESOURCE_CLASS)
 	      
 	      format.html { redirect_to @group, notice: 'Group was successfully created.' }
 	      format.json { render action: 'show', status: :created, location: @group }
@@ -124,28 +122,27 @@ class GroupsController < ApplicationController
   # remove group members and add new group members.
   ######################################################################
   def update
-    if @group.present?
-      respond_to do |format|
-        if @group.update_attributes(group_params)
-				  # Relate resources
-				  # relate_resources
-				
-				  # Lookup membership list to see if they already exists
-				  @members = lookup_users(@group)
+    respond_to do |format|
+      if @group.update_attributes(group_params)
+      
+			  # Relate resources from injected methods in GroupRelations 
+			  # module. It relates the current set of resources to the group
+			  relate_resources(resource_ids: params[:group][:resource_ids],
+	        group: @group, class: Group::RESOURCE_CLASS)
 			
-				  # Create and notify group members of their inclusion into the group
-				  create_notify(@members, @group) if @members.present?      
-        
-          format.html { redirect_to @group, notice: 'Group was successfully updated.' }
-          format.json { head :no_content }
-        else
-          @verrors = @group.errors.full_messages
-          format.html { render action: 'edit' }
-          format.json { render json: @group.errors, status: :unprocessable_entity }
-        end
+			  # Lookup membership list to see if they already exists
+			  @members = lookup_users(@group)
+		
+			  # Create and notify group members of their inclusion into the group
+			  create_notify(@members, @group) if @members.present?      
+      
+        format.html { redirect_to @group, notice: 'Group was successfully updated.' }
+        format.json { head :no_content }
+      else
+        @verrors = @group.errors.full_messages
+        format.html { render action: 'edit' }
+        format.json { render json: @group.errors, status: :unprocessable_entity }
       end
-    else
-      groups_alert("We could not find the requested group to update - group ##{params[:id]}")
     end
   end
 
@@ -159,18 +156,11 @@ class GroupsController < ApplicationController
   # unrelate_resources might not be needed.
   ######################################################################
   def destroy
-  	if @group.present?
-  		# Unrelate the group resources
-  		unrelate_resources
-  	
-		  @group.destroy
-		  respond_to do |format|
-		    format.html { redirect_to groups_url, notice: "Group was successfully deleted." }
-		    format.json { head :no_content }
-		  end
-    else
-    	groups_alert("Could not find requeted group to delete.")
-    end
+	  @group.destroy
+	  respond_to do |format|
+	    format.html { redirect_to groups_url, notice: "Group was successfully deleted." }
+	    format.json { head :no_content }
+	  end
   end
 
 	## CUSTOM ACTIONS ----------------------------------------------------
@@ -182,32 +172,19 @@ class GroupsController < ApplicationController
 	# to a single group member and re-display the show template.
 	######################################################################
 	def notify
-
-		if @group.present?
-		  
-		  begin
-		    respond_to do |format|	
-  #		  	authorize! :notify, @group, message: "You are not authorized to invite requested Group members."
-			    @user = @group.users.find(params[:uid])
-			
-			    if invite_member(@group, @user)			
-				    format.html { redirect_to @group, 
-				      notice: "Group invite resent to #{@user.email}."}
-				    format.json { head :no_content }
-			    else
-				    format.html { redirect_to @group, 
-				      alert: "Group invite faild to #{@user.email}."}
-				    format.json { head :no_content }
-			    end
-			  end
-		  rescue Mongoid::Errors::DocumentNotFound
-			  groups_alert("We could not find the requested group member.")
-    	end
-	  	
-  	else
-  		groups_alert("We could not find the requested group.")
-  	end
-    
+    respond_to do |format|	
+	    @user = @group.users.find(params[:uid])
+	
+	    if invite_member(@group, @user)			
+		    format.html { redirect_to @group, 
+		      notice: "Group invite resent to #{@user.email}."}
+		    format.json { head :no_content }
+	    else
+		    format.html { redirect_to @group, 
+		      alert: "Group invite faild to #{@user.email}."}
+		    format.json { head :no_content }
+	    end
+	  end    
 	end
 
 	######################################################################
@@ -216,27 +193,18 @@ class GroupsController < ApplicationController
 	# The remove_member method will remove one group member.
 	######################################################################
 	def remove_member
-	  if @group.present?
-		  begin
-        respond_to do |format|	
-  #		  	authorize! :remove_member, @group, 
-  #		  		message: "You are not authorized to remove requested Group members."
-        	
-        	# Delete the user association
-        	user = User.find(params[:uid])
-        	@group.users.delete(user)
-        	@group.reload
-		      
-      		format.html { redirect_to edit_group_url(@group), 
-      		  notice: "Group member #{user.email} has been removed from the group, but NOT deleted from the system."}
-      		format.json { head :no_content }
-    	  end
-		  rescue Mongoid::Errors::DocumentNotFound
-			  groups_alert("We could not find the requested group member." )
-		  end
-    else
-    	groups_alert("We could not find the requested group.")
-    end
+
+    respond_to do |format|
+    	# Delete the user association
+    	user = User.find(params[:uid])
+    	@group.users.delete(user)
+    	@group.reload
+      
+  		format.html { redirect_to edit_group_url(@group), 
+  		  notice: "Group member #{user.email} has been removed from the group, but NOT deleted from the system."}
+  		format.json { head :no_content }
+	  end
+
 	end
 
 
@@ -335,70 +303,6 @@ class GroupsController < ApplicationController
   	users
   end 
 
-	## -------------------------------------------------------------------
-	# Actions for updating resource relationships to the group.
-	# You will need to customize these methods to ensure that a group
-	# has access to the primary service resource.
-	## -------------------------------------------------------------------
-	
-	######################################################################
-	# The owned_resource method will set an instance variable called 
-	# @resources to hold an array of hashes. Each array element holds
-	# resource information in a hash. The user can select multiple 
-	# resources to share with the group. This instance variable is used 
-	# by the form partial. The example array of hash values are
-	# shown below:
-	#
-	# @resources[0] = { id: 1, related: true, label: 'name'} 
-	#
-	# The 'related' key/value is used to indicae whether the resource 
-	# is already related to the group. Its value can either be true or 
-	# false. The 'label' key/value is text choice that will be displayed
-	# to the user.
-	#
-	# This method also sets an instance variable for the @resource_name
-	# to the name of the resource you are relating to the group.
-	#
-	# You will need to customize this method to list the resources that
-	# you want to share with the group.
-	######################################################################
-	def owned_resources
-	
-		# Dummy resource name for demonstration purposes
-		@resource_name = 'Shared Resource'
-		
-		# Dummy resources variable for demonstration purposes
-		@resources = [
-			{id: 1, related: true, label: 'Resource 1'},
-			{id: 2, related: false, label: 'Resource 2'},
-			{id: 3, related: true, label: 'Resource 3'},
-		]
-		return @resources
-		
-	end
-	
-	######################################################################
-	# The relate_resources method will relate the requested resources to 
-	# the group. It is expecting an array of resource id's. It will then
-	# add each resource to the group.
-	#
-	# You will need to customize this method to relate the resource that
-	# you wish to use.
-	######################################################################
-	def relate_resources(resources)
-		return true
-	end
-	
-	######################################################################
-	# The unrelate_resources method will un-elate the all resources  
-	# from the group.
-	#
-	# You will need to customize this method to relate the resource that
-	# you wish to use.
-	######################################################################
-	def unrelate_resources
-		return true
-	end
 
 	## PRIVATE INSTANCE METHODS ------------------------------------------
 
@@ -411,11 +315,7 @@ class GroupsController < ApplicationController
   # * Catch the error if not found and set instance variable to nil
   ####################################################################
   def set_group
-  	begin
-    	@group = Group.find(params[:id])
-    rescue Mongoid::Errors::DocumentNotFound
-    	@group = nil
-    end
+  	@group = Group.find(params[:id])
   end
 
 	######################################################################
@@ -444,4 +344,14 @@ class GroupsController < ApplicationController
   		format.json { head :no_content }
   	end
   end 
+  
+  ######################################################################
+  # The missing_document method is the controller method for catching
+  # a Mongoid Mongoid::Errors::DocumentNotFound exception across all
+  # controller actions. User will be redirected to the groups#index view
+  ######################################################################
+  def missing_document(exception)
+    groups_alert("We are unable to find the requested #{exception.klass} - ID ##{exception.params[0]}")
+  end
+  
 end

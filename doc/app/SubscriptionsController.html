@@ -105,6 +105,8 @@
 
   <ul class="link-list">
   
+    <li><a href="./Ability.html">Ability</a>
+  
     <li><a href="./Account.html">Account</a>
   
     <li><a href="./AccountsController.html">AccountsController</a>
@@ -123,6 +125,8 @@
   
     <li><a href="./GroupMailer.html">GroupMailer</a>
   
+    <li><a href="./GroupRelations.html">GroupRelations</a>
+  
     <li><a href="./GroupsController.html">GroupsController</a>
   
     <li><a href="./GroupsHelper.html">GroupsHelper</a>
@@ -132,6 +136,12 @@
     <li><a href="./HomeHelper.html">HomeHelper</a>
   
     <li><a href="./Oops.html">Oops</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectsController.html">ProjectsController</a>
+  
+    <li><a href="./ProjectsHelper.html">ProjectsHelper</a>
   
     <li><a href="./Subscription.html">Subscription</a>
   
@@ -200,7 +210,7 @@ subscription plans being setup on the Stripe.com service for charging.</p>
 
           
           <div class="method-source-code" id="create-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 49</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 52</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>
   <span class="ruby-ivar">@subscription</span> = <span class="ruby-constant">Subscription</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">subscription_params</span>)
 
@@ -240,7 +250,7 @@ subscription plans being setup on the Stripe.com service for charging.</p>
 
           
           <div class="method-source-code" id="destroy-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 79</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 82</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
   <span class="ruby-ivar">@subscription</span>.<span class="ruby-identifier">destroy</span>
   <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
@@ -274,7 +284,7 @@ subscription plans being setup on the Stripe.com service for charging.</p>
 
           
           <div class="method-source-code" id="edit-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 44</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 47</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">edit</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- edit-source -->
@@ -303,7 +313,7 @@ subscription plans being setup on the Stripe.com service for charging.</p>
 
           
           <div class="method-source-code" id="index-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 15</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 18</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">index</span>
   <span class="ruby-ivar">@subscriptions</span> = <span class="ruby-constant">Subscription</span>.<span class="ruby-identifier">all</span>
 <span class="ruby-keyword">end</span></pre>
@@ -338,7 +348,7 @@ Subscriptions#show action.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 32</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 35</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@subscription</span> = <span class="ruby-constant">Subscription</span>.<span class="ruby-identifier">new</span>
   
@@ -375,7 +385,7 @@ Subscriptions#show action.</p>
 
           
           <div class="method-source-code" id="show-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 21</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 24</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">show</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- show-source -->
@@ -404,7 +414,7 @@ Subscriptions#show action.</p>
 
           
           <div class="method-source-code" id="update-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 65</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 68</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>
   <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">if</span> <span class="ruby-ivar">@subscription</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">subscription_params</span>)
