@@ -43,8 +43,14 @@ class ProjectsController < ApplicationController
     end
   end
 
+  ######################################################################
   # GET /projects/1
   # GET /projects/1.json
+  #
+  # The show method will show the project record. The corresponding
+  # view will show the owner name and list of user group names 
+  # associated with the project.
+  ######################################################################
   def show
   end
 
@@ -57,34 +63,62 @@ class ProjectsController < ApplicationController
   ######################################################################
   def new
     @project = Project.new
-    
   end
 
+  ######################################################################
   # GET /projects/1/edit
+  #
+  # The standard edit method will display the edit form and include the
+  # ability to select groups that will be given access to the project.
+  ######################################################################
   def edit
   end
 
+  ######################################################################
   # POST /projects
   # POST /projects.json
+  #
+  # The create method will create a new project and relate any selected
+  # groups that the user selected.
+  ######################################################################
   def create
     @project = Project.new(project_params)
-
+    @project.user = current_user
+    
     respond_to do |format|
       if @project.save
+        @project.group_relate(params[:project][:group_ids])
         format.html { redirect_to @project, notice: 'Project was successfully created.' }
         format.json { render action: 'show', status: :created, location: @project }
       else
+        @verrors = @project.errors.full_messages
         format.html { render action: 'new' }
         format.json { render json: @project.errors, status: :unprocessable_entity }
       end
     end
   end
 
+  ######################################################################
   # PATCH/PUT /projects/1
   # PATCH/PUT /projects/1.json
+  #
+  # The update will update the Project model object including any 
+  # changes to the group access privileges that the user selected.
+  ######################################################################
   def update
+  
+    # Check to see if the project group_ids hash is blank. This 
+    # indicates that the user has deselected all groups, so we
+    #  need to assign an empty array so the event relationship will
+    # be cleared.
+		params[:project][:group_ids] ||= []
+		
     respond_to do |format|
       if @project.update(project_params)
+      
+        @project.group_relate(params[:project][:group_ids])
+        @project.save
+        
         format.html { redirect_to @project, notice: 'Project was successfully updated.' }
         format.json { head :no_content }
       else
@@ -94,12 +128,18 @@ class ProjectsController < ApplicationController
     end
   end
 
+  ######################################################################
   # DELETE /projects/1
   # DELETE /projects/1.json
+  #
+  # The destroy project method will delete the project, but does not 
+  # destroy the related groups that were given access to the project.
+  ######################################################################
   def destroy
     @project.destroy
     respond_to do |format|
-      format.html { redirect_to projects_url }
+      format.html { redirect_to projects_url, notice:
+        "Project was successfully deleted." }
       format.json { head :no_content }
     end
   end
@@ -128,7 +168,38 @@ class ProjectsController < ApplicationController
   # white list through.
   ######################################################################
   def project_params
-    params.require(:project).permit(:name, :description, :user_id, :group_id)
+    params.require(:project).permit(:name, :description, :group_ids)
   end
+  
+  ######################################################################
+  # The display_alert_message will display an alert on the project#index
+  # page.
+  ######################################################################
+  def display_alert_msg(msg)
+    flash[:alert] = msg
+    redirect_to projects_url
+  end
+  
+  
+  ######################################################################
+  # The access_denied method is the controller method for catching
+  # a CanCan exception for an unauthorized action. The user will be
+  # redirected to the projects_url
+  ######################################################################
+  def access_denied(exception)
+    msg = "You are not authorized to access the requested #{exception.subject.class}."
+    display_alert_msg(msg)
+  end
+  
+  
+  ######################################################################
+  # The missing_document method is the controller method for catching
+  # a Mongoid Mongoid::Errors::DocumentNotFound exception across all
+  # controller actions. User will be redirected to the projects_url
+  ######################################################################
+  def missing_document(exception)
+    msg = "We are unable to find the requested #{exception.klass} - ID ##{exception.params[0]}"
+    display_alert_msg(msg)
+  end    
   
 end

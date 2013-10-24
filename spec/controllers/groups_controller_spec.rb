@@ -4,6 +4,7 @@ describe GroupsController do
 
   include_context 'user_setup'
   include_context 'group_setup'
+  include_context 'project_setup'
 
   # TEST SETUP ---------------------------------------------------------
   let(:find_one_user) {
@@ -12,12 +13,6 @@ describe GroupsController do
   
   let(:find_one_group) {
     @group = Group.where(owner_id: @owner.id).first
-  }
-  
-  let(:login_admin) {
-    sign_out @signed_in_user
-    signin_admin
-    subject.current_user.should_not be_nil
   }
   
   let(:login_as_group_owner){
@@ -30,6 +25,12 @@ describe GroupsController do
     sign_out @signed_in_user
     @signed_in_user = User.where(:id.ne => @owner.id).first
     sign_in @signed_in_user
+  }
+
+  let(:create_projects){
+      3.times.each do
+        FactoryGirl.create(:project, user: @signed_in_user)
+      end
   }
     
   before(:each) {
@@ -49,6 +50,7 @@ describe GroupsController do
 
   describe "GET index" do
     describe "Valid examples" do
+    
       it "Should return success" do
         get :index
         response.should be_success
@@ -60,10 +62,9 @@ describe GroupsController do
       end
       
       it "Should return the complete list of groups" do
-        ids = @groups.pluck(:id).sort
         get :index
         assigns(:groups).count.should_not eq(0)
-        assigns(:groups).pluck(:id).sort.should eq(ids)
+        assigns(:groups).pluck(:id).sort.should eq(@group_ids.sort)
       end
       
       it "should set the menu active flag for admin menu" do
@@ -465,6 +466,21 @@ describe GroupsController do
         end
       end
       
+      it "Should relate the correct resources to the group" do
+        create_projects
+        project_ids = Project.all.pluck(:id)
+        valid_group_params[:group][:resource_ids] = project_ids
+        post :create, valid_group_params
+        assigns(:group).project_ids.sort.should eq(project_ids.sort)
+      end
+      
+      it "Should relate the correct number of resources to the group" do
+        create_projects
+        project_ids = Project.all.pluck(:id)
+        valid_group_params[:group][:resource_ids] = project_ids
+        post :create, valid_group_params
+        assigns(:group).projects.count.should eq(project_ids.count)      
+      end      
     end # Valid create examples
     
     describe "Invalid create examples" do
@@ -513,7 +529,7 @@ describe GroupsController do
         post :create, valid_group_params
         assigns(:group).owner_id.should eq(@owner.id)
       end 
-    end # Edit authorization examples		   
+    end # Create authorization examples		   
   end
 
   # UPDATE ACTION TESTS ------------------------------------------------
@@ -535,6 +551,7 @@ describe GroupsController do
     }
     
     describe "Valid update examples" do
+
       it "Should redirect to Group#show path" do
         put :update, update_params   
         response.should redirect_to group_url(@group)
@@ -568,7 +585,23 @@ describe GroupsController do
           new_members.should match(/#{delivery.to}/)
         end
       end      
-        
+      
+      it "Should relate the correct resources to the group" do
+        create_projects
+        project_ids = Project.all.pluck(:id)
+        update_params[:group][:resource_ids] = project_ids
+        put :update, update_params
+        assigns(:group).project_ids.sort.should eq(project_ids.sort)
+      end
+      
+      it "Should relate the correct number of resources to the group" do
+        create_projects
+        project_ids = Project.all.pluck(:id)
+        update_params[:group][:resource_ids] = project_ids
+        put :update, update_params
+        assigns(:group).projects.count.should eq(project_ids.count)      
+      end
+      
     end # Valid update examples
     
     describe "Invalid update examples" do
@@ -707,7 +740,19 @@ describe GroupsController do
       end
       
       it "Should unrelate all group resources" do
-        pending "Resource development"
+        # Associate resources to the group
+        project = FactoryGirl.create(:project, user: @signed_in_user)
+        @group.send(Group::RESOURCE_CLASS.downcase.pluralize) << project
+      
+        resources = @group.send(Group::RESOURCE_CLASS.downcase.pluralize)
+        rcount = resources.count
+        rcount.should_not eq(0)
+        
+        expect{
+          delete :destroy, destroy_params
+        }.to_not change(Object.const_get(Group::RESOURCE_CLASS), :count).by(-1)
+        
+        Object.const_get(Group::RESOURCE_CLASS).count.should eq(rcount)
       end
     end # Valid examples
     

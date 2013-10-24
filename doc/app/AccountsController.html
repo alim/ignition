@@ -76,6 +76,8 @@
     
     <li><a href="#method-i-edit">#edit</a>
     
+    <li><a href="#method-i-missing_document">#missing_document</a>
+    
     <li><a href="#method-i-new">#new</a>
     
     <li><a href="#method-i-set_user">#set_user</a>
@@ -103,6 +105,8 @@
 
   <ul class="link-list">
   
+    <li><a href="./Ability.html">Ability</a>
+  
     <li><a href="./Account.html">Account</a>
   
     <li><a href="./AccountsController.html">AccountsController</a>
@@ -121,6 +125,8 @@
   
     <li><a href="./GroupMailer.html">GroupMailer</a>
   
+    <li><a href="./GroupRelations.html">GroupRelations</a>
+  
     <li><a href="./GroupsController.html">GroupsController</a>
   
     <li><a href="./GroupsHelper.html">GroupsHelper</a>
@@ -130,6 +136,12 @@
     <li><a href="./HomeHelper.html">HomeHelper</a>
   
     <li><a href="./Oops.html">Oops</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectsController.html">ProjectsController</a>
+  
+    <li><a href="./ProjectsHelper.html">ProjectsHelper</a>
   
     <li><a href="./Subscription.html">Subscription</a>
   
@@ -195,32 +207,24 @@ customer_id and set the status of the account to ACTIVE</p>
 
           
           <div class="method-source-code" id="create-source">
-            <pre><span class="ruby-comment"># File app/controllers/accounts_controller.rb, line 39</span>
+            <pre><span class="ruby-comment"># File app/controllers/accounts_controller.rb, line 46</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>
   <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">present?</span>
-              
-      <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span> = <span class="ruby-constant">Account</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">nil?</span>
-       
-      <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">save_with_stripe</span>(<span class="ruby-identifier">params</span>)
-        <span class="ruby-comment"># We saved the account, now redirect to the show page</span>
-        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">user_url</span>(<span class="ruby-ivar">@user</span>), <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">'Account was successfully created.'</span> }
+    <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span> = <span class="ruby-constant">Account</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">nil?</span>
 
-      <span class="ruby-keyword">else</span>
-        <span class="ruby-ivar">@verrors</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">full_messages</span>
-        <span class="ruby-ivar">@account</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>
-        <span class="ruby-ivar">@account</span>.<span class="ruby-identifier">stripe_cc_token</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">errors</span>[<span class="ruby-value">:customer_id</span>].<span class="ruby-identifier">present?</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">:</span>
-          <span class="ruby-identifier">params</span>[<span class="ruby-value">:account</span>][<span class="ruby-value">:stripe_cc_token</span>]
-
-        <span class="ruby-ivar">@account</span>.<span class="ruby-identifier">cardholder_name</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:cardholder_name</span>]
-        <span class="ruby-ivar">@account</span>.<span class="ruby-identifier">cardholder_email</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:cardholder_email</span>]
-
-        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">action</span><span class="ruby-operator">:</span> <span class="ruby-value">:new</span> }
-      <span class="ruby-keyword">end</span>
-      
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">save_with_stripe</span>(<span class="ruby-identifier">params</span>)
+      <span class="ruby-comment"># We saved the account, now redirect to the show page</span>
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">user_url</span>(<span class="ruby-ivar">@user</span>), <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">'Account was successfully created.'</span> }
     <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] = <span class="ruby-node">&quot;We could not find the requested User account ##{params[:user_id]}&quot;</span>
-      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> {<span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">admin_oops_url</span>}
+      <span class="ruby-ivar">@verrors</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">full_messages</span>
+      <span class="ruby-ivar">@account</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>
+      <span class="ruby-ivar">@account</span>.<span class="ruby-identifier">stripe_cc_token</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">errors</span>[<span class="ruby-value">:customer_id</span>].<span class="ruby-identifier">present?</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">:</span>
+        <span class="ruby-identifier">params</span>[<span class="ruby-value">:account</span>][<span class="ruby-value">:stripe_cc_token</span>]
+
+      <span class="ruby-ivar">@account</span>.<span class="ruby-identifier">cardholder_name</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:cardholder_name</span>]
+      <span class="ruby-ivar">@account</span>.<span class="ruby-identifier">cardholder_email</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:cardholder_email</span>]
+
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">action</span><span class="ruby-operator">:</span> <span class="ruby-value">:new</span> }
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
@@ -253,21 +257,32 @@ and destory the customer record on the stripe.com service.</p>
 
           
           <div class="method-source-code" id="destroy-source">
-            <pre><span class="ruby-comment"># File app/controllers/accounts_controller.rb, line 136</span>
+            <pre><span class="ruby-comment"># File app/controllers/accounts_controller.rb, line 129</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@account</span>.<span class="ruby-identifier">present?</span>
-    <span class="ruby-keyword">begin</span>
-      <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">destroy</span>
-      <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">reload</span>
-      <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">users_url</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;User credit card deleted.&quot;</span>
-    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">StripeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">stripe_error</span>
-      <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] = <span class="ruby-node">&quot;Error deleting credit card account - #{stripe_error.message}&quot;</span>
-      <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">users_url</span>
-    <span class="ruby-keyword">end</span>
+  <span class="ruby-comment"># Added the following check, because we could not CANCAN ability to</span>
+  <span class="ruby-comment"># operate correctly.</span>
+  <span class="ruby-keyword">if</span> (<span class="ruby-ivar">@user</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">role</span> <span class="ruby-operator">==</span> <span class="ruby-constant">User</span><span class="ruby-operator">::</span><span class="ruby-constant">CUSTOMER</span>)
+  
+    <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] = <span class="ruby-string">&quot;You are not authorized to access the requested User.&quot;</span>
+    <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">admin_oops_url</span>
+    
   <span class="ruby-keyword">else</span>
-    <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] = <span class="ruby-string">&quot;Could not find user credit card account to delete.&quot;</span>
-    <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">users_url</span>
-  <span class="ruby-keyword">end</span>  
+  
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@account</span>.<span class="ruby-identifier">present?</span>
+      <span class="ruby-keyword">begin</span>
+        <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">destroy</span>
+        <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">users_url</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;User credit card deleted.&quot;</span>
+      <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">StripeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">stripe_error</span>
+        <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] = <span class="ruby-node">&quot;Error deleting credit card account - #{stripe_error.message}&quot;</span>
+        <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">user_url</span>(<span class="ruby-ivar">@user</span>)
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] = <span class="ruby-string">&quot;Could not find user credit card account to delete.&quot;</span>
+      <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">user_url</span>(<span class="ruby-ivar">@user</span>)
+    <span class="ruby-keyword">end</span>    
+     
+  <span class="ruby-keyword">end</span>
+  
 <span class="ruby-keyword">end</span></pre>
           </div><!-- destroy-source -->
           
@@ -298,23 +313,18 @@ record for credit card updates.</p>
 
           
           <div class="method-source-code" id="edit-source">
-            <pre><span class="ruby-comment"># File app/controllers/accounts_controller.rb, line 74</span>
+            <pre><span class="ruby-comment"># File app/controllers/accounts_controller.rb, line 73</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">edit</span>
   <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">present?</span> 
-      <span class="ruby-keyword">if</span> <span class="ruby-ivar">@account</span>.<span class="ruby-identifier">present?</span>
-        <span class="ruby-keyword">if</span> <span class="ruby-ivar">@account</span>.<span class="ruby-identifier">get_customer</span>
-          <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span>
-        <span class="ruby-keyword">else</span>
-          <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] = <span class="ruby-string">&quot;Stripe error - could not get customer data.&quot;</span>
-          <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> {<span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">user_url</span>(<span class="ruby-ivar">@user</span>)}
-        <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@account</span>.<span class="ruby-identifier">present?</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-ivar">@account</span>.<span class="ruby-identifier">get_customer</span>
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span>
       <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] = <span class="ruby-node">&quot;We could not find the requested account for User ##{params[:user_id]}&quot;</span>
-        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> {<span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">admin_oops_url</span>}
+        <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] = <span class="ruby-string">&quot;Stripe error - could not get customer data.&quot;</span>
+        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> {<span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">user_url</span>(<span class="ruby-ivar">@user</span>)}
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] = <span class="ruby-node">&quot;We could not find the requested User account ##{params[:user_id]}&quot;</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] = <span class="ruby-string">&quot;We could not find the requested credit card account.&quot;</span>
       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> {<span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">admin_oops_url</span>}
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>  
@@ -349,22 +359,17 @@ the  admin_oops_url with a corresponding error message.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File app/controllers/accounts_controller.rb, line 14</span>
+            <pre><span class="ruby-comment"># File app/controllers/accounts_controller.rb, line 26</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">new</span>
   <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">present?</span> 
-      <span class="ruby-keyword">begin</span>
-        <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span> = <span class="ruby-constant">Account</span>.<span class="ruby-identifier">new</span>
-        <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">reload</span>
-        <span class="ruby-ivar">@account</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>
-              <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span> = <span class="ruby-constant">Account</span>.<span class="ruby-identifier">new</span>          
+      <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">reload</span>
+      <span class="ruby-ivar">@account</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span>
       <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">StripeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">stripe_error</span>
-        <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] = <span class="ruby-node">&quot;Stripe error associated with account error = #{stripe_error.message}&quot;</span>
-        <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> {<span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">user_url</span>(<span class="ruby-ivar">@user</span>)}
-      <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] = <span class="ruby-node">&quot;We could not find the requested User account ##{params[:user_id]}&quot;</span>
-      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> {<span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">admin_oops_url</span>}
+      <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] = <span class="ruby-node">&quot;Stripe error associated with account error = #{stripe_error.message}&quot;</span>
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> {<span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">user_url</span>(<span class="ruby-ivar">@user</span>)}
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
@@ -399,10 +404,10 @@ record.</p>
 
           
           <div class="method-source-code" id="update-source">
-            <pre><span class="ruby-comment"># File app/controllers/accounts_controller.rb, line 103</span>
+            <pre><span class="ruby-comment"># File app/controllers/accounts_controller.rb, line 97</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>
   <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@account</span>.<span class="ruby-identifier">present?</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@account</span>.<span class="ruby-identifier">present?</span>
 
       <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">update_with_stripe</span>(<span class="ruby-identifier">params</span>)
         <span class="ruby-comment"># We saved the account, now redirect to the show page</span>
@@ -413,7 +418,6 @@ record.</p>
         <span class="ruby-ivar">@account</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>
         <span class="ruby-ivar">@account</span>.<span class="ruby-identifier">stripe_cc_token</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">errors</span>[<span class="ruby-value">:customer_id</span>].<span class="ruby-identifier">present?</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">nil</span> <span class="ruby-operator">:</span>
           <span class="ruby-identifier">params</span>[<span class="ruby-value">:account</span>][<span class="ruby-value">:stripe_cc_token</span>]
-
         <span class="ruby-ivar">@account</span>.<span class="ruby-identifier">cardholder_name</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:cardholder_name</span>]
         <span class="ruby-ivar">@account</span>.<span class="ruby-identifier">cardholder_email</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:cardholder_email</span>]
 
@@ -421,8 +425,8 @@ record.</p>
       <span class="ruby-keyword">end</span>
       
     <span class="ruby-keyword">else</span>
-      <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] = <span class="ruby-node">&quot;We could not find the requested User account ##{params[:user_id]}&quot;</span>
-      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> {<span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">users_url</span>}
+      <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] = <span class="ruby-string">&quot;We could not find the requested credit card account.&quot;</span>
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> {<span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">user_url</span>(<span class="ruby-ivar">@user</span>)}
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
@@ -442,6 +446,43 @@ record.</p>
       <h3 class="section-header">Protected Instance Methods</h3>
 
     
+      <div id="method-i-missing_document" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">missing_document</span><span
+            class="method-args">(exception)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The <a
+href="AccountsController.html#method-i-missing_document">#missing_document</a>
+method is the controller method for catching a Mongoid
+Mongoid::Errors::DocumentNotFound exception across all controller actions.</p>
+          
+
+          
+          <div class="method-source-code" id="missing_document-source">
+            <pre><span class="ruby-comment"># File app/controllers/accounts_controller.rb, line 182</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">missing_document</span>(<span class="ruby-identifier">exception</span>)
+        <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span> 
+          <span class="ruby-identifier">msg</span> = <span class="ruby-node">&quot;We are unable to find the requested User account - ID ##{exception.params[0]}&quot;</span>
+              <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">admin_oops_url</span>, <span class="ruby-identifier">alert</span><span class="ruby-operator">:</span> <span class="ruby-identifier">msg</span> }
+              <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">head</span> <span class="ruby-value">:no_content</span> }
+      <span class="ruby-keyword">end</span>  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- missing_document-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- missing_document-method -->
+
+    
       <div id="method-i-set_user" class="method-detail ">
         
         <div class="method-heading">
@@ -458,24 +499,21 @@ the following actions:</p>
 <ul><li>
 <p>Try to lookup the resource</p>
 </li><li>
-<p>Catch the error if not found and set instance variable to nil</p>
+<p>Catch the error if not found and redirect with error message</p>
 </li></ul>
           
 
           
           <div class="method-source-code" id="set_user-source">
-            <pre><span class="ruby-comment"># File app/controllers/accounts_controller.rb, line 162</span>
+            <pre><span class="ruby-comment"># File app/controllers/accounts_controller.rb, line 166</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">set_user</span>
-  <span class="ruby-keyword">begin</span>
-    <span class="ruby-ivar">@user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:user_id</span>])
- 
-    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">id</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>]
-      <span class="ruby-ivar">@account</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span> 
-    <span class="ruby-keyword">else</span>
-      <span class="ruby-ivar">@account</span> = <span class="ruby-keyword">nil</span>
-    <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Mongoid</span><span class="ruby-operator">::</span><span class="ruby-constant">Errors</span><span class="ruby-operator">::</span><span class="ruby-constant">DocumentNotFound</span>
-    <span class="ruby-ivar">@user</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:user_id</span>])
+  <span class="ruby-identifier">authorize!</span> <span class="ruby-value">:update</span>, <span class="ruby-ivar">@user</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">id</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>]
+    <span class="ruby-ivar">@account</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span> 
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@account</span> = <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- set_user-source -->

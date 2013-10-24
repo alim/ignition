@@ -1,4 +1,7 @@
 class ApplicationController < ActionController::Base
+  # Include module for displaying alert messages
+  include Oops
+
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
@@ -87,11 +90,8 @@ class ApplicationController < ActionController::Base
   # redirected to the admin_oops_url
   ######################################################################
   def access_denied(exception)
-    respond_to do |format|
-      msg = "You are not authorized to access the requested #{exception.subject.class}."
-      format.html { redirect_to admin_oops_url, alert: msg }
-      format.json { head :no_content }
-    end
+    msg = "You are not authorized to access the requested #{exception.subject.class}."
+    display_alert(message: msg, target: Oops::ADMIN)
   end
   
   
@@ -101,10 +101,7 @@ class ApplicationController < ActionController::Base
   # controller actions. User will be redirected to the groups#index view
   ######################################################################
   def missing_document(exception)
-    respond_to do |format|
-      msg = "We are unable to find the requested #{exception.klass} - ID ##{exception.params[0]}"
-      format.html { redirect_to admin_oops_url, alert: msg }
-      format.json { head :no_content }
-    end
+    msg = "We are unable to find the requested #{exception.klass} - ID ##{exception.params[0]}"
+    display_alert(message: msg, target: Oops::ADMIN)
   end  
 end

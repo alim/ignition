@@ -63,14 +63,26 @@
   
 </nav>
 
-    
+    <!-- Included Modules -->
+<nav id="includes-section" class="section">
+  <h3 class="section-header">Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><a class="include" href="Oops.html">Oops</a>
+  
+  
+  </ul>
+</nav>
+
     <!-- Method Quickref -->
 <nav id="method-list-section" class="section">
   <h3 class="section-header">Methods</h3>
 
   <ul class="link-list">
     
-    <li><a href="#method-i-admin_alert">#admin_alert</a>
+    <li><a href="#method-i-access_denied">#access_denied</a>
     
     <li><a href="#method-i-after_sign_in_path_for">#after_sign_in_path_for</a>
     
@@ -79,6 +91,8 @@
     <li><a href="#method-i-configure_permitted_parameters">#configure_permitted_parameters</a>
     
     <li><a href="#method-i-layout_by_resource">#layout_by_resource</a>
+    
+    <li><a href="#method-i-missing_document">#missing_document</a>
     
     <li><a href="#method-i-set_menu_active">#set_menu_active</a>
     
@@ -103,6 +117,8 @@
 
   <ul class="link-list">
   
+    <li><a href="./Ability.html">Ability</a>
+  
     <li><a href="./Account.html">Account</a>
   
     <li><a href="./AccountsController.html">AccountsController</a>
@@ -121,6 +137,8 @@
   
     <li><a href="./GroupMailer.html">GroupMailer</a>
   
+    <li><a href="./GroupRelations.html">GroupRelations</a>
+  
     <li><a href="./GroupsController.html">GroupsController</a>
   
     <li><a href="./GroupsHelper.html">GroupsHelper</a>
@@ -130,6 +148,12 @@
     <li><a href="./HomeHelper.html">HomeHelper</a>
   
     <li><a href="./Oops.html">Oops</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectsController.html">ProjectsController</a>
+  
+    <li><a href="./ProjectsHelper.html">ProjectsHelper</a>
   
     <li><a href="./Subscription.html">Subscription</a>
   
@@ -176,11 +200,11 @@
       <h3 class="section-header">Public Instance Methods</h3>
 
     
-      <div id="method-i-admin_alert" class="method-detail ">
+      <div id="method-i-access_denied" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">admin_alert</span><span
-            class="method-args">(msg)</span>
+          <span class="method-name">access_denied</span><span
+            class="method-args">(exception)</span>
           <span class="method-click-advice">click to toggle source</span>
         </div>
         
@@ -188,28 +212,26 @@
         <div class="method-description">
           
           <p>The <a
-href="ApplicationController.html#method-i-admin_alert">#admin_alert</a>
-method will display an alert message and redirect the user to the adminoops
-view.</p>
+href="ApplicationController.html#method-i-access_denied">#access_denied</a>
+method is the controller method for catching a CanCan exception for an
+unauthorized action. The user will be redirected to the admin_oops_url</p>
           
 
           
-          <div class="method-source-code" id="admin_alert-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 88</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">admin_alert</span>(<span class="ruby-identifier">msg</span>)
-      <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span> 
-              <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">admin_oops_url</span>, <span class="ruby-identifier">alert</span><span class="ruby-operator">:</span> <span class="ruby-identifier">msg</span> }
-              <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">head</span> <span class="ruby-value">:no_content</span> }
-      <span class="ruby-keyword">end</span>
+          <div class="method-source-code" id="access_denied-source">
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 92</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">access_denied</span>(<span class="ruby-identifier">exception</span>)
+  <span class="ruby-identifier">msg</span> = <span class="ruby-node">&quot;You are not authorized to access the requested #{exception.subject.class}.&quot;</span>
+  <span class="ruby-identifier">display_alert</span>(<span class="ruby-identifier">message</span><span class="ruby-operator">:</span> <span class="ruby-identifier">msg</span>, <span class="ruby-identifier">target</span><span class="ruby-operator">:</span> <span class="ruby-constant">Oops</span><span class="ruby-operator">::</span><span class="ruby-constant">ADMIN</span>)
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- admin_alert-source -->
+          </div><!-- access_denied-source -->
           
         </div>
 
         
 
         
-      </div><!-- admin_alert-method -->
+      </div><!-- access_denied-method -->
 
     
       <div id="method-i-after_sign_in_path_for" class="method-detail ">
@@ -232,7 +254,7 @@ information.</p>
 
           
           <div class="method-source-code" id="after_sign_in_path_for-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 27</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 30</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">after_sign_in_path_for</span>(<span class="ruby-identifier">resource</span>)
         <span class="ruby-keyword">if</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">User</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">resource</span>.<span class="ruby-identifier">first_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">'*None*'</span> <span class="ruby-operator">||</span> 
                 <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">last_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">'*None*'</span>)
@@ -269,7 +291,7 @@ have signed out the system.</p>
 
           
           <div class="method-source-code" id="after_sign_out_path_for-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 18</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 21</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">after_sign_out_path_for</span>(<span class="ruby-identifier">resource</span>)
         <span class="ruby-identifier">root_url</span>
 <span class="ruby-keyword">end</span></pre>
@@ -301,7 +323,7 @@ href="README_rdoc.html">README</a> file for more details.</p>
 
           
           <div class="method-source-code" id="configure_permitted_parameters-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 59</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 62</span>
       <span class="ruby-keyword">def</span> <span class="ruby-identifier">configure_permitted_parameters</span>
   <span class="ruby-identifier">devise_parameter_sanitizer</span>.<span class="ruby-identifier">for</span>(<span class="ruby-value">:account_update</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">permit</span>(
       <span class="ruby-value">:email</span>, <span class="ruby-value">:password</span>, <span class="ruby-value">:password_confirmation</span>, <span class="ruby-value">:current_password</span>,
@@ -339,7 +361,7 @@ use.</p>
 
           
           <div class="method-source-code" id="layout_by_resource-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 74</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 77</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">layout_by_resource</span>
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">HomeController</span>)
       <span class="ruby-string">&quot;home&quot;</span>
@@ -357,6 +379,41 @@ use.</p>
 
         
       </div><!-- layout_by_resource-method -->
+
+    
+      <div id="method-i-missing_document" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">missing_document</span><span
+            class="method-args">(exception)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The <a
+href="ApplicationController.html#method-i-missing_document">#missing_document</a>
+method is the controller method for catching a Mongoid
+Mongoid::Errors::DocumentNotFound exception across all controller actions.
+<a href="User.html">User</a> will be redirected to the groupsindex view</p>
+          
+
+          
+          <div class="method-source-code" id="missing_document-source">
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 103</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">missing_document</span>(<span class="ruby-identifier">exception</span>)
+  <span class="ruby-identifier">msg</span> = <span class="ruby-node">&quot;We are unable to find the requested #{exception.klass} - ID ##{exception.params[0]}&quot;</span>
+  <span class="ruby-identifier">display_alert</span>(<span class="ruby-identifier">message</span><span class="ruby-operator">:</span> <span class="ruby-identifier">msg</span>, <span class="ruby-identifier">target</span><span class="ruby-operator">:</span> <span class="ruby-constant">Oops</span><span class="ruby-operator">::</span><span class="ruby-constant">ADMIN</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- missing_document-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- missing_document-method -->
 
     
       <div id="method-i-set_menu_active" class="method-detail ">
@@ -378,7 +435,7 @@ CSS class to active.</p>
 
           
           <div class="method-source-code" id="set_menu_active-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 43</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 46</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">set_menu_active</span>
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Devise</span><span class="ruby-operator">::</span><span class="ruby-constant">RegistrationsController</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">user_signed_in?</span> <span class="ruby-operator">&amp;&amp;</span> 
     <span class="ruby-identifier">params</span>[<span class="ruby-value">:action</span>] <span class="ruby-operator">==</span> <span class="ruby-string">'edit'</span>

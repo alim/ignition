@@ -4,7 +4,8 @@
 # to a subset of system resources. 
 ########################################################################
 class GroupsController < ApplicationController
-
+  include GroupRelations
+  
   # RESCUE SETTINGS ----------------------------------------------------
 	rescue_from Mongoid::Errors::DocumentNotFound, with: :missing_document
   rescue_from CanCan::AccessDenied, with: :access_denied
@@ -48,12 +49,10 @@ class GroupsController < ApplicationController
 	  @user = User.find(@group.owner_id)
 	  @owner_email = @user.email
 	
-	  # Build hash of users assoicated with the group
-	  @users = []
-	  @group.users.each do |user_id|
-		  user = User.find(user_id)
-		  @users << user
-	  end
+	  # Get list of associated users and resources
+	  @users = @group.users
+	  @resources = @group.send(Group::RESOURCE_CLASS.downcase.pluralize)
+puts "\n\n[show] Resources.count = #{@resources.count} and name= #{@resources.name}\n\n"	  
   end
 
 	######################################################################
@@ -67,7 +66,6 @@ class GroupsController < ApplicationController
   ######################################################################
   def new
     @group = Group.new
-    owned_resources
   end
 
 	######################################################################
@@ -78,7 +76,6 @@ class GroupsController < ApplicationController
   # selected by the user for sharing with the group.
   ######################################################################
   def edit
-  	owned_resources
   end
 
 	######################################################################
@@ -103,8 +100,10 @@ class GroupsController < ApplicationController
 				# Create and notify group members of their inclusion into the group
 				create_notify(@members, @group) if @members.present?
 	          	  		
-	      # Relate the selected resources
-	      relate_resources(params[:resource_ids])
+	      # Relate resources from injected methods in GroupRelations 
+			  # module. It relates the current set of resources to the group
+	      relate_resources(resource_ids: params[:group][:resource_ids],
+	        group: @group, class: Group::RESOURCE_CLASS)
 	      
 	      format.html { redirect_to @group, notice: 'Group was successfully created.' }
 	      format.json { render action: 'show', status: :created, location: @group }
@@ -127,8 +126,10 @@ class GroupsController < ApplicationController
     respond_to do |format|
       if @group.update_attributes(group_params)
       
-			  # Relate resources
-			  relate_resources(params[:resource_ids])
+			  # Relate resources from injected methods in GroupRelations 
+			  # module. It relates the current set of resources to the group
+			  relate_resources(resource_ids: params[:group][:resource_ids],
+	        group: @group, class: Group::RESOURCE_CLASS)
 			
 			  # Lookup membership list to see if they already exists
 			  @members = lookup_users(@group)
@@ -333,20 +334,20 @@ class GroupsController < ApplicationController
 	# You will need to customize this method to list the resources that
 	# you want to share with the group.
 	######################################################################
-	def owned_resources
-	
-		# Dummy resource name for demonstration purposes
-		@resource_name = 'Shared Resource'
-		
-		# Dummy resources variable for demonstration purposes
-		@resources = [
-			{id: 1, related: true, label: 'Resource 1'},
-			{id: 2, related: false, label: 'Resource 2'},
-			{id: 3, related: true, label: 'Resource 3'},
-		]
-		return @resources
-		
-	end
+#	def owned_resources
+#	
+#		# Dummy resource name for demonstration purposes
+#		@resource_name = 'Shared Resource'
+#		
+#		# Dummy resources variable for demonstration purposes
+#		@resources = [
+#			{id: 1, related: true, label: 'Resource 1'},
+#			{id: 2, related: false, label: 'Resource 2'},
+#			{id: 3, related: true, label: 'Resource 3'},
+#		]
+#		return @resources
+#		
+#	end
 	
 	######################################################################
 	# The relate_resources method will relate the requested resources to 
@@ -356,9 +357,9 @@ class GroupsController < ApplicationController
 	# You will need to customize this method to relate the resource that
 	# you wish to use.
 	######################################################################
-	def relate_resources(resources)
-		return true
-	end
+#	def relate_resources(resources)
+#		return true
+#	end
 	
 	######################################################################
 	# The unrelate_resources method will un-elate the all resources  

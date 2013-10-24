@@ -1,7 +1,13 @@
 <%- model_class = Group -%>
 <div class="page-header">
   <h1>Group</h1>
+  <p>
+    The user group definition is shown below. You can update the
+    group membership by selecting the <em>Edit</em> button at the
+    bottom on the page. 
+  </p>
 </div>
+<%= render partial: 'shared/flash', locals: { flash: flash } %>  
 
 <dl class="dl-horizontal">
   <dt><strong>Name:</strong></dt>
@@ -13,31 +19,53 @@
 </dl>
 
 <h3>Users Associated with the Group</h3>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>First name</th>
-      <th>Last name</th>
-      <th>Email</th>
-      <th>Re-invite</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @users.each do |user| %>
+
+<% if @users.present? %>
+  <table class="table table-striped">
+    <thead>
       <tr>
-        <td><%= user.first_name %></td>
-        <td><%= user.last_name %></td>
-        <td><%= user.email %></td>
-        <td>
-  				<%= form_tag notify_group_url, method: :put do %>
-  					<%= hidden_field_tag :uid, user.id %>
-  					<%= submit_tag 'Send Invite', class: "btn btn-mini" %>
-  				<% end %>
-  			</td>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Email</th>
+        <th>Re-invite</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= user.first_name %></td>
+          <td><%= user.last_name %></td>
+          <td><%= user.email %></td>
+          <td>
+    				<%= form_tag notify_group_url, method: :put do %>
+    					<%= hidden_field_tag :uid, user.id %>
+    					<%= submit_tag 'Send Invite', class: "btn btn-mini" %>
+    				<% end %>
+    			</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>
+    There are no users associated with this group.
+  </p>
+<% end %>
+
+
+<h3>Related Resources</h3>
+<% if @resources.present? %>
+  <p>
+    The resources that are accessible by this group are listed in the
+    table below:
+  </p>
+  <%= render partial: 'resource_list', locals: { resources: @resources } %> 
+<% else %>
+  <p>
+    There are no resources associated with this group.
+  </p>
+<% end %>
+
 
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),

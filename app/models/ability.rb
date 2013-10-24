@@ -44,7 +44,6 @@ class Ability
   # * user - the user object to which access would be granted
   ######################################################################
   def check_ids(resource, user)
-
 		if resource.user.id == user.id
 			return true
 		else

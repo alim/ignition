@@ -27,4 +27,11 @@ shared_context 'user_setup' do
 		@signed_in_user = FactoryGirl.create(:user)
 		sign_in @signed_in_user
 	}
+	
+	# Logout of current user and login as an administrator
+  let(:login_admin) {
+    sign_out @signed_in_user
+    signin_admin
+    subject.current_user.should_not be_nil
+  }	
 end
