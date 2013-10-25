@@ -16,6 +16,7 @@ describe Group do
   
   after(:each) {
     User.destroy_all
+    Group.destroy_all
   }
   
   # ATTRIBUTE TESTS ----------------------------------------------------
@@ -157,4 +158,32 @@ describe Group do
       end            
     end
   end # Group relationships
+  
+  # SCOPE TESTS --------------------------------------------------------
+  describe "Scope tests" do
+    before(:each) { 
+      multi_groups_multi_users
+      multiple_groups
+    }
+    
+    describe "owned_groups scope" do
+      it "should find the correct number of groups" do
+        groups = Group.owned_groups(@owner)    
+        groups.count.should eq(@group_count)
+      end
+      
+      it "should find only groups associated with a given user" do
+        groups = Group.owned_groups(@owner)
+        groups.each do |group|
+          group.owner_id.should eq(@owner.id)
+        end
+      end
+      
+      it "should not find any records for non-owner" do
+        user = User.where(:id.ne => @owner.id).first
+        groups = Group.owned_groups(user)
+        groups.should be_empty
+      end
+    end
+  end
 end

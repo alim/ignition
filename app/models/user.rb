@@ -79,8 +79,11 @@ class User
   ## RELATIONSHIPS -----------------------------------------------------
   has_and_belongs_to_many :groups, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
+  embeds_one :account 
   
-  embeds_one :account
+  ## RESOURCES MANAGED BY A USER
+  has_many :projects, dependent: :destroy  # Example primary resource
+
   
   ## QUERY SCOPES ------------------------------------------------------
   scope :by_email, ->(email){ where(email: /^.*#{email}.*/i) }

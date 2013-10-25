@@ -1,4 +1,6 @@
 Ignition::Application.routes.draw do
+  resources :projects
+
   resources :subscriptions
 
   resources :groups do

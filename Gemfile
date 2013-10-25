@@ -45,7 +45,7 @@ gem 'strip_attributes'
 
 # Authentication and Authorization
 gem 'devise', "~> 3.0.1"
-gem 'cancan'
+gem 'cancan', "~> 1.6.10"
 
 # Paperclip GEM for handling file attachments
 gem 'paperclip'

@@ -1,9 +1,21 @@
 class AccountsController < ApplicationController
+
+  # RESCUE SETTINGS ----------------------------------------------------
+  rescue_from Mongoid::Errors::DocumentNotFound, with: :missing_document
+  rescue_from CanCan::AccessDenied, with: :access_denied 
+  
+  
   # Before filters -----------------------------------------------------
   before_filter :authenticate_user!
   
   before_action :set_user
+
+  # CANCAN AUTHORIZATION -----------------------------------------------
+  # This helper assumes that the instance variable @group is loaded
+  # or checks Class permissions
+  authorize_resource
   
+    
   ######################################################################
   # GET    /admin/users/:user_id/accounts/new(.:format)
   #
@@ -13,19 +25,14 @@ class AccountsController < ApplicationController
   ######################################################################
   def new
     respond_to do |format|
-      if @user.present? 
-        begin
-          @user.account = Account.new
-          @user.reload
-          @account = @user.account
-        	format.html
-      	rescue Stripe::StripeError => stripe_error
-          flash[:alert] = "Stripe error associated with account error = #{stripe_error.message}"
-          format.html {redirect_to user_url(@user)}
-        end
-      else
-        flash[:alert] = "We could not find the requested User account ##{params[:user_id]}"
-        format.html {redirect_to admin_oops_url}
+      begin
+        @user.account = Account.new          
+        @user.reload
+        @account = @user.account
+      	format.html
+    	rescue Stripe::StripeError => stripe_error
+        flash[:alert] = "Stripe error associated with account error = #{stripe_error.message}"
+        format.html {redirect_to user_url(@user)}
       end
     end
   end
@@ -38,29 +45,21 @@ class AccountsController < ApplicationController
   ######################################################################
   def create
     respond_to do |format|
-      if @user.present?
-                
-        @user.account = Account.new if @user.account.nil?
-         
-        if @user.account.save_with_stripe(params)
-          # We saved the account, now redirect to the show page
-          format.html { redirect_to user_url(@user), notice: 'Account was successfully created.' }
+      @user.account = Account.new if @user.account.nil?
 
-        else
-          @verrors = @user.account.errors.full_messages
-          @account = @user.account
-          @account.stripe_cc_token = @user.account.errors[:customer_id].present? ? nil :
-            params[:account][:stripe_cc_token]
-
-          @account.cardholder_name = params[:cardholder_name]
-          @account.cardholder_email = params[:cardholder_email]
-
-          format.html { render action: :new }
-        end
-        
+      if @user.account.save_with_stripe(params)
+        # We saved the account, now redirect to the show page
+        format.html { redirect_to user_url(@user), notice: 'Account was successfully created.' }
       else
-        flash[:alert] = "We could not find the requested User account ##{params[:user_id]}"
-        format.html {redirect_to admin_oops_url}
+        @verrors = @user.account.errors.full_messages
+        @account = @user.account
+        @account.stripe_cc_token = @user.account.errors[:customer_id].present? ? nil :
+          params[:account][:stripe_cc_token]
+
+        @account.cardholder_name = params[:cardholder_name]
+        @account.cardholder_email = params[:cardholder_email]
+
+        format.html { render action: :new }
       end
     end
   end
@@ -73,20 +72,15 @@ class AccountsController < ApplicationController
   ######################################################################
   def edit
     respond_to do |format|
-      if @user.present? 
-        if @account.present?
-          if @account.get_customer
-            format.html
-          else
-            flash[:alert] = "Stripe error - could not get customer data."
-            format.html {redirect_to user_url(@user)}
-          end
+      if @account.present?
+        if @account.get_customer
+          format.html
         else
-          flash[:alert] = "We could not find the requested account for User ##{params[:user_id]}"
-          format.html {redirect_to admin_oops_url}
+          flash[:alert] = "Stripe error - could not get customer data."
+          format.html {redirect_to user_url(@user)}
         end
       else
-        flash[:alert] = "We could not find the requested User account ##{params[:user_id]}"
+        flash[:alert] = "We could not find the requested credit card account."
         format.html {redirect_to admin_oops_url}
       end
     end  
@@ -102,7 +96,7 @@ class AccountsController < ApplicationController
   ######################################################################
   def update
     respond_to do |format|
-      if @user.present? && @account.present?
+      if @account.present?
 
         if @user.account.update_with_stripe(params)
           # We saved the account, now redirect to the show page
@@ -113,7 +107,6 @@ class AccountsController < ApplicationController
           @account = @user.account
           @account.stripe_cc_token = @user.account.errors[:customer_id].present? ? nil :
             params[:account][:stripe_cc_token]
-
           @account.cardholder_name = params[:cardholder_name]
           @account.cardholder_email = params[:cardholder_email]
 
@@ -121,8 +114,8 @@ class AccountsController < ApplicationController
         end
         
       else
-        flash[:alert] = "We could not find the requested User account ##{params[:user_id]}"
-        format.html {redirect_to users_url}
+        flash[:alert] = "We could not find the requested credit card account."
+        format.html {redirect_to user_url(@user)}
       end
     end
   end
@@ -134,44 +127,64 @@ class AccountsController < ApplicationController
   # the user and destory the customer record on the stripe.com service.
   ######################################################################
   def destroy
-    if @user.present? && @account.present?
-      begin
-        @user.account.destroy
-        @user.reload
-        redirect_to users_url, notice: "User credit card deleted."
-      rescue Stripe::StripeError => stripe_error
-        flash[:alert] = "Error deleting credit card account - #{stripe_error.message}"
-        redirect_to users_url
-      end
+    # Added the following check, because we could not CANCAN ability to
+    # operate correctly.
+    if (@user.id != current_user.id) && (current_user.role == User::CUSTOMER)
+    
+      flash[:alert] = "You are not authorized to access the requested User."
+      redirect_to admin_oops_url
+      
     else
-      flash[:alert] = "Could not find user credit card account to delete."
-      redirect_to users_url
-    end  
+    
+      if @account.present?
+        begin
+          @user.account.destroy
+          redirect_to users_url, notice: "User credit card deleted."
+        rescue Stripe::StripeError => stripe_error
+          flash[:alert] = "Error deleting credit card account - #{stripe_error.message}"
+          redirect_to user_url(@user)
+        end
+      else
+        flash[:alert] = "Could not find user credit card account to delete."
+        redirect_to user_url(@user)
+      end    
+       
+    end
+    
   end
   
   
   # PROTECTED INSTANCE METHODS =----------------------------------------
   protected
-  
+
   ####################################################################
   # Use callbacks to share common setup or constraints between actions.
   # We do the following actions:
   # * Try to lookup the resource
-  # * Catch the error if not found and set instance variable to nil
+  # * Catch the error if not found and redirect with error message
   ####################################################################
   def set_user
-    begin
-      @user = User.find(params[:user_id])
-   
-      if @user.account.present? && @user.account.id.to_s == params[:id]
-        @account = @user.account 
-      else
-        @account = nil
-      end
-    rescue Mongoid::Errors::DocumentNotFound
-      @user = nil
+    @user = User.find(params[:user_id])
+    authorize! :update, @user
+    
+    if @user.account.present? && @user.account.id.to_s == params[:id]
+      @account = @user.account 
+    else
+      @account = nil
     end
   end
 
-  
+  ######################################################################
+  # The missing_document method is the controller method for catching
+  # a Mongoid Mongoid::Errors::DocumentNotFound exception across all
+  # controller actions.
+  ######################################################################
+  def missing_document(exception)
+	  respond_to do |format| 
+	    msg = "We are unable to find the requested User account - ID ##{exception.params[0]}"
+  		format.html { redirect_to admin_oops_url, alert: msg }
+  		format.json { head :no_content }
+  	end  
+  end
+
 end

@@ -69,6 +69,12 @@
                     edit_user_registration_url %>
                 </li>
                 
+                <!-- Projects -->
+                <li <%= @project_active %> >
+                  <%= link_to '<i class="icon-book"></i> Projects'.html_safe,
+                    projects_url %>
+                </li>
+                
                 <!-- User groups -->
                 <li <%= @groups_active %>>
                   <%= link_to '<i class="icon-th"></i> Groups'.html_safe, 

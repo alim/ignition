@@ -4,22 +4,37 @@
 # to a subset of system resources. 
 ########################################################################
 class GroupsController < ApplicationController
+
+  # RESCUE SETTINGS ----------------------------------------------------
+	rescue_from Mongoid::Errors::DocumentNotFound, with: :missing_document
+  rescue_from CanCan::AccessDenied, with: :access_denied
 	
+	# BEFORE CALLBACKS ---------------------------------------------------
 	before_filter :authenticate_user!
 	
   before_action :set_group, only: [:show, :edit, :update, :notify, 
   	:remove_member, :destroy]
+  	
   before_action :set_group_class
 
+  # CANCAN AUTHORIZATION -----------------------------------------------
+  # This helper assumes that the instance variable @group is loaded
+  # or checks Class permissions
+  authorize_resource
+  
+  
 	######################################################################
   # GET /groups
   # GET /groups.json
   #
   # Standard listing of user groups and membership.
   ######################################################################
-  def index
-    @groups = Group.all
-
+  def index 
+    if current_user.role == User::SERVICE_ADMIN
+      @groups = Group.all
+    else
+      @groups = Group.where(owner_id: current_user.id)
+    end
   end
 
 	######################################################################
@@ -30,25 +45,15 @@ class GroupsController < ApplicationController
   # allows you to re-send the group invite to a given user.
   ######################################################################
   def show
-  	
-		if @group.present?
-		  begin
-			  @user = User.find(@group.owner_id)
-			  @owner_email = @user.email
-			
-			  # Build hash of users assoicated with the group
-			  @users = []
-			  @group.users.each do |user_id|
-				  user = User.find(user_id)
-				  @users << user
-			  end
-			rescue Mongoid::Errors::DocumentNotFound
-			  groups_alert("Unable to find User member information for group - #{@group.name}.")
-			end
-		else
-			groups_alert('Unable to find group information for group ##{params[:id]}.')
-		end
-  	
+	  @user = User.find(@group.owner_id)
+	  @owner_email = @user.email
+	
+	  # Build hash of users assoicated with the group
+	  @users = []
+	  @group.users.each do |user_id|
+		  user = User.find(user_id)
+		  @users << user
+	  end
   end
 
 	######################################################################
@@ -73,11 +78,7 @@ class GroupsController < ApplicationController
   # selected by the user for sharing with the group.
   ######################################################################
   def edit
-    if @group.present?
-  	  owned_resources
-  	else
-  	  groups_alert("We could not find the requested group - ##{params[:id]}")
-  	end
+  	owned_resources
   end
 
 	######################################################################
@@ -95,8 +96,6 @@ class GroupsController < ApplicationController
 			@group.owner_id = current_user.id
 
 			if @group.save
-				# Relate selected resources
-				# relate_resources
 			
 				# Lookup membership list to see if they already exists
 				@members = lookup_users(@group)
@@ -104,6 +103,7 @@ class GroupsController < ApplicationController
 				# Create and notify group members of their inclusion into the group
 				create_notify(@members, @group) if @members.present?
 	          	  		
+	      # Relate the selected resources
 	      relate_resources(params[:resource_ids])
 	      
 	      format.html { redirect_to @group, notice: 'Group was successfully created.' }
@@ -124,28 +124,25 @@ class GroupsController < ApplicationController
   # remove group members and add new group members.
   ######################################################################
   def update
-    if @group.present?
-      respond_to do |format|
-        if @group.update_attributes(group_params)
-				  # Relate resources
-				  # relate_resources
-				
-				  # Lookup membership list to see if they already exists
-				  @members = lookup_users(@group)
+    respond_to do |format|
+      if @group.update_attributes(group_params)
+      
+			  # Relate resources
+			  relate_resources(params[:resource_ids])
 			
-				  # Create and notify group members of their inclusion into the group
-				  create_notify(@members, @group) if @members.present?      
-        
-          format.html { redirect_to @group, notice: 'Group was successfully updated.' }
-          format.json { head :no_content }
-        else
-          @verrors = @group.errors.full_messages
-          format.html { render action: 'edit' }
-          format.json { render json: @group.errors, status: :unprocessable_entity }
-        end
+			  # Lookup membership list to see if they already exists
+			  @members = lookup_users(@group)
+		
+			  # Create and notify group members of their inclusion into the group
+			  create_notify(@members, @group) if @members.present?      
+      
+        format.html { redirect_to @group, notice: 'Group was successfully updated.' }
+        format.json { head :no_content }
+      else
+        @verrors = @group.errors.full_messages
+        format.html { render action: 'edit' }
+        format.json { render json: @group.errors, status: :unprocessable_entity }
       end
-    else
-      groups_alert("We could not find the requested group to update - group ##{params[:id]}")
     end
   end
 
@@ -159,18 +156,14 @@ class GroupsController < ApplicationController
   # unrelate_resources might not be needed.
   ######################################################################
   def destroy
-  	if @group.present?
-  		# Unrelate the group resources
-  		unrelate_resources
-  	
-		  @group.destroy
-		  respond_to do |format|
-		    format.html { redirect_to groups_url, notice: "Group was successfully deleted." }
-		    format.json { head :no_content }
-		  end
-    else
-    	groups_alert("Could not find requeted group to delete.")
-    end
+		# Unrelate the group resources
+		unrelate_resources
+	
+	  @group.destroy
+	  respond_to do |format|
+	    format.html { redirect_to groups_url, notice: "Group was successfully deleted." }
+	    format.json { head :no_content }
+	  end
   end
 
 	## CUSTOM ACTIONS ----------------------------------------------------
@@ -182,32 +175,19 @@ class GroupsController < ApplicationController
 	# to a single group member and re-display the show template.
 	######################################################################
 	def notify
-
-		if @group.present?
-		  
-		  begin
-		    respond_to do |format|	
-  #		  	authorize! :notify, @group, message: "You are not authorized to invite requested Group members."
-			    @user = @group.users.find(params[:uid])
-			
-			    if invite_member(@group, @user)			
-				    format.html { redirect_to @group, 
-				      notice: "Group invite resent to #{@user.email}."}
-				    format.json { head :no_content }
-			    else
-				    format.html { redirect_to @group, 
-				      alert: "Group invite faild to #{@user.email}."}
-				    format.json { head :no_content }
-			    end
-			  end
-		  rescue Mongoid::Errors::DocumentNotFound
-			  groups_alert("We could not find the requested group member.")
-    	end
-	  	
-  	else
-  		groups_alert("We could not find the requested group.")
-  	end
-    
+    respond_to do |format|	
+	    @user = @group.users.find(params[:uid])
+	
+	    if invite_member(@group, @user)			
+		    format.html { redirect_to @group, 
+		      notice: "Group invite resent to #{@user.email}."}
+		    format.json { head :no_content }
+	    else
+		    format.html { redirect_to @group, 
+		      alert: "Group invite faild to #{@user.email}."}
+		    format.json { head :no_content }
+	    end
+	  end    
 	end
 
 	######################################################################
@@ -216,27 +196,18 @@ class GroupsController < ApplicationController
 	# The remove_member method will remove one group member.
 	######################################################################
 	def remove_member
-	  if @group.present?
-		  begin
-        respond_to do |format|	
-  #		  	authorize! :remove_member, @group, 
-  #		  		message: "You are not authorized to remove requested Group members."
-        	
-        	# Delete the user association
-        	user = User.find(params[:uid])
-        	@group.users.delete(user)
-        	@group.reload
-		      
-      		format.html { redirect_to edit_group_url(@group), 
-      		  notice: "Group member #{user.email} has been removed from the group, but NOT deleted from the system."}
-      		format.json { head :no_content }
-    	  end
-		  rescue Mongoid::Errors::DocumentNotFound
-			  groups_alert("We could not find the requested group member." )
-		  end
-    else
-    	groups_alert("We could not find the requested group.")
-    end
+
+    respond_to do |format|
+    	# Delete the user association
+    	user = User.find(params[:uid])
+    	@group.users.delete(user)
+    	@group.reload
+      
+  		format.html { redirect_to edit_group_url(@group), 
+  		  notice: "Group member #{user.email} has been removed from the group, but NOT deleted from the system."}
+  		format.json { head :no_content }
+	  end
+
 	end
 
 
@@ -411,11 +382,7 @@ class GroupsController < ApplicationController
   # * Catch the error if not found and set instance variable to nil
   ####################################################################
   def set_group
-  	begin
-    	@group = Group.find(params[:id])
-    rescue Mongoid::Errors::DocumentNotFound
-    	@group = nil
-    end
+  	@group = Group.find(params[:id])
   end
 
 	######################################################################
@@ -444,4 +411,14 @@ class GroupsController < ApplicationController
   		format.json { head :no_content }
   	end
   end 
+  
+  ######################################################################
+  # The missing_document method is the controller method for catching
+  # a Mongoid Mongoid::Errors::DocumentNotFound exception across all
+  # controller actions. User will be redirected to the groups#index view
+  ######################################################################
+  def missing_document(exception)
+    groups_alert("We are unable to find the requested #{exception.klass} - ID ##{exception.params[0]}")
+  end
+  
 end

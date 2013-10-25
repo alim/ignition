@@ -80,4 +80,31 @@ class ApplicationController < ActionController::Base
       "admin"
     end
   end
+  
+  ######################################################################
+  # The access_denied method is the controller method for catching
+  # a CanCan exception for an unauthorized action. The user will be
+  # redirected to the admin_oops_url
+  ######################################################################
+  def access_denied(exception)
+    respond_to do |format|
+      msg = "You are not authorized to access the requested #{exception.subject.class}."
+      format.html { redirect_to admin_oops_url, alert: msg }
+      format.json { head :no_content }
+    end
+  end
+  
+  
+  ######################################################################
+  # The missing_document method is the controller method for catching
+  # a Mongoid Mongoid::Errors::DocumentNotFound exception across all
+  # controller actions. User will be redirected to the groups#index view
+  ######################################################################
+  def missing_document(exception)
+    respond_to do |format|
+      msg = "We are unable to find the requested #{exception.klass} - ID ##{exception.params[0]}"
+      format.html { redirect_to admin_oops_url, alert: msg }
+      format.json { head :no_content }
+    end
+  end  
 end
