@@ -22,21 +22,15 @@ Ignition::Application.routes.draw do
   	end # users
 	end
 	
-  get "home/index"
-  
-  get "home/support"
-  
-  get "home/contact"
-
-  get "home/about"
-
-  get "admin/help"
-
-  get "admin/index"
-  
-  get "admin/oops"
-
-  get "admin/calendar"
+  get   "home/index"
+  get   "home/support"
+  get   "home/contact"
+  post  "home/create_contact"
+  get   "home/about"
+  get   "admin/help"
+  get   "admin/index"
+  get   "admin/oops"
+  get   "admin/calendar"
 
   get "admin" => 'admin#index'  
   

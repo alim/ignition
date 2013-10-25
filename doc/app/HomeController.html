@@ -74,6 +74,8 @@
     
     <li><a href="#method-i-contact">#contact</a>
     
+    <li><a href="#method-i-create_contact">#create_contact</a>
+    
     <li><a href="#method-i-index">#index</a>
     
     <li><a href="#method-i-support">#support</a>
@@ -114,6 +116,10 @@
     <li><a href="./ApplicationController.html">ApplicationController</a>
   
     <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Contact.html">Contact</a>
+  
+    <li><a href="./ContactMailer.html">ContactMailer</a>
   
     <li><a href="./Group.html">Group</a>
   
@@ -205,9 +211,9 @@ service or company.</p>
 
           
           <div class="method-source-code" id="about-source">
-            <pre><span class="ruby-comment"># File app/controllers/home_controller.rb, line 38</span>
+            <pre><span class="ruby-comment"># File app/controllers/home_controller.rb, line 74</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">about</span>
-      <span class="ruby-ivar">@about_active</span>=<span class="ruby-string">&quot;active&quot;</span>
+      <span class="ruby-ivar">@about_active</span>=<span class="ruby-string">&quot;class=active&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- about-source -->
           
@@ -230,16 +236,19 @@ service or company.</p>
 
         <div class="method-description">
           
-          <p>The contact action will present a contact form and email a copy of the
-contents to the configured address. See the corresponding the
-application.yml for configuring the contact reply_to address.</p>
+          <p>The contact method presents a form for contacting us. The form then calls
+the <a
+href="HomeController.html#method-i-create_contact">#create_contact</a>
+method for sending us the email.</p>
           
 
           
           <div class="method-source-code" id="contact-source">
-            <pre><span class="ruby-comment"># File app/controllers/home_controller.rb, line 23</span>
+            <pre><span class="ruby-comment"># File app/controllers/home_controller.rb, line 25</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">contact</span>
-      <span class="ruby-ivar">@contact_active</span>=<span class="ruby-string">&quot;active&quot;</span>
+      <span class="ruby-ivar">@contact_active</span> = <span class="ruby-string">&quot;class=active&quot;</span>
+      <span class="ruby-ivar">@contact</span> = <span class="ruby-constant">Contact</span>.<span class="ruby-identifier">new</span>
+
 <span class="ruby-keyword">end</span></pre>
           </div><!-- contact-source -->
           
@@ -249,6 +258,61 @@ application.yml for configuring the contact reply_to address.</p>
 
         
       </div><!-- contact-method -->
+
+    
+      <div id="method-i-create_contact" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_contact</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The <a
+href="HomeController.html#method-i-create_contact">#create_contact</a>
+method uses a mailer class to generate an email message to us via our
+website.</p>
+          
+
+          
+          <div class="method-source-code" id="create_contact-source">
+            <pre><span class="ruby-comment"># File app/controllers/home_controller.rb, line 35</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_contact</span>
+      <span class="ruby-ivar">@contact_active</span> = <span class="ruby-string">&quot;class=active&quot;</span>
+              <span class="ruby-ivar">@contact</span> = <span class="ruby-constant">Contact</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:contact</span>])
+
+              <span class="ruby-keyword">if</span> <span class="ruby-ivar">@contact</span>.<span class="ruby-identifier">valid?</span>
+                <span class="ruby-keyword">begin</span>
+                        <span class="ruby-constant">ContactMailer</span>.<span class="ruby-identifier">contact_message</span>(<span class="ruby-ivar">@contact</span>).<span class="ruby-identifier">deliver</span>
+
+      <span class="ruby-identifier">redirect_to</span>(<span class="ruby-identifier">home_contact_url</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span>
+        <span class="ruby-string">&quot;Contact request was successfully submitted.&quot;</span>)
+        
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Timeout</span><span class="ruby-operator">::</span><span class="ruby-constant">Error</span>, <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SMTP</span>, <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SMTPAuthenticationError</span>, 
+      <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SMTPServerBusy</span>, <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SMTPSyntaxError</span>, <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SMTPFatalError</span>, 
+      <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SMTPUnknownError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+      <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">error</span>(<span class="ruby-node">&quot;Unable to send email to: #{@contact.email} - error = #{e}&quot;</span>)
+      <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] = <span class="ruby-node">&quot;Contact delivery error sending email - #{e.message}&quot;</span>
+      <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">home_contact_url</span>
+    <span class="ruby-keyword">end</span>
+    
+              <span class="ruby-keyword">else</span>
+                      <span class="ruby-comment"># Create a hash that holds the request options</span>
+                      <span class="ruby-ivar">@verrors</span> = <span class="ruby-ivar">@contact</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">full_messages</span>
+                      <span class="ruby-identifier">render</span> <span class="ruby-identifier">action</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;contact&quot;</span>
+              <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_contact-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_contact-method -->
 
     
       <div id="method-i-index" class="method-detail ">
@@ -270,7 +334,7 @@ the service.</p>
           <div class="method-source-code" id="index-source">
             <pre><span class="ruby-comment"># File app/controllers/home_controller.rb, line 14</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">index</span>
-      <span class="ruby-ivar">@home_active</span>=<span class="ruby-string">&quot;active&quot;</span>
+      <span class="ruby-ivar">@home_active</span>=<span class="ruby-string">&quot;class=active&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- index-source -->
           
@@ -298,9 +362,9 @@ the service.</p>
 
           
           <div class="method-source-code" id="support-source">
-            <pre><span class="ruby-comment"># File app/controllers/home_controller.rb, line 30</span>
+            <pre><span class="ruby-comment"># File app/controllers/home_controller.rb, line 66</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">support</span> 
-      <span class="ruby-ivar">@support_active</span>=<span class="ruby-string">&quot;active&quot;</span>
+      <span class="ruby-ivar">@support_active</span>=<span class="ruby-string">&quot;class=active&quot;</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- support-source -->
           

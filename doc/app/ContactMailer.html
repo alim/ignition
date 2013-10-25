@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 
-<title>class UserMailer - Rails Application Documentation</title>
+<title>class ContactMailer - Rails Application Documentation</title>
 
 <link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
 
@@ -47,7 +47,7 @@
     <nav id="file-list-section" class="section">
   <h3 class="section-header">Defined In</h3>
   <ul>
-    <li>app/mailers/user_mailer.rb
+    <li>app/mailers/contact_mailer.rb
   </ul>
 </nav>
 
@@ -70,7 +70,7 @@
 
   <ul class="link-list">
     
-    <li><a href="#method-i-new_account">#new_account</a>
+    <li><a href="#method-i-contact_message">#contact_message</a>
     
   </ul>
 </nav>
@@ -156,10 +156,13 @@
 </nav>
 
 <div id="documentation">
-  <h1 class="class">class UserMailer</h1>
+  <h1 class="class">class ContactMailer</h1>
 
   <div id="description" class="description">
     
+<p>The contact mailer is for managing the contact form  request on the web
+service.</p>
+
   </div><!-- description -->
 
   
@@ -180,39 +183,37 @@
       <h3 class="section-header">Public Instance Methods</h3>
 
     
-      <div id="method-i-new_account" class="method-detail ">
+      <div id="method-i-contact_message" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">new_account</span><span
-            class="method-args">(user)</span>
+          <span class="method-name">contact_message</span><span
+            class="method-args">(contact)</span>
           <span class="method-click-advice">click to toggle source</span>
         </div>
         
 
         <div class="method-description">
           
-          <p>Email for new user account. It will email the user their login, password, a
-login link, and a link to change their password.</p>
+          <p>The standard contact request message.</p>
           
 
           
-          <div class="method-source-code" id="new_account-source">
-            <pre><span class="ruby-comment"># File app/mailers/user_mailer.rb, line 8</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">new_account</span>(<span class="ruby-identifier">user</span>)
-  <span class="ruby-ivar">@user</span> = <span class="ruby-identifier">user</span>
-  <span class="ruby-ivar">@login_url</span> =  <span class="ruby-identifier">new_user_session_url</span>
-  <span class="ruby-ivar">@new_password_url</span> =  <span class="ruby-identifier">edit_user_password_url</span>
-  
-  <span class="ruby-identifier">mail</span>(<span class="ruby-identifier">to</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">email</span>, <span class="ruby-identifier">subject</span><span class="ruby-operator">:</span> <span class="ruby-string">'New Account'</span>)
+          <div class="method-source-code" id="contact_message-source">
+            <pre><span class="ruby-comment"># File app/mailers/contact_mailer.rb, line 12</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">contact_message</span>(<span class="ruby-identifier">contact</span>)
+        <span class="ruby-comment"># Setup instance variable for mailer view</span>
+        <span class="ruby-ivar">@contact</span> = <span class="ruby-identifier">contact</span>
+        
+        <span class="ruby-identifier">mail</span>(<span class="ruby-value">:subject</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{Contact::CONTACT_SUBJECT}&quot;</span>)
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- new_account-source -->
+          </div><!-- contact_message-source -->
           
         </div>
 
         
 
         
-      </div><!-- new_account-method -->
+      </div><!-- contact_message-method -->
 
     
     </section><!-- public-instance-method-details -->

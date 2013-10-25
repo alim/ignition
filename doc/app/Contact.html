@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 
-<title>class Group - Rails Application Documentation</title>
+<title>class Contact - Rails Application Documentation</title>
 
 <link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
 
@@ -47,7 +47,7 @@
     <nav id="file-list-section" class="section">
   <h3 class="section-header">Defined In</h3>
   <ul>
-    <li>app/models/group.rb
+    <li>app/models/contact.rb
   </ul>
 </nav>
 
@@ -70,11 +70,11 @@
   <ul class="link-list">
   
   
-    <li><span class="include">Mongoid::Document</span>
+    <li><span class="include">ActiveModel::Validations</span>
   
   
   
-    <li><span class="include">Mongoid::Timestamps</span>
+    <li><span class="include">ActiveModel::Conversion</span>
   
   
   </ul>
@@ -86,11 +86,9 @@
 
   <ul class="link-list">
     
-    <li><a href="#method-i-members">#members</a>
+    <li><a href="#method-c-new">::new</a>
     
-    <li><a href="#method-i-members-3D">#members=</a>
-    
-    <li><a href="#method-i-members_list">#members_list</a>
+    <li><a href="#method-i-persisted-3F">#persisted?</a>
     
   </ul>
 </nav>
@@ -176,15 +174,13 @@
 </nav>
 
 <div id="documentation">
-  <h1 class="class">class Group</h1>
+  <h1 class="class">class Contact</h1>
 
   <div id="description" class="description">
     
-<p>The <a href="Group.html">Group</a> class allows us to authorize a group of
-users to access a primary resource, such as a <a
-href="Project.html">Project</a>. <a href="Group.html">Group</a> access to a
-primary resource enables the group to access all records related to the 
-primary resource.</p>
+<p>This model is used to hold the contact request. It is not tied to a
+database table, but just holds the contents in memory. We do include
+ActiveModel validations to help validate the form entries.</p>
 
   </div><!-- description -->
 
@@ -202,7 +198,19 @@ primary resource.</p>
       <h3 class="section-header">Constants</h3>
       <dl>
       
-        <dt id="RESOURCE_CLASS">RESOURCE_CLASS
+        <dt id="CONTACT_EMAILBOX">CONTACT_EMAILBOX
+        
+        <dd class="description"><p>Email address defaults for all contact requests</p>
+
+<pre>CONTACT_EMAILBOX = 'support@example.com'</pre>
+        
+      
+        <dt id="CONTACT_FROM">CONTACT_FROM
+        
+        <dd class="description">
+        
+      
+        <dt id="CONTACT_SUBJECT">CONTACT_SUBJECT
         
         <dd class="description">
         
@@ -212,17 +220,114 @@ primary resource.</p>
     
 
     
+    <!-- Attributes -->
+    <section id="attribute-method-details" class="method-section section">
+      <h3 class="section-header">Attributes</h3>
+
+      
+      <div id="attribute-i-body" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">body</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>ACCESSORS ———————————————————</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-email" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">email</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>ACCESSORS ———————————————————</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-name" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">name</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>ACCESSORS ———————————————————</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-phone" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">phone</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>ACCESSORS ———————————————————</p>
+        
+        </div>
+      </div>
+      
+    </section><!-- attribute-method-details -->
+    
 
     <!-- Methods -->
     
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(attributes = {})</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>INSTANCE METHODS ————————————————–</p>
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File app/models/contact.rb, line 27</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">attributes</span> = {})
+  <span class="ruby-identifier">attributes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">send</span>(<span class="ruby-node">&quot;#{name}=&quot;</span>, <span class="ruby-identifier">value</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- new-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- new-method -->
+
+    
+    </section><!-- public-class-method-details -->
+  
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
       <h3 class="section-header">Public Instance Methods</h3>
 
     
-      <div id="method-i-members" class="method-detail ">
+      <div id="method-i-persisted-3F" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">members</span><span
+          <span class="method-name">persisted?</span><span
             class="method-args">()</span>
           <span class="method-click-advice">click to toggle source</span>
         </div>
@@ -230,96 +335,23 @@ primary resource.</p>
 
         <div class="method-description">
           
-          <p>VIRTUAL ATTRIBUTE METHDS</p>
-
-<p>The members and the members= are methods for creating virtual  attributes
-that are not stored in the database. These virtual attributes will hold a
-membership list in the form of a list of individual email address.</p>
+          
           
 
           
-          <div class="method-source-code" id="members-source">
-            <pre><span class="ruby-comment"># File app/models/group.rb, line 45</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">members</span>
-  <span class="ruby-ivar">@members</span>
+          <div class="method-source-code" id="persisted-3F-source">
+            <pre><span class="ruby-comment"># File app/models/contact.rb, line 33</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">persisted?</span>
+  <span class="ruby-keyword">false</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- members-source -->
+          </div><!-- persisted-3F-source -->
           
         </div>
 
         
 
         
-      </div><!-- members-method -->
-
-    
-      <div id="method-i-members-3D" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">members=</span><span
-            class="method-args">(value)</span>
-          <span class="method-click-advice">click to toggle source</span>
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-
-          
-          <div class="method-source-code" id="members-3D-source">
-            <pre><span class="ruby-comment"># File app/models/group.rb, line 49</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">members=</span>(<span class="ruby-identifier">value</span>)
-  <span class="ruby-ivar">@members</span>=<span class="ruby-identifier">value</span>
-<span class="ruby-keyword">end</span></pre>
-          </div><!-- members-3D-source -->
-          
-        </div>
-
-        
-
-        
-      </div><!-- members-3D-method -->
-
-    
-      <div id="method-i-members_list" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">members_list</span><span
-            class="method-args">()</span>
-          <span class="method-click-advice">click to toggle source</span>
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>The <a href="Group.html#method-i-members_list">#members_list</a> method
-will parse the membership list of email addresses check them for valid
-email format.</p>
-          
-
-          
-          <div class="method-source-code" id="members_list-source">
-            <pre><span class="ruby-comment"># File app/models/group.rb, line 59</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">members_list</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">members</span>.<span class="ruby-identifier">present?</span>
-    <span class="ruby-identifier">email_list</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">members</span>.<span class="ruby-identifier">split</span>
-    <span class="ruby-identifier">email_list</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">email</span><span class="ruby-operator">|</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">email</span>.<span class="ruby-identifier">match</span>(<span class="ruby-regexp">/^.+@.+\..+/</span>)
-        <span class="ruby-keyword">self</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:members</span>, <span class="ruby-node">&quot;invalid email address - #{email}&quot;</span>)
-      <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">end</span></pre>
-          </div><!-- members_list-source -->
-          
-        </div>
-
-        
-
-        
-      </div><!-- members_list-method -->
+      </div><!-- persisted-3F-method -->
 
     
     </section><!-- public-instance-method-details -->
