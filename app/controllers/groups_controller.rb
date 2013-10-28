@@ -238,7 +238,7 @@ class GroupsController < ApplicationController
 				group.users << new_user
 				
   			# Email user
-  			GroupMailer.member_email(new_user, new_password, group).deliver
+  			GroupMailer.member_email(new_user, group).deliver  			
   		else
   			# Associate User record to group
   			group.users << user
@@ -246,7 +246,7 @@ class GroupsController < ApplicationController
   			# Notify current user that they are now a member of the group
   			# We do not need to send the user password, since they should
   			# have it.
-  			GroupMailer.member_email(user, nil, group).deliver
+  			GroupMailer.member_email(user, group).deliver  			
   		end
   	end
   end
@@ -265,12 +265,18 @@ class GroupsController < ApplicationController
 		if user.sign_in_count == 0
     	# Create a new password
   		new_password = Devise.friendly_token.first(plen)
-
-			# Email user
-			GroupMailer.member_email(user, new_password, group).deliver
+      user.password = new_password
+      user.password_confirmation = new_password
+      if user.save
+        
+			  # Email user
+        GroupMailer.member_email(user, group).deliver
+      else
+        groups_alert("We could not reset the password for User - #{user.email}")
+      end
   	else 		
 			# Notify current user that they are now a member of the group
-			GroupMailer.member_email(user, nil, group).deliver
+			GroupMailer.member_email(user, group).deliver
   	end
   end
   

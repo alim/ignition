@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe GroupMailer do
+describe ContactMailer do
   before(:each) do
     ActionMailer::Base.delivery_method = :test
     ActionMailer::Base.perform_deliveries = true
@@ -8,18 +8,13 @@ describe GroupMailer do
     # Collect al deliveries into an array
     ActionMailer::Base.deliveries = []
     
-    @group = FactoryGirl.build(:group)
-    @user = FactoryGirl.create(:user)
-    @group.owner_id = @user.id
-    @group.save
-    
-    @group_email = GroupMailer.member_email(@user, @group).deliver
+    @contact = FactoryGirl.build(:contact)
+    @contact_email = ContactMailer.contact_message(@contact).deliver
   end
   
   
   after(:each) do
     ActionMailer::Base.deliveries.clear
-    User.destroy_all
   end
   
   it 'should send an email' do
@@ -27,11 +22,11 @@ describe GroupMailer do
   end
   
   it 'renders the receiver email' do
-    ActionMailer::Base.deliveries.first.to.should == [@user.email]
+    ActionMailer::Base.deliveries.first.to.should == [@contact.email]
   end
   
   it 'renders the sender email' do  
-    ActionMailer::Base.deliveries.first.from.should == [Group::GROUP_FROM_EMAIL]
+    ActionMailer::Base.deliveries.first.from.should == [Contact::CONTACT_FROM]
   end
     
 end
