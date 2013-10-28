@@ -656,7 +656,7 @@ user</p>
                               <span class="ruby-identifier">group</span>.<span class="ruby-identifier">users</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">new_user</span>
                               
                       <span class="ruby-comment"># Email user</span>
-                      <span class="ruby-constant">GroupMailer</span>.<span class="ruby-identifier">member_email</span>(<span class="ruby-identifier">new_user</span>, <span class="ruby-identifier">new_password</span>, <span class="ruby-identifier">group</span>).<span class="ruby-identifier">deliver</span>
+                      <span class="ruby-constant">GroupMailer</span>.<span class="ruby-identifier">member_email</span>(<span class="ruby-identifier">new_user</span>, <span class="ruby-identifier">group</span>).<span class="ruby-identifier">deliver</span>                          
               <span class="ruby-keyword">else</span>
                       <span class="ruby-comment"># Associate User record to group</span>
                       <span class="ruby-identifier">group</span>.<span class="ruby-identifier">users</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">user</span>
@@ -664,7 +664,7 @@ user</p>
                       <span class="ruby-comment"># Notify current user that they are now a member of the group</span>
                       <span class="ruby-comment"># We do not need to send the user password, since they should</span>
                       <span class="ruby-comment"># have it.</span>
-                      <span class="ruby-constant">GroupMailer</span>.<span class="ruby-identifier">member_email</span>(<span class="ruby-identifier">user</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">group</span>).<span class="ruby-identifier">deliver</span>
+                      <span class="ruby-constant">GroupMailer</span>.<span class="ruby-identifier">member_email</span>(<span class="ruby-identifier">user</span>, <span class="ruby-identifier">group</span>).<span class="ruby-identifier">deliver</span>                      
               <span class="ruby-keyword">end</span>
       <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
@@ -711,12 +711,18 @@ user</p>
               <span class="ruby-keyword">if</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">sign_in_count</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
       <span class="ruby-comment"># Create a new password</span>
               <span class="ruby-identifier">new_password</span> = <span class="ruby-constant">Devise</span>.<span class="ruby-identifier">friendly_token</span>.<span class="ruby-identifier">first</span>(<span class="ruby-identifier">plen</span>)
-
-                      <span class="ruby-comment"># Email user</span>
-                      <span class="ruby-constant">GroupMailer</span>.<span class="ruby-identifier">member_email</span>(<span class="ruby-identifier">user</span>, <span class="ruby-identifier">new_password</span>, <span class="ruby-identifier">group</span>).<span class="ruby-identifier">deliver</span>
+    <span class="ruby-identifier">user</span>.<span class="ruby-identifier">password</span> = <span class="ruby-identifier">new_password</span>
+    <span class="ruby-identifier">user</span>.<span class="ruby-identifier">password_confirmation</span> = <span class="ruby-identifier">new_password</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">save</span>
+      
+                        <span class="ruby-comment"># Email user</span>
+      <span class="ruby-constant">GroupMailer</span>.<span class="ruby-identifier">member_email</span>(<span class="ruby-identifier">user</span>, <span class="ruby-identifier">group</span>).<span class="ruby-identifier">deliver</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">groups_alert</span>(<span class="ruby-node">&quot;We could not reset the password for User - #{user.email}&quot;</span>)
+    <span class="ruby-keyword">end</span>
       <span class="ruby-keyword">else</span>                 
                       <span class="ruby-comment"># Notify current user that they are now a member of the group</span>
-                      <span class="ruby-constant">GroupMailer</span>.<span class="ruby-identifier">member_email</span>(<span class="ruby-identifier">user</span>, <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">group</span>).<span class="ruby-identifier">deliver</span>
+                      <span class="ruby-constant">GroupMailer</span>.<span class="ruby-identifier">member_email</span>(<span class="ruby-identifier">user</span>, <span class="ruby-identifier">group</span>).<span class="ruby-identifier">deliver</span>
       <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- invite_member-source -->
@@ -752,7 +758,7 @@ as the parameter. It assumes that group.members holds the  email list.</p>
 
           
           <div class="method-source-code" id="lookup_users-source">
-            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 288</span>
+            <pre><span class="ruby-comment"># File app/controllers/groups_controller.rb, line 294</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">lookup_users</span>(<span class="ruby-identifier">group</span>)
       <span class="ruby-identifier">users</span> = {}           <span class="ruby-comment"># Hash for returning results</span>
 
