@@ -12,6 +12,13 @@ class Group
   field :description, type: String
   field :owner_id, type: BSON::ObjectId
   
+  ## CONSTANTS ---------------------------------------------------------
+  GROUP_FROM_EMAIL = ENV["GROUP_FROM_EMAIL"].present? ? 
+    ENV["GROUP_FROM_EMAIL"] : "no-reply@example.com"
+
+  GROUP_EMAIL_SUBJECT = ENV["GROUP_EMAIL_SUBJECT"].present? ? 
+    ENV["GROUP_EMAIL_SUBJECT"] : "Group Membership Notification"
+  
   ## RELATIONSHIPS -----------------------------------------------------
   has_and_belongs_to_many :users
   

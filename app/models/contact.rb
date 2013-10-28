@@ -9,11 +9,14 @@ class Contact
   extend ActiveModel::Naming
 
 	# Email address defaults for all contact requests
-#	CONTACT_EMAILBOX = 'support@example.com'
-  CONTACT_EMAILBOX = 'andylim61@gmail.com'
-  CONTACT_FROM = 'no-reply@example.com'
+	CONTACT_EMAILBOX = ENV["CONTACT_EMAILBOX"].present? ? 
+	  ENV["CONTACT_EMAILBOX"] : 'support@example.com'
+	  
+  CONTACT_FROM = ENV["CONTACT_FROM"].present? ? 
+	  ENV["CONTACT_FROM"] : 'no-reply@example.com'
   
-  CONTACT_SUBJECT = 'New contact request'
+  CONTACT_SUBJECT = ENV["CONTACT_SUBJECT"].present? ? 
+	  ENV["CONTACT_SUBJECT"] : 'New contact request'
   
 	# ACCESSORS ---------------------------------------------------------
   attr_accessor :name, :email, :phone, :body
