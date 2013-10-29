@@ -30,6 +30,14 @@ class Subscription
   
   # VALIDATIONS --------------------------------------------------------
   validates_presence_of :plan_id
+  validates_presence_of :stripe_id
+  validates_presence_of :stripe_customer_id
+  validates_presence_of :quantity
+  validates_presence_of :sub_start
+  validates_presence_of :sub_end
+  validates_presence_of :status
+  validates_presence_of :user_id
+
   
   # RELATIONSHIPS ------------------------------------------------------
   belongs_to :user
