@@ -13,7 +13,7 @@
   <dt><strong>Name:</strong></dt>
   <dd><%= @project.name %></dd>
   <dt><strong>Description:</strong></dt>
-  <dd><%= @project.description %></dd>
+  <dd><%= @project.description.html_safe %></dd>
   <dt><strong>Group Owner:</strong></dt>
   <dd>
     <%= @project.user.first_name %> <%= @project.user.last_name %> - 

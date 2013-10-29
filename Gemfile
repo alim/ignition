@@ -40,7 +40,6 @@ gem 'twitter-bootstrap-rails', '~> 2.2.0'
 gem 'will_paginate'
 gem 'less-rails'
 
-
 gem 'strip_attributes'
 
 # Authentication and Authorization

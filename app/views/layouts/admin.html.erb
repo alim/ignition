@@ -7,7 +7,7 @@
     <title><%= content_for?(:title) ? yield(:title) : "Ignition" %></title>
     <%= csrf_meta_tags %>
 		<%= javascript_include_tag "https://js.stripe.com/v2/" %>
-		<%= tag :meta, name: "pub_key", content: ENV['PUB_KEY'] %>
+		<%= tag :meta, name: "pub_key", content: ENV['PUB_KEY'] %>	
 		
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -129,6 +129,20 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <%= javascript_include_tag "application" %>
-
+    
+    <!-- TinyMCE initializer after all javascripts have loaded -->
+    <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
+    <script>
+      tinymce.init({
+        //selector:'textarea',
+        mode : "specific_textareas",
+        editor_selector : "tinymce",
+        resize: "both",
+        width: "75%",
+        browser_spellcheck : true,
+        content_css : "/assets/tinymce_content.css",
+        body_class: "tinymce_body",
+      });
+    </script>	
   </body>
 </html>
