@@ -86,11 +86,31 @@ describe Subscription do
   # STRIPE ACTION TESTS ------------------------------------------------
   describe "Stripe interface tests" do
     describe "Create subscription examples" do
-      pending
+      let(:get_stripe_id) {
+        @subscription = Subscription.first
+        @stripe_id = @subscription.stripe_id
+      }
+
+      it "Should not be valid without a stripe_id" do
+          get_stripe_id
+          @subscription.stripe_id = nil
+          @subscription.should_not be_valid
+          @subscription.should have(1).error_on(:stripe_id)
+      end
     end
     
     describe "Update subscription examples" do
-      pending
+      let(:get_stripe_id) {
+        @subscription = Subscription.first
+        @stripe_id = @subscription.stripe_id
+      }
+
+      it "Should not be valid without a stripe_id" do
+          get_stripe_id
+          @subscription.stripe_id = nil
+          @subscription.should_not be_valid
+          @subscription.should have(1).error_on(:stripe_id)
+      end
     end
     
     describe "Delete subscription" do
