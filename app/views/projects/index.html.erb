@@ -20,8 +20,9 @@
     </p>    
   <% end %>
   
-
 </div>
+<%= render partial: 'shared/flash', locals: { flash: flash } %>
+
 <table class="table table-striped">
   <thead>
     <tr>
@@ -35,11 +36,14 @@
   <tbody>
     <% @projects.each do |project| %>
       <tr>
-        <td><%= link_to project.id, project_path(project) %></td>
-        <td><%= project.name %></td>
+        <td><%= link_to project.name, project_path(project) %></td>
         <td><%= project.description %></td>
-        <td><%= project.user_id %></td>
-        <td><%= project.group_ids %></td>
+        <td><%= project.user.first_name %> <%= project.user.last_name %></td>
+        <td>
+          <% project.groups.each do |group| %>
+            <%= group.name %><br/>
+          <% end %>
+        </td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_project_path(project), :class => 'btn btn-mini' %>
@@ -57,3 +61,4 @@
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_project_path,
             :class => 'btn btn-primary' %>
+<p><br/></p>

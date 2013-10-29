@@ -14,7 +14,12 @@ class Group
   
   ## RELATIONSHIPS -----------------------------------------------------
   has_and_belongs_to_many :users
-  has_and_belongs_to_many :projects   # Sample primary resource relation
+  
+  # Sample primary resource relation. We are using a resource that 
+  # represents a Project in our service. We also set a class constant
+  # to the name of the class to which the groups will be given access
+  has_and_belongs_to_many :projects
+  RESOURCE_CLASS = 'Project'
   
   ## VALIDATIONS -------------------------------------------------------
   validate :members_list

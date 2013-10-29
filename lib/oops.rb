@@ -52,7 +52,7 @@ module Oops
   # * target - the target error page - Oops::ADMIN or Oops::HOME
   # * resource - the resource that can contain the error messages
   ######################################################################
-  def display_error(msg)
+  def display_error(args)
   	if args.count >= 2
 			msg = args[:message]
 			target = args[:target]

@@ -27,4 +27,18 @@ class Project
   ## RELATIONSHIPS -----------------------------------------------------
   belongs_to :user
   has_and_belongs_to_many :groups
+  
+  ## GROUP METHOD INJECTION --------------------------------------------
+  include GroupRelations
+  
+  ######################################################################
+  # The GroupRelations module has some utility methods that will enable
+  # the project to interact with user groups. The group_relate method
+  # uses the relate_groups utility method to relate groups to the
+  # the current instance of the Project model class.
+  ######################################################################
+  def group_relate(group_ids)
+    relate_groups(group_ids: group_ids, resource: self)
+  end
+
 end

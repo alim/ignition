@@ -1,17 +1,33 @@
 <%- model_class = Project -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+  <h1>Project</h1>
+  <p>
+    The information on this page shows you a project record, which
+    includes the project owner and any user groups associated with the
+    project.
+  </p>
 </div>
+<%= render partial: 'shared/flash', locals: { flash: flash } %>
 
 <dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
+  <dt><strong>Name:</strong></dt>
   <dd><%= @project.name %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
+  <dt><strong>Description:</strong></dt>
   <dd><%= @project.description %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
-  <dd><%= @project.user_id %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:group_id) %>:</strong></dt>
-  <dd><%= @project.group_id %></dd>
+  <dt><strong>Group Owner:</strong></dt>
+  <dd>
+    <%= @project.user.first_name %> <%= @project.user.last_name %> - 
+    <%= @project.user.email %>
+  </dd>
+  <br/>
+  <% if @project.groups.present? %>
+    <dt><strong>Related Groups:</strong></dt>
+    <dd>
+      <% @project.groups.each do |group| %>
+        <%= group.name %><br/>
+      <% end %>
+    </dd>
+  <% end %>
 </dl>
 
 <div class="form-actions">
@@ -23,5 +39,5 @@
               project_path(@project),
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
+              :class => 'btn btn-danger pull-right' %>
 </div>

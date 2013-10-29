@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+<title>module GroupRelations - Rails Application Documentation</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="module">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>lib/group_relations.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-relate_groups">#relate_groups</a>
+    
+    <li><a href="#method-i-relate_resources">#relate_resources</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./README_rdoc.html">README</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./Ability.html">Ability</a>
+  
+    <li><a href="./Account.html">Account</a>
+  
+    <li><a href="./AccountsController.html">AccountsController</a>
+  
+    <li><a href="./AccountsHelper.html">AccountsHelper</a>
+  
+    <li><a href="./AdminController.html">AdminController</a>
+  
+    <li><a href="./AdminHelper.html">AdminHelper</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Group.html">Group</a>
+  
+    <li><a href="./GroupMailer.html">GroupMailer</a>
+  
+    <li><a href="./GroupRelations.html">GroupRelations</a>
+  
+    <li><a href="./GroupsController.html">GroupsController</a>
+  
+    <li><a href="./GroupsHelper.html">GroupsHelper</a>
+  
+    <li><a href="./HomeController.html">HomeController</a>
+  
+    <li><a href="./HomeHelper.html">HomeHelper</a>
+  
+    <li><a href="./Oops.html">Oops</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectsController.html">ProjectsController</a>
+  
+    <li><a href="./ProjectsHelper.html">ProjectsHelper</a>
+  
+    <li><a href="./Subscription.html">Subscription</a>
+  
+    <li><a href="./SubscriptionsController.html">SubscriptionsController</a>
+  
+    <li><a href="./SubscriptionsHelper.html">SubscriptionsHelper</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserMailer.html">UserMailer</a>
+  
+    <li><a href="./UsersController.html">UsersController</a>
+  
+    <li><a href="./UsersHelper.html">UsersHelper</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="module">module GroupRelations</h1>
+
+  <div id="description" class="description">
+    
+<p>The <a href="GroupRelations.html">GroupRelations</a> module provides
+utility methods for handling  relationships between resources and user
+groups. The module is designed to be injected into service resources and to
+the group model and controller objects.</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-relate_groups" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">relate_groups</span><span
+            class="method-args">(params)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The <a href="GroupRelations.html#method-i-relate_groups">#relate_groups</a>
+method will relate a series of user groups to  a given resource. The method
+takes a parameter hash with the  following parameter key-values:</p>
+<ul><li>
+<p>group_ids: is an array of group id’s to relate to the resource</p>
+</li><li>
+<p>resource: is the resource to which the groups will be related</p>
+</li></ul>
+
+<p>The method assumes that the relationship is either 1 (resource) - N
+(groups) or N (groups) - N (projects).</p>
+          
+
+          
+          <div class="method-source-code" id="relate_groups-source">
+            <pre><span class="ruby-comment"># File lib/group_relations.rb, line 20</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">relate_groups</span>(<span class="ruby-identifier">params</span>)
+  <span class="ruby-identifier">group_ids</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:group_ids</span>]
+  <span class="ruby-identifier">resource</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:resource</span>]
+  
+  <span class="ruby-comment"># Clear the relation</span>
+  <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">groups</span> = <span class="ruby-keyword">nil</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">group_ids</span>.<span class="ruby-identifier">present?</span>
+    <span class="ruby-identifier">group_ids</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">id</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">group</span> = <span class="ruby-constant">Group</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">id</span>)
+      <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">groups</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">group</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- relate_groups-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- relate_groups-method -->
+
+    
+      <div id="method-i-relate_resources" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">relate_resources</span><span
+            class="method-args">(params)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The <a
+href="GroupRelations.html#method-i-relate_resources">#relate_resources</a>
+method will relate the requested resources to  the group. It is expecting
+an parameter hash with the following key/value pairs:</p>
+<ul><li>
+<p>resource_ids: array of resource id’s. It will then add each resource to the
+group.</p>
+</li><li>
+<p>group: <a href="Group.html">Group</a> object to which the resource will be
+related</p>
+</li><li>
+<p>class: Text string of the name of the resource model Class (see group.rb)</p>
+</li></ul>
+          
+
+          
+          <div class="method-source-code" id="relate_resources-source">
+            <pre><span class="ruby-comment"># File lib/group_relations.rb, line 49</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">relate_resources</span>(<span class="ruby-identifier">params</span>)
+  <span class="ruby-identifier">resource_ids</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:resource_ids</span>]
+  <span class="ruby-identifier">group</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:group</span>]
+  <span class="ruby-identifier">resource_class</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:class</span>]
+  
+  <span class="ruby-comment"># Clear the relations by constructing the call from passed in</span>
+  <span class="ruby-comment"># variables. A call translation example for a class passed</span>
+  <span class="ruby-comment"># in that is 'Project', would result in a method invocation </span>
+  <span class="ruby-comment"># group.projects = nil</span>
+  <span class="ruby-identifier">group</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">resource_class</span>.<span class="ruby-identifier">downcase</span>.<span class="ruby-identifier">pluralize</span> <span class="ruby-operator">+</span> <span class="ruby-string">'='</span>, <span class="ruby-keyword">nil</span>)
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">resource_ids</span>.<span class="ruby-identifier">present?</span>
+    <span class="ruby-identifier">resource_ids</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">rid</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">resource</span> = <span class="ruby-constant">Object</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">resource_class</span>).<span class="ruby-identifier">find</span>(<span class="ruby-identifier">rid</span>)
+      <span class="ruby-identifier">group</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">resource_class</span>.<span class="ruby-identifier">downcase</span>.<span class="ruby-identifier">pluralize</span>) <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">resource</span>
+    <span class="ruby-keyword">end</span>
+    
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- relate_resources-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- relate_resources-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.2.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

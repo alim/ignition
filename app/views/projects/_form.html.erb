@@ -14,8 +14,11 @@
     </div>
   </div>
 
-  
-	<!-- Generate a checkbox list of Events that can be related to the group -->
+	<!-- -----------------------------------------------------------------
+	  Generate a checkbox list of Groups that can be related to the 
+	  resource.  The group_list method below is defined in the 
+	  group_helper.rb file.
+	------------------------------------------------------------------ -->
 	<% @owned_groups = group_list(user: current_user, resource: @project) %>
 	<% if @owned_groups.present? %>
 		<h3>Group Access</h3>
@@ -32,7 +35,7 @@
 				<% @owned_groups.each do |group| %>
 					<div class="controls">
 						<div class="checkbox">
-							<%= check_box_tag "group_ids", group[:id], group[:related] %>
+							<%= check_box_tag "project[group_ids][]", group[:id], group[:related] %>
 							<%= group[:label] %>
 				  	</div>
 		    	</div>
@@ -40,6 +43,8 @@
 		</div>
 		<br/>
 	<% end %>	
+	<!-- END OF GROUP LISTING ---------------------------------------- -->
+	
   <div class="form-actions">
     <%= f.submit nil, class: 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

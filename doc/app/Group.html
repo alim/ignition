@@ -113,6 +113,8 @@
 
   <ul class="link-list">
   
+    <li><a href="./Ability.html">Ability</a>
+  
     <li><a href="./Account.html">Account</a>
   
     <li><a href="./AccountsController.html">AccountsController</a>
@@ -131,6 +133,8 @@
   
     <li><a href="./GroupMailer.html">GroupMailer</a>
   
+    <li><a href="./GroupRelations.html">GroupRelations</a>
+  
     <li><a href="./GroupsController.html">GroupsController</a>
   
     <li><a href="./GroupsHelper.html">GroupsHelper</a>
@@ -140,6 +144,12 @@
     <li><a href="./HomeHelper.html">HomeHelper</a>
   
     <li><a href="./Oops.html">Oops</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectsController.html">ProjectsController</a>
+  
+    <li><a href="./ProjectsHelper.html">ProjectsHelper</a>
   
     <li><a href="./Subscription.html">Subscription</a>
   
@@ -166,6 +176,12 @@
 
   <div id="description" class="description">
     
+<p>The <a href="Group.html">Group</a> class allows us to authorize a group of
+users to access a primary resource, such as a <a
+href="Project.html">Project</a>. <a href="Group.html">Group</a> access to a
+primary resource enables the group to access all records related to the 
+primary resource.</p>
+
   </div><!-- description -->
 
   
@@ -176,6 +192,19 @@
 
     
 
+    
+    <!-- Constants -->
+    <section id="constants-list" class="section">
+      <h3 class="section-header">Constants</h3>
+      <dl>
+      
+        <dt id="RESOURCE_CLASS">RESOURCE_CLASS
+        
+        <dd class="description">
+        
+      
+      </dl>
+    </section>
     
 
     
@@ -206,7 +235,7 @@ membership list in the form of a list of individual email address.</p>
 
           
           <div class="method-source-code" id="members-source">
-            <pre><span class="ruby-comment"># File app/models/group.rb, line 27</span>
+            <pre><span class="ruby-comment"># File app/models/group.rb, line 45</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">members</span>
   <span class="ruby-ivar">@members</span>
 <span class="ruby-keyword">end</span></pre>
@@ -236,7 +265,7 @@ membership list in the form of a list of individual email address.</p>
 
           
           <div class="method-source-code" id="members-3D-source">
-            <pre><span class="ruby-comment"># File app/models/group.rb, line 31</span>
+            <pre><span class="ruby-comment"># File app/models/group.rb, line 49</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">members=</span>(<span class="ruby-identifier">value</span>)
   <span class="ruby-ivar">@members</span>=<span class="ruby-identifier">value</span>
 <span class="ruby-keyword">end</span></pre>
@@ -268,7 +297,7 @@ email format.</p>
 
           
           <div class="method-source-code" id="members_list-source">
-            <pre><span class="ruby-comment"># File app/models/group.rb, line 41</span>
+            <pre><span class="ruby-comment"># File app/models/group.rb, line 59</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">members_list</span>
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">members</span>.<span class="ruby-identifier">present?</span>
     <span class="ruby-identifier">email_list</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">members</span>.<span class="ruby-identifier">split</span>
