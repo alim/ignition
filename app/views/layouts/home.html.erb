@@ -189,5 +189,18 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <%= javascript_include_tag "application" %>
 
+    <!-- TinyMCE initializer after all javascripts have loaded -->
+    <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
+    <script>
+      tinymce.init({
+        mode : "specific_textareas",
+        editor_selector : "tinymce",
+        resize: "both",
+        width: "75%",
+        browser_spellcheck : true,
+        content_css : "/assets/tinymce_content.css",
+        body_class: "tinymce_body",
+      });
+    </script>	
   </body>
 </html>

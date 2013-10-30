@@ -29,6 +29,7 @@ class Subscription
   field :user_id, type: String
   
   # VALIDATIONS --------------------------------------------------------
+  
   validates_presence_of :plan_id
   validates_presence_of :stripe_id
   validates_presence_of :stripe_customer_id
@@ -40,5 +41,6 @@ class Subscription
 
   
   # RELATIONSHIPS ------------------------------------------------------
+  
   belongs_to :user
 end

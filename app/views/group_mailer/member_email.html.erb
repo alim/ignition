@@ -51,7 +51,7 @@
     			<% if @group.description.empty? %>
     				No description provided
 					<% else %>
-						<%= @group.description %>
+						<%= @group.description.html_safe %>
 					<% end %>
     		</td>
     	</tr>

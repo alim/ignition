@@ -174,6 +174,29 @@ service.</p>
     
 
     
+    <!-- Constants -->
+    <section id="constants-list" class="section">
+      <h3 class="section-header">Constants</h3>
+      <dl>
+      
+        <dt id="CONTACT_EMAILBOX">CONTACT_EMAILBOX
+        
+        <dd class="description"><p>Email address defaults for all contact requests</p>
+        
+      
+        <dt id="CONTACT_FROM">CONTACT_FROM
+        
+        <dd class="description">
+        
+      
+        <dt id="CONTACT_SUBJECT">CONTACT_SUBJECT
+        
+        <dd class="description">
+        
+      
+      </dl>
+    </section>
+    
 
     
 
@@ -199,12 +222,12 @@ service.</p>
 
           
           <div class="method-source-code" id="contact_message-source">
-            <pre><span class="ruby-comment"># File app/mailers/contact_mailer.rb, line 12</span>
+            <pre><span class="ruby-comment"># File app/mailers/contact_mailer.rb, line 24</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">contact_message</span>(<span class="ruby-identifier">contact</span>)
         <span class="ruby-comment"># Setup instance variable for mailer view</span>
         <span class="ruby-ivar">@contact</span> = <span class="ruby-identifier">contact</span>
         
-        <span class="ruby-identifier">mail</span>(<span class="ruby-value">:subject</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{Contact::CONTACT_SUBJECT}&quot;</span>)
+        <span class="ruby-identifier">mail</span>(<span class="ruby-value">:subject</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{CONTACT_SUBJECT}&quot;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div><!-- contact_message-source -->
           

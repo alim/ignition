@@ -193,29 +193,6 @@ ActiveModel validations to help validate the form entries.</p>
     
 
     
-    <!-- Constants -->
-    <section id="constants-list" class="section">
-      <h3 class="section-header">Constants</h3>
-      <dl>
-      
-        <dt id="CONTACT_EMAILBOX">CONTACT_EMAILBOX
-        
-        <dd class="description"><p>Email address defaults for all contact requests</p>
-        
-      
-        <dt id="CONTACT_FROM">CONTACT_FROM
-        
-        <dd class="description">
-        
-      
-        <dt id="CONTACT_SUBJECT">CONTACT_SUBJECT
-        
-        <dd class="description">
-        
-      
-      </dl>
-    </section>
-    
 
     
     <!-- Attributes -->
@@ -300,7 +277,7 @@ ActiveModel validations to help validate the form entries.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File app/models/contact.rb, line 30</span>
+            <pre><span class="ruby-comment"># File app/models/contact.rb, line 22</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">attributes</span> = {})
   <span class="ruby-identifier">attributes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">send</span>(<span class="ruby-node">&quot;#{name}=&quot;</span>, <span class="ruby-identifier">value</span>)
@@ -338,7 +315,7 @@ ActiveModel validations to help validate the form entries.</p>
 
           
           <div class="method-source-code" id="persisted-3F-source">
-            <pre><span class="ruby-comment"># File app/models/contact.rb, line 36</span>
+            <pre><span class="ruby-comment"># File app/models/contact.rb, line 28</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">persisted?</span>
   <span class="ruby-keyword">false</span>
 <span class="ruby-keyword">end</span></pre>

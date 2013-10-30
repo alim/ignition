@@ -1,12 +1,12 @@
-Mon, 28 Oct 2013 14:59:09 -0400
-README.rdoc	Wed, 09 Oct 2013 20:04:01 -0400
+Wed, 30 Oct 2013 09:56:19 -0400
+README.rdoc	Tue, 29 Oct 2013 15:51:34 -0400
 app/controllers/accounts_controller.rb	Thu, 24 Oct 2013 15:42:12 -0400
 app/controllers/admin_controller.rb	Thu, 26 Sep 2013 12:03:30 -0400
 app/controllers/application_controller.rb	Thu, 24 Oct 2013 15:42:12 -0400
-app/controllers/groups_controller.rb	Mon, 28 Oct 2013 13:22:20 -0400
-app/controllers/home_controller.rb	Fri, 25 Oct 2013 15:30:23 -0400
+app/controllers/groups_controller.rb	Mon, 28 Oct 2013 15:04:31 -0400
+app/controllers/home_controller.rb	Mon, 28 Oct 2013 15:04:31 -0400
 app/controllers/projects_controller.rb	Thu, 24 Oct 2013 15:42:12 -0400
-app/controllers/subscriptions_controller.rb	Wed, 09 Oct 2013 20:04:01 -0400
+app/controllers/subscriptions_controller.rb	Tue, 29 Oct 2013 22:15:07 -0400
 app/controllers/users_controller.rb	Thu, 24 Oct 2013 15:42:12 -0400
 app/helpers/accounts_helper.rb	Tue, 08 Oct 2013 14:57:13 -0400
 app/helpers/admin_helper.rb	Fri, 02 Aug 2013 16:53:49 -0400
@@ -16,15 +16,15 @@ app/helpers/home_helper.rb	Fri, 02 Aug 2013 17:08:59 -0400
 app/helpers/projects_helper.rb	Thu, 24 Oct 2013 15:42:12 -0400
 app/helpers/subscriptions_helper.rb	Wed, 25 Sep 2013 12:56:19 -0400
 app/helpers/users_helper.rb	Wed, 25 Sep 2013 13:02:40 -0400
-app/mailers/contact_mailer.rb	Fri, 25 Oct 2013 12:05:27 -0400
-app/mailers/group_mailer.rb	Mon, 28 Oct 2013 13:30:35 -0400
+app/mailers/contact_mailer.rb	Tue, 29 Oct 2013 16:00:48 -0400
+app/mailers/group_mailer.rb	Tue, 29 Oct 2013 16:05:41 -0400
 app/mailers/user_mailer.rb	Wed, 25 Sep 2013 13:02:40 -0400
 app/models/ability.rb	Thu, 24 Oct 2013 15:42:12 -0400
-app/models/account.rb	Tue, 08 Oct 2013 15:05:27 -0400
-app/models/contact.rb	Mon, 28 Oct 2013 13:27:34 -0400
-app/models/group.rb	Mon, 28 Oct 2013 13:30:07 -0400
+app/models/account.rb	Tue, 29 Oct 2013 10:14:10 -0400
+app/models/contact.rb	Tue, 29 Oct 2013 16:00:16 -0400
+app/models/group.rb	Tue, 29 Oct 2013 16:05:11 -0400
 app/models/project.rb	Thu, 24 Oct 2013 15:42:12 -0400
-app/models/subscription.rb	Tue, 08 Oct 2013 14:57:13 -0400
-app/models/user.rb	Thu, 24 Oct 2013 15:42:12 -0400
+app/models/subscription.rb	Tue, 29 Oct 2013 21:48:31 -0400
+app/models/user.rb	Tue, 29 Oct 2013 10:16:33 -0400
 lib/group_relations.rb	Thu, 24 Oct 2013 15:42:12 -0400
 lib/oops.rb	Thu, 24 Oct 2013 15:42:12 -0400
