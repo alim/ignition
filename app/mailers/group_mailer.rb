@@ -1,6 +1,13 @@
 class GroupMailer < ActionMailer::Base
-  default from: "#{Group::GROUP_FROM_EMAIL}"
-  default subject: "#{Group::GROUP_EMAIL_SUBJECT}"
+  
+  GROUP_FROM_EMAIL = ENV["GROUP_FROM_EMAIL"].present? ? 
+    ENV["GROUP_FROM_EMAIL"] : "no-reply@example.com"
+
+  GROUP_EMAIL_SUBJECT = ENV["GROUP_EMAIL_SUBJECT"].present? ? 
+    ENV["GROUP_EMAIL_SUBJECT"] : "Group Membership Notification"
+
+  default from: "#{GROUP_FROM_EMAIL}"
+  default subject: "#{GROUP_EMAIL_SUBJECT}"
   
   ######################################################################
   # The member_email method will notify a new member of a group

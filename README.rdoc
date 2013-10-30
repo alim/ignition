@@ -37,16 +37,25 @@ need to do the following:
     SMTP_DOMAIN=somedomain.com
     SMTP_USER=someuser@somedomain.com
     SMTP_PASSWORD=somepassword
+    
     ADMIN_FIRST_NAME=Some
     ADMIN_LAST_NAME=Admin
     ADMIN_PHONE=800.555.1212
     ADMIN_EMAIL=sadmin@example.com
     ADMIN_PASSWORD=somepassword
+    
     TEST_API_KEY='your stripe test api/private key'
     TEST_PUB_KEY='your stripe test public key'
     PROD_API_KEY='your stripe production api/private key'
     PROD_PUB_KEY='your stripe production public key'
-        
+
+    export CONTACT_EMAILBOX='operations@example.com'
+    export CONTACT_FROM='no-reply-mailbox@example.com'
+    export CONTACT_SUBJECT='New Contact Request'
+
+    export GROUP_FROM_EMAIL="no-reply-mailbox@example.com"
+    export GROUP_EMAIL_SUBJECT="Group Membership Notification"      
+      
 1. Run the rhc command to install these environment variables for your application. You can then destroy the text file you created in the previous step.
     rhc set-env /path/to/variables.txt -a someapp
  

@@ -11,7 +11,7 @@ FactoryGirl.define do
   
   factory :contact, class: Contact do
     name { generate(:contact_name) }
-    email Contact::CONTACT_EMAILBOX
+    email ContactMailer::CONTACT_EMAILBOX
     phone "734.555.1212"
     body { generate(:contact_body) }
   end
