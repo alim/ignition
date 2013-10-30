@@ -26,7 +26,7 @@ describe ContactMailer do
   end
   
   it 'renders the sender email' do  
-    ActionMailer::Base.deliveries.first.from.should == [Contact::CONTACT_FROM]
+    ActionMailer::Base.deliveries.first.from.should == [ContactMailer::CONTACT_FROM]
   end
     
 end

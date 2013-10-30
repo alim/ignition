@@ -31,7 +31,7 @@ describe GroupMailer do
   end
   
   it 'renders the sender email' do  
-    ActionMailer::Base.deliveries.first.from.should == [Group::GROUP_FROM_EMAIL]
+    ActionMailer::Base.deliveries.first.from.should == [GroupMailer::GROUP_FROM_EMAIL]
   end
     
 end

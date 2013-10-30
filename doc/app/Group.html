@@ -202,16 +202,6 @@ primary resource.</p>
       <h3 class="section-header">Constants</h3>
       <dl>
       
-        <dt id="GROUP_EMAIL_SUBJECT">GROUP_EMAIL_SUBJECT
-        
-        <dd class="description">
-        
-      
-        <dt id="GROUP_FROM_EMAIL">GROUP_FROM_EMAIL
-        
-        <dd class="description"><p>CONSTANTS ———————————————————</p>
-        
-      
         <dt id="RESOURCE_CLASS">RESOURCE_CLASS
         
         <dd class="description">
@@ -249,7 +239,7 @@ membership list in the form of a list of individual email address.</p>
 
           
           <div class="method-source-code" id="members-source">
-            <pre><span class="ruby-comment"># File app/models/group.rb, line 52</span>
+            <pre><span class="ruby-comment"># File app/models/group.rb, line 49</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">members</span>
   <span class="ruby-ivar">@members</span>
 <span class="ruby-keyword">end</span></pre>
@@ -279,7 +269,7 @@ membership list in the form of a list of individual email address.</p>
 
           
           <div class="method-source-code" id="members-3D-source">
-            <pre><span class="ruby-comment"># File app/models/group.rb, line 56</span>
+            <pre><span class="ruby-comment"># File app/models/group.rb, line 53</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">members=</span>(<span class="ruby-identifier">value</span>)
   <span class="ruby-ivar">@members</span>=<span class="ruby-identifier">value</span>
 <span class="ruby-keyword">end</span></pre>
@@ -311,7 +301,7 @@ email format.</p>
 
           
           <div class="method-source-code" id="members_list-source">
-            <pre><span class="ruby-comment"># File app/models/group.rb, line 66</span>
+            <pre><span class="ruby-comment"># File app/models/group.rb, line 63</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">members_list</span>
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">members</span>.<span class="ruby-identifier">present?</span>
     <span class="ruby-identifier">email_list</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">members</span>.<span class="ruby-identifier">split</span>

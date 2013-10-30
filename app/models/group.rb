@@ -12,29 +12,26 @@ class Group
   field :description, type: String
   field :owner_id, type: BSON::ObjectId
   
-  ## CONSTANTS ---------------------------------------------------------
-  GROUP_FROM_EMAIL = ENV["GROUP_FROM_EMAIL"].present? ? 
-    ENV["GROUP_FROM_EMAIL"] : "no-reply@example.com"
-
-  GROUP_EMAIL_SUBJECT = ENV["GROUP_EMAIL_SUBJECT"].present? ? 
-    ENV["GROUP_EMAIL_SUBJECT"] : "Group Membership Notification"
-  
   ## RELATIONSHIPS -----------------------------------------------------
+  
   has_and_belongs_to_many :users
   
   # Sample primary resource relation. We are using a resource that 
   # represents a Project in our service. We also set a class constant
   # to the name of the class to which the groups will be given access
+  
   has_and_belongs_to_many :projects
   RESOURCE_CLASS = 'Project'
   
   ## VALIDATIONS -------------------------------------------------------
+  
   validate :members_list
   validates_presence_of :name
   validates_presence_of :description
   validates_presence_of :owner_id
   
   ## SCOPE DEFINITIONS -------------------------------------------------
+  
   scope :owned_groups, ->(owner){
     owner.present? ? where(owner_id: owner.id) : scoped
   } 

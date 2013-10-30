@@ -3,8 +3,20 @@
 # the web service.
 ########################################################################
 class ContactMailer < ActionMailer::Base
-  default from: Contact::CONTACT_FROM
-  default to: Contact::CONTACT_EMAILBOX
+	# Email address defaults for all contact requests
+	
+	CONTACT_EMAILBOX = ENV["CONTACT_EMAILBOX"].present? ? 
+	  ENV["CONTACT_EMAILBOX"] : 'support@example.com'
+	  
+  CONTACT_FROM = ENV["CONTACT_FROM"].present? ? 
+	  ENV["CONTACT_FROM"] : 'no-reply@example.com'
+  
+  CONTACT_SUBJECT = ENV["CONTACT_SUBJECT"].present? ? 
+	  ENV["CONTACT_SUBJECT"] : 'New contact request'
+  
+
+  default from: CONTACT_FROM
+  default to: CONTACT_EMAILBOX
   
   ######################################################################
   # The standard contact request message.
@@ -13,6 +25,6 @@ class ContactMailer < ActionMailer::Base
 		# Setup instance variable for mailer view
 		@contact = contact
 		
-		mail(:subject => "#{Contact::CONTACT_SUBJECT}")
+		mail(:subject => "#{CONTACT_SUBJECT}")
 	end  
 end

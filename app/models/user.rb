@@ -31,6 +31,7 @@ class User
   field :remember_created_at, :type => Time
 
   ## Trackable
+  
   field :sign_in_count,      :type => Integer, :default => 0
   field :current_sign_in_at, :type => Time
   field :last_sign_in_at,    :type => Time
@@ -60,6 +61,7 @@ class User
   SERVICE_ADMIN = 2
  
   ## Additional fields and validations ---------------------------------
+  
   field :first_name, type: String, default: ''
   validates_presence_of :first_name
   
@@ -77,15 +79,18 @@ class User
   
   
   ## RELATIONSHIPS -----------------------------------------------------
+  
   has_and_belongs_to_many :groups, dependent: :destroy
   has_many :subscriptions, dependent: :destroy
   embeds_one :account 
   
   ## RESOURCES MANAGED BY A USER
+  
   has_many :projects, dependent: :destroy  # Example primary resource
 
   
   ## QUERY SCOPES ------------------------------------------------------
+  
   scope :by_email, ->(email){ where(email: /^.*#{email}.*/i) }
   scope :by_first_name, ->(name){ where(first_name: /^.*#{name}.*/i) }
   scope :by_last_name, ->(name){ where(last_name: /^.*#{name}.*/i) }
