@@ -7,9 +7,9 @@ describe Subscription do
     @subscription = Subscription.last
   }
   
-  before(:each) {
-    create_subscriptions
-  }
+  before(:each) { create_subscriptions }
+  
+  after(:each) { Subscription.destroy_all }
 
   # METHOD CHECKS ------------------------------------------------------
 	describe "Should respond to all accessor methods" do
@@ -85,35 +85,64 @@ describe Subscription do
   
   # STRIPE ACTION TESTS ------------------------------------------------
   describe "Stripe interface tests" do
+  
+    # Credit card and stripe test data
+    let(:cardnum) { "4242424242424242" }
+    let(:email) { "janesmith@example.com" }
+    let(:name) { "Jane Smith" }
+    let(:cvcvalue) { "616" }
+    let(:token) { @token = get_token(name, cardnum, Date.today.month, 
+      (Date.today.year + 1), cvcvalue) }  
+  
+    let(:stripe_customer){ 
+      @customer = create_customer(@token, email) 
+    }
+    
+    before(:each){
+      find_a_subscription
+      stripe_customer
+      @user = FactoryGirl.create(:user_with_account)
+      @user.account.customer_id = @customer.id
+    }
+  
+    after(:each){
+      @user.destroy
+      delete_customer(@customer)
+    }
+    
     describe "Create subscription examples" do
-      let(:get_stripe_id) {
-        @subscription = Subscription.first
-        @stripe_id = @subscription.stripe_id
-      }
-
-      it "Should not be valid without a stripe_id" do
-          get_stripe_id
-          @subscription.stripe_id = nil
-          @subscription.should_not be_valid
-          @subscription.should have(1).error_on(:stripe_id)
+      it "should return a Stripe.com subscription object with no options" do
+        expect {
+          @subscription.subscribe(@account, 
+            Subscription::PLAN_OPTIONS[:silver][:plan_id])
+        }.to_not raise_error
       end
+      
+      it "should specify the correct plan for the subscription" do
+        pending
+      end
+      
     end
     
     describe "Update subscription examples" do
-      let(:get_stripe_id) {
-        @subscription = Subscription.first
-        @stripe_id = @subscription.stripe_id
-      }
-
-      it "Should not be valid without a stripe_id" do
-          get_stripe_id
-          @subscription.stripe_id = nil
-          @subscription.should_not be_valid
-          @subscription.should have(1).error_on(:stripe_id)
+      it "should update the customer's plan" do
+        expect {
+          @subscription.subscribe(@account, 
+            Subscription::PLAN_OPTIONS[:bronze][:plan_id])
+        }.to_not raise_error
       end
+      
+      it "should specify the correct plan for the subscription" do
+        pending
+      end      
     end
     
     describe "Delete subscription" do
+      it "should remove the subscription from the customer's account" do
+        expect {
+          @subscription.cancel_subscription(@account)
+        }.to_not raise_error
+      end
     end 
   end
 end

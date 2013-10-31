@@ -1,11 +1,11 @@
-Thu, 31 Oct 2013 17:02:31 -0400
+Thu, 31 Oct 2013 17:49:23 -0400
 README.rdoc	Wed, 30 Oct 2013 17:37:44 -0400
 app/controllers/accounts_controller.rb	Wed, 30 Oct 2013 17:16:09 -0400
 app/controllers/admin_controller.rb	Thu, 26 Sep 2013 12:03:30 -0400
 app/controllers/application_controller.rb	Wed, 30 Oct 2013 17:16:09 -0400
 app/controllers/groups_controller.rb	Wed, 30 Oct 2013 17:16:09 -0400
 app/controllers/home_controller.rb	Wed, 30 Oct 2013 17:16:09 -0400
-app/controllers/projects_controller.rb	Thu, 31 Oct 2013 16:57:31 -0400
+app/controllers/projects_controller.rb	Thu, 31 Oct 2013 17:44:35 -0400
 app/controllers/subscriptions_controller.rb	Wed, 30 Oct 2013 17:37:44 -0400
 app/controllers/users_controller.rb	Wed, 30 Oct 2013 17:16:09 -0400
 app/helpers/accounts_helper.rb	Tue, 08 Oct 2013 14:57:13 -0400
@@ -23,8 +23,8 @@ app/models/ability.rb	Wed, 30 Oct 2013 17:16:09 -0400
 app/models/account.rb	Wed, 30 Oct 2013 17:37:44 -0400
 app/models/contact.rb	Wed, 30 Oct 2013 17:37:44 -0400
 app/models/group.rb	Wed, 30 Oct 2013 17:37:44 -0400
-app/models/project.rb	Thu, 31 Oct 2013 15:25:16 -0400
-app/models/subscription.rb	Thu, 31 Oct 2013 12:06:31 -0400
+app/models/project.rb	Thu, 31 Oct 2013 17:44:35 -0400
+app/models/subscription.rb	Thu, 31 Oct 2013 17:48:36 -0400
 app/models/user.rb	Wed, 30 Oct 2013 17:37:44 -0400
 lib/group_relations.rb	Wed, 30 Oct 2013 17:16:10 -0400
 lib/oops.rb	Wed, 30 Oct 2013 17:16:10 -0400

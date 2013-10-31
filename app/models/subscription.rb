@@ -13,12 +13,11 @@ class Subscription
   # CONSTANTS ----------------------------------------------------------
   
   # The PLAN_OPTIONS is a hash of Stripe.com plan ID's associated with
-  # this service
+  # this service. Each hash enter includes a label and an id
   PLAN_OPTIONS = {
-    bronze: 'plan_bronze',
-    silver: 'plan_silver',
-    gold: 'plan_gold',
-    platinum: 'plan_paltinum',
+    bronze: {label: 'Bronze Plan', plan_id: 'ignition_bronze_plan'},
+    silver: {label: 'Silver Plan', plan_id: 'ignition_silver_plan'},
+    gold: {label: 'Gold Plan', plan_id: 'ignition_gold_plan'},
   }
   
   
