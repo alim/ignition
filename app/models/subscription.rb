@@ -10,6 +10,19 @@ class Subscription
   # Add call to strip leading and trailing white spaces from all atributes
   strip_attributes  # See strip_attributes for more information
   
+  # CONSTANTS ----------------------------------------------------------
+  
+  # The PLAN_OPTIONS is a hash of Stripe.com plan ID's associated with
+  # this service. Each hash enter includes a label and an id
+  PLAN_OPTIONS = {
+    bronze: {label: 'Bronze Plan', plan_id: 'ignition_bronze_plan'},
+    silver: {label: 'Silver Plan', plan_id: 'ignition_silver_plan'},
+    gold: {label: 'Gold Plan', plan_id: 'ignition_gold_plan'},
+  }
+  
+  
+  # ATTRIBUTES ---------------------------------------------------------
+  
   field :plan_id, type: String
   field :stripe_id, type: String
   field :cancel_at_period_end, type: Boolean
@@ -25,8 +38,6 @@ class Subscription
   field :trial_start, type: DateTime
   field :trial_end, type: DateTime
   
-  # Need to add field for relationship to a user account
-  field :user_id, type: String
   
   # VALIDATIONS --------------------------------------------------------
   
