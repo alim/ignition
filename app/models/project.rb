@@ -11,6 +11,7 @@
 class Project
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Paperclip
 
   # Add call to strip leading and trailing white spaces from all atributes
   strip_attributes  # See strip_attributes for more information
@@ -20,15 +21,19 @@ class Project
 
   
   ## VALIDATIONS -------------------------------------------------------
+  
   validates_presence_of :name
   validates_presence_of :description
   validates_presence_of :user_id
   
   ## RELATIONSHIPS -----------------------------------------------------
+  
   belongs_to :user
   has_and_belongs_to_many :groups
+  has_mongoid_attached_file :charter_doc
   
   ## GROUP METHOD INJECTION --------------------------------------------
+  
   include GroupRelations
   
   ######################################################################

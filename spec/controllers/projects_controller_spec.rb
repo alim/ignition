@@ -442,6 +442,7 @@ describe ProjectsController do
     }
     
     describe "with valid params" do
+     
       it "creates a new Project" do
         expect {
           post :create, project_params
@@ -473,6 +474,34 @@ describe ProjectsController do
         post :create, project_params
         assigns(:project).group_ids.sort.first.should eq(@group.id)
       end
+      
+      describe "file upload examples" do
+        before(:each) do
+          @file = fixture_file_upload('spec/fixtures/test_doc.pdf', 
+            'application/pdf')
+          project_params[:project][:charter_doc] = @file
+        end
+      
+        it "should allow attaching a pdf file" do
+          post :create, project_params
+          response.should redirect_to(assigns(:project))
+        end
+        
+        it "should upload file and set file name attribute" do
+          post :create, project_params 
+          assigns(:project).charter_doc_file_name.should match(/test_doc.pdf/)
+        end
+        
+        it "should upload file and set file url attribute" do
+          post :create, project_params 
+          assigns(:project).charter_doc.url.should match(/test_doc.pdf/)
+        end        
+
+        it "should upload file and set file content_type attribute" do
+          post :create, project_params 
+          assigns(:project).charter_doc_content_type.should match(/pdf/)
+        end        
+      end 
     end
 
     describe "with invalid params" do
@@ -557,6 +586,34 @@ describe ProjectsController do
         put :update, update_params
         assigns(:project).group_ids.should eq([@group.id])
       end
+      
+      describe "file upload examples" do
+        before(:each) do
+          @file = fixture_file_upload('spec/fixtures/test_doc.pdf', 
+            'application/pdf')
+          update_params[:project][:charter_doc] = @file
+        end
+      
+        it "should allow attaching a pdf file" do
+          put :update, update_params
+          response.should redirect_to(assigns(:project))
+        end
+        
+        it "should upload file and set file name attribute" do
+          put :update, update_params
+          assigns(:project).charter_doc_file_name.should match(/test_doc.pdf/)
+        end
+        
+        it "should upload file and set file url attribute" do
+          put :update, update_params
+          assigns(:project).charter_doc.url.should match(/test_doc.pdf/)
+        end        
+
+        it "should upload file and set file content_type attribute" do
+          put :update, update_params
+          assigns(:project).charter_doc_content_type.should match(/pdf/)
+        end        
+      end       
     end # with valid parameters
 
     describe "with invalid params" do

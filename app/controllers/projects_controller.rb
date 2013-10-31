@@ -84,7 +84,7 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(project_params)
     @project.user = current_user
-    
+
     respond_to do |format|
       if @project.save
         @project.group_relate(params[:project][:group_ids])
@@ -168,7 +168,7 @@ class ProjectsController < ApplicationController
   # white list through.
   ######################################################################
   def project_params
-    params.require(:project).permit(:name, :description, :group_ids)
+    params.require(:project).permit(:name, :description, :group_ids, :charter_doc)
   end
   
   ######################################################################
