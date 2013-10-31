@@ -47,7 +47,6 @@ gem 'devise', "~> 3.0.1"
 gem 'cancan', "~> 1.6.10"
 
 # Paperclip GEM for handling file attachments
-# gem 'paperclip'
 gem "mongoid-paperclip", :require => "mongoid_paperclip"
 gem 'aws-sdk'
 
