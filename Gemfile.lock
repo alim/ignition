@@ -94,6 +94,8 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.25)
     minitest (4.7.5)
+    mongoid-paperclip (0.0.8)
+      paperclip (>= 2.3.6)
     moped (2.0.0.beta3)
       bson (~> 2.0.0.rc3)
       optionable (~> 0.1.1)
@@ -205,7 +207,7 @@ DEPENDENCIES
   less-rails
   minitest
   mongoid (~> 4.0)!
-  paperclip
+  mongoid-paperclip
   rails (~> 4.0.0)
   rspec-rails
   sass-rails (~> 4.0.0)

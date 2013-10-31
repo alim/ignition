@@ -12,8 +12,17 @@
 <dl class="dl-horizontal">
   <dt><strong>Name:</strong></dt>
   <dd><%= @project.name %></dd>
+  
   <dt><strong>Description:</strong></dt>
   <dd><%= @project.description.html_safe %></dd>
+  
+  <dt><strong>Charter document:</strong></dt>
+  <dd>
+    <%= link_to @project.charter_doc_file_name , 
+      @project.charter_doc.url, class: 'btn btn-mini' %>
+  </dd>
+  <br/>
+  
   <dt><strong>Group Owner:</strong></dt>
   <dd>
     <%= @project.user.first_name %> <%= @project.user.last_name %> - 
