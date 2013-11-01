@@ -13,10 +13,8 @@ describe Subscription do
 
   # METHOD CHECKS ------------------------------------------------------
 	describe "Should respond to all accessor methods" do
-		it { should respond_to(:plan_id) }
-		it { should respond_to(:stripe_id) }
+		it { should respond_to(:stripe_plan_id) }
 		it { should respond_to(:cancel_at_period_end) }
-		it { should respond_to(:stripe_customer_id) }
 		it { should respond_to(:quantity) }
 		it { should respond_to(:sub_start) }
 		it { should respond_to(:sub_end) }
@@ -41,21 +39,11 @@ describe Subscription do
       sub = FactoryGirl.create(:subscription)
       sub.should be_valid
     end
-    
-    it "Should not be valid, if plan_id is missing" do
-      @subscription.plan_id = nil
-      @subscription.should_not be_valid
-    end
         
-    it "Should not be valid, if stripe_id is missing" do
-      @subscription.stripe_id = nil
+    it "Should not be valid, if stripe_plan_id is missing" do
+      @subscription.stripe_plan_id = nil
       @subscription.should_not be_valid
-    end
-    
-    it "Should not be valid, if stripe_customer_id is missing" do
-      @subscription.stripe_customer_id = nil
-      @subscription.should_not be_valid
-    end
+    end    
     
     it "Should not be valid, if quantity is missing" do
       @subscription.quantity = nil
@@ -66,11 +54,6 @@ describe Subscription do
       @subscription.sub_start = nil
       @subscription.should_not be_valid
     end    
-    
-    it "Should not be valid, if sub_end is missing" do
-      @subscription.sub_end = nil
-      @subscription.should_not be_valid
-    end
 
     it "Should not be valid, if status is missing" do
       @subscription.status = nil
@@ -142,6 +125,10 @@ describe Subscription do
         expect {
           @subscription.cancel_subscription(@account)
         }.to_not raise_error
+      end
+      
+      it "should cancel a subscription when the user is deleted" do
+        pending
       end
     end 
   end

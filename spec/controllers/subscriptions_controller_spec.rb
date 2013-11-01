@@ -90,10 +90,8 @@ describe SubscriptionsController do
     let(:create_params) {
       {subscription: 
         {
-          plan_id: @fake_subscription.plan_id,
-          stripe_id: @fake_subscription.stripe_id,
+          stripe_plan_id: @fake_subscription.stripe_plan_id,
           cancel_at_period_end: @fake_subscription.cancel_at_period_end,
-          stripe_customer_id: @fake_subscription.stripe_customer_id,
           quantity: @fake_subscription.quantity,
           sub_start: @fake_subscription.sub_start,
           sub_end: @fake_subscription.sub_end,
@@ -146,16 +144,14 @@ describe SubscriptionsController do
   end
 
   describe "PUT update" do
-    let(:new_plan_id){ "99999999" }
-    let(:new_fake_stripe_id){ "999999999" }
+    let(:new_fake_stripe_plan_id){ "999999999" }
   
     
     let(:update_params){
       {
         id: @fake_subscription.id,
         subscription: {
-          plan_id: new_plan_id,
-          stripe_id: new_fake_stripe_id,
+          stripe_plan_id: new_fake_stripe_plan_id,
         }
       }
     }
@@ -163,8 +159,7 @@ describe SubscriptionsController do
     describe "with valid params" do
       it "updates the requested subscription" do
         put :update, update_params
-        assigns(:subscription).plan_id.should eq(new_plan_id)
-        assigns(:subscription).stripe_id.should eq(new_fake_stripe_id)
+        assigns(:subscription).stripe_plan_id.should eq(new_fake_stripe_plan_id)
       end
 
       it "assigns the requested subscription as @subscription" do
