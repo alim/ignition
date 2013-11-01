@@ -1,73 +1,33 @@
-<%= form_for(@subscription) do |f| %>
-  <% if @subscription.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@subscription.errors.count, "error") %> prohibited this subscription from being saved:</h2>
+<%= render partial: 'shared/validation_errors' %>
 
-      <ul>
-      <% @subscription.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+<p>
+  Please note that all plans come with a 30-day trial period. Your
+  credit card will not be charged until after this 30-day trial period.
+  You will need to cancel your account before the end of the trial
+  period to avoid any chargers after the trial period.
+</p>
+
+<%= form_for @subscription, html: {class: 'form-horizontal'} do |f| %>
+  <br/>
+  <div class="control-group">
+    <label class='control-label'>Subscription Plan</label>
+    <div class="controls">
+      <%= f.select(:stripe_plan_id, subscription_plans) %>
     </div>
-  <% end %>
+  </div>
 
-  <div class="field">
-    <%= f.label :plan_id %><br>
-    <%= f.number_field :plan_id %>
+  <br/>
+  <div class="control-group">
+    <label class='control-label'>Coupon</label>
+    <div class="controls">
+      <%= f.text_field(:coupon_code) %>
+    </div>
   </div>
-  <div class="field">
-    <%= f.label :stripe_id %><br>
-    <%= f.text_field :stripe_id %>
+
+  <div class="form-actions">
+    <%= f.submit 'Subscribe', class: 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                admin_index_path, class: 'btn' %>
   </div>
-  <div class="field">
-    <%= f.label :cancel_at_period_end %><br>
-    <%= f.text_field :cancel_at_period_end %>
-  </div>
-  <div class="field">
-    <%= f.label :stripe_customer_id %><br>
-    <%= f.text_field :stripe_customer_id %>
-  </div>
-  <div class="field">
-    <%= f.label :quantity %><br>
-    <%= f.number_field :quantity %>
-  </div>
-  <div class="field">
-    <%= f.label :sub_start %><br>
-    <%= f.datetime_select :sub_start %>
-  </div>
-  <div class="field">
-    <%= f.label :sub_end %><br>
-    <%= f.datetime_select :sub_end %>
-  </div>
-  <div class="field">
-    <%= f.label :status %><br>
-    <%= f.text_field :status %>
-  </div>
-  <div class="field">
-    <%= f.label :canceled_at %><br>
-    <%= f.datetime_select :canceled_at %>
-  </div>
-  <div class="field">
-    <%= f.label :current_period_start %><br>
-    <%= f.datetime_select :current_period_start %>
-  </div>
-  <div class="field">
-    <%= f.label :current_period_end %><br>
-    <%= f.datetime_select :current_period_end %>
-  </div>
-  <div class="field">
-    <%= f.label :ended_at %><br>
-    <%= f.datetime_select :ended_at %>
-  </div>
-  <div class="field">
-    <%= f.label :trial_start %><br>
-    <%= f.datetime_select :trial_start %>
-  </div>
-  <div class="field">
-    <%= f.label :trial_end %><br>
-    <%= f.datetime_select :trial_end %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+
 <% end %>
