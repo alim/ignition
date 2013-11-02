@@ -62,7 +62,13 @@ class SubscriptionsController < ApplicationController
     end
   end
 
+  ######################################################################
   # GET /subscriptions/1/edit
+  #
+  # Standard edit action and view. Instructions added to the view
+  # about updating their subscription plan. We added a partial to 
+  # display the plan options.
+  ######################################################################
   def edit
   end
 

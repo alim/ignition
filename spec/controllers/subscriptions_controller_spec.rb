@@ -99,7 +99,6 @@ describe SubscriptionsController do
           canceled_at: @fake_subscription.canceled_at,
           current_period_start: @fake_subscription.current_period_start,
           current_period_end: @fake_subscription.current_period_end,
-          ended_at: @fake_subscription.ended_at,
           trial_start: @fake_subscription.trial_start,
           trial_end: @fake_subscription.trial_end,
           user_id: @fake_subscription.user_id,

@@ -22,7 +22,6 @@ describe Subscription do
 		it { should respond_to(:canceled_at) }
 		it { should respond_to(:current_period_start) }
 		it { should respond_to(:current_period_end) }
-		it { should respond_to(:ended_at) }
 		it { should respond_to(:trial_start) }
 		it { should respond_to(:trial_end) }
 		it { should respond_to(:user_id) }
@@ -89,7 +88,7 @@ describe Subscription do
     }
   
     after(:each){
-      @user.destroy
+      User.destroy_all
       delete_customer(@customer)
     }
     

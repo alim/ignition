@@ -15,7 +15,6 @@ FactoryGirl.define do
     canceled_at { DateTime.now + 10.months }
     current_period_start { DateTime.now + 1.month }
     current_period_end { DateTime.now + 2.months }
-    ended_at { DateTime.now + 10.months }
     trial_start { DateTime.now }
     trial_end { DateTime.now + 1.month }
     user_id {rand(1..100000)}
