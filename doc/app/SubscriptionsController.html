@@ -210,14 +210,22 @@ subscription plans being setup on the Stripe.com service for charging.</p>
         <div class="method-description">
           
           <p>POST /subscriptions POST /subscriptions.json</p>
+
+<p>The create method will fill out the subscription options and calls the
+model instance method for creating a subscription on the  Stripe.com</p>
           
 
           
           <div class="method-source-code" id="create-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 52</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 83</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>
   <span class="ruby-ivar">@subscription</span> = <span class="ruby-constant">Subscription</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">subscription_params</span>)
   <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">subscriptions</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-ivar">@subscription</span>
+  
+  <span class="ruby-comment"># STUB METHOD WHILE INSTANCE METHOD IS BEING DEVELOPERED.</span>
+  <span class="ruby-comment"># THE REAL CALL WILL BE @subscription.subscribe(current_user.account,</span>
+  <span class="ruby-comment"># params[:plan_id], coupon: params[:coupon_code]</span>
+  <span class="ruby-identifier">update_subscription</span>(<span class="ruby-ivar">@subscription</span>)
   
   <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">if</span> <span class="ruby-ivar">@subscription</span>.<span class="ruby-identifier">save</span>
@@ -256,7 +264,7 @@ subscription plans being setup on the Stripe.com service for charging.</p>
 
           
           <div class="method-source-code" id="destroy-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 84</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 121</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
   <span class="ruby-ivar">@subscription</span>.<span class="ruby-identifier">destroy</span>
   <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
@@ -286,11 +294,15 @@ subscription plans being setup on the Stripe.com service for charging.</p>
         <div class="method-description">
           
           <p>GET /subscriptions/1/edit</p>
+
+<p>Standard edit action and view. Instructions added to the view about
+updating their subscription plan. We added a partial to  display the plan
+options.</p>
           
 
           
           <div class="method-source-code" id="edit-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 47</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 72</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">edit</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- edit-source -->
@@ -315,11 +327,13 @@ subscription plans being setup on the Stripe.com service for charging.</p>
         <div class="method-description">
           
           <p>GET /subscriptions GET /subscriptions.json</p>
+
+<p>The index method will only be available for service administrators</p>
           
 
           
           <div class="method-source-code" id="index-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 18</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 22</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">index</span>
   <span class="ruby-ivar">@subscriptions</span> = <span class="ruby-constant">Subscription</span>.<span class="ruby-identifier">all</span>
 <span class="ruby-keyword">end</span></pre>
@@ -354,7 +368,7 @@ Subscriptions#show action.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 35</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 45</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@subscription</span> = <span class="ruby-constant">Subscription</span>.<span class="ruby-identifier">new</span>
   
@@ -362,7 +376,16 @@ Subscriptions#show action.</p>
   <span class="ruby-ivar">@subplan</span> = <span class="ruby-constant">Subscription</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">user_id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span>).<span class="ruby-identifier">first</span>
   
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@subplan</span>.<span class="ruby-identifier">present?</span>
+    <span class="ruby-comment"># Subscription plan is active</span>
     <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">subscription_url</span>(<span class="ruby-ivar">@subplan</span>)
+    
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">present?</span>
+    <span class="ruby-comment"># We have an account for signing up a subscription</span>
+    
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-comment"># No account and no subscription plan - Redirect to update</span>
+    <span class="ruby-comment"># user account with notice to add credit card.</span>
+    <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">new_user_account</span>(<span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- new-source -->
@@ -387,11 +410,15 @@ Subscriptions#show action.</p>
         <div class="method-description">
           
           <p>GET /subscriptions/1 GET /subscriptions/1.json</p>
+
+<p>The show method will display the list of subscription attributes that were
+returned from Stripe.com and stored in the <a
+href="Subscription.html">Subscription</a> model class.</p>
           
 
           
           <div class="method-source-code" id="show-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 24</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 34</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">show</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- show-source -->
@@ -420,13 +447,14 @@ Subscriptions#show action.</p>
 
           
           <div class="method-source-code" id="update-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 70</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 106</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>
   <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">if</span> <span class="ruby-ivar">@subscription</span>.<span class="ruby-identifier">update</span>(<span class="ruby-identifier">subscription_params</span>)
       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@subscription</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">'Subscription was successfully updated.'</span> }
       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">head</span> <span class="ruby-value">:no_content</span> }
     <span class="ruby-keyword">else</span>
+      <span class="ruby-ivar">@verrors</span> =  <span class="ruby-ivar">@subscription</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">full_messages</span>
       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">action</span><span class="ruby-operator">:</span> <span class="ruby-string">'edit'</span> }
       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">json</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@subscription</span>.<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-value">:unprocessable_entity</span> }
     <span class="ruby-keyword">end</span>

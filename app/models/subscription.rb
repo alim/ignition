@@ -39,7 +39,6 @@ class Subscription
   field :canceled_at, type: DateTime
   field :current_period_start, type: DateTime
   field :current_period_end, type: DateTime
-  field :ended_at, type: DateTime
   field :trial_start, type: DateTime
   field :trial_end, type: DateTime
   
