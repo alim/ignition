@@ -80,7 +80,17 @@
   </ul>
 </nav>
 
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
     
+    <li><a href="#method-i-plan_str">#plan_str</a>
+    
+  </ul>
+</nav>
+
   </div>
 
   <div id="project-metadata">
@@ -114,6 +124,10 @@
     <li><a href="./ApplicationController.html">ApplicationController</a>
   
     <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Contact.html">Contact</a>
+  
+    <li><a href="./ContactMailer.html">ContactMailer</a>
   
     <li><a href="./Group.html">Group</a>
   
@@ -177,11 +191,124 @@ timestamps and white space stripping.</p>
     
 
     
+    <!-- Constants -->
+    <section id="constants-list" class="section">
+      <h3 class="section-header">Constants</h3>
+      <dl>
+      
+        <dt id="ACTIVE">ACTIVE
+        
+        <dd class="description">
+        
+      
+        <dt id="CANCELED">CANCELED
+        
+        <dd class="description">
+        
+      
+        <dt id="PAST_DUE">PAST_DUE
+        
+        <dd class="description">
+        
+      
+        <dt id="PLAN_OPTIONS">PLAN_OPTIONS
+        
+        <dd class="description"><p>The <a href="Subscription.html#PLAN_OPTIONS">PLAN_OPTIONS</a> is a hash of
+Stripe.com plan ID’s associated with this service. Each hash enter includes
+a label and an id</p>
+        
+      
+        <dt id="TRAILING">TRAILING
+        
+        <dd class="description"><p>SUBSCRIPTION STATUS VALUES</p>
+        
+      
+        <dt id="UNKNOWN">UNKNOWN
+        
+        <dd class="description">
+        
+      
+        <dt id="UNPAID">UNPAID
+        
+        <dd class="description">
+        
+      
+      </dl>
+    </section>
+    
 
+    
+    <!-- Attributes -->
+    <section id="attribute-method-details" class="method-section section">
+      <h3 class="section-header">Attributes</h3>
+
+      
+      <div id="attribute-i-coupon_code" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">coupon_code</span><span
+            class="attribute-access-type">[RW]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Non-database attribute for storing a coupon code when subscribing</p>
+        
+        </div>
+      </div>
+      
+    </section><!-- attribute-method-details -->
     
 
     <!-- Methods -->
     
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-plan_str" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">plan_str</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The <a href="Subscription.html#method-i-plan_str">#plan_str</a> returns a
+string that represents the name of the subscription plan.</p>
+          
+
+          
+          <div class="method-source-code" id="plan_str-source">
+            <pre><span class="ruby-comment"># File app/models/subscription.rb, line 67</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">plan_str</span>
+  <span class="ruby-keyword">case</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">stripe_plan_id</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">PLAN_OPTIONS</span>[<span class="ruby-value">0</span>][<span class="ruby-value">:plan_id</span>]
+    <span class="ruby-identifier">str</span> = <span class="ruby-string">&quot;Bronze Subscription Plan&quot;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">PLAN_OPTIONS</span>[<span class="ruby-value">1</span>][<span class="ruby-value">:plan_id</span>]
+    <span class="ruby-identifier">str</span> = <span class="ruby-string">&quot;Silver Subscription Plan&quot;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">PLAN_OPTIONS</span>[<span class="ruby-value">2</span>][<span class="ruby-value">:plan_id</span>]
+    <span class="ruby-identifier">str</span> = <span class="ruby-string">&quot;Gold Subscription Plan&quot;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">str</span> = <span class="ruby-string">&quot;Unknown Plan&quot;</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">str</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- plan_str-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- plan_str-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
   </section><!-- 5Buntitled-5D -->
 
 </div><!-- documentation -->

@@ -1,6 +1,6 @@
 <%= render partial: 'shared/validation_errors' %>
 
-<%= form_for @project, :html => { class: 'form-horizontal' } do |f| %>
+<%= form_for @project, html: { multipart: true, class: 'form-horizontal' } do |f| %>
   <div class="control-group">
     <%= f.label :name, class: 'control-label' %>
     <div class="controls">
@@ -10,9 +10,17 @@
   <div class="control-group">
     <%= f.label :description, class: 'control-label' %>
     <div class="controls">
-      <%= f.text_area :description, rows: 4, class: 'text_area span6' %>
+      <%= f.text_area :description, class: 'text_area tinymce' %>
     </div>
   </div>
+  
+  <div class="control-group">
+    <label class="control-label">Charter Document</label>
+    <div class="controls">
+      <%= f.file_field :charter_doc %>
+    </div>
+  </div>
+  
 
 	<!-- -----------------------------------------------------------------
 	  Generate a checkbox list of Groups that can be related to the 

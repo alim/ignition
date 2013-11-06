@@ -7,16 +7,14 @@ describe Subscription do
     @subscription = Subscription.last
   }
   
-  before(:each) {
-    create_subscriptions
-  }
+  before(:each) { create_subscriptions }
+  
+  after(:each) { Subscription.destroy_all }
 
   # METHOD CHECKS ------------------------------------------------------
 	describe "Should respond to all accessor methods" do
-		it { should respond_to(:plan_id) }
-		it { should respond_to(:stripe_id) }
+		it { should respond_to(:stripe_plan_id) }
 		it { should respond_to(:cancel_at_period_end) }
-		it { should respond_to(:stripe_customer_id) }
 		it { should respond_to(:quantity) }
 		it { should respond_to(:sub_start) }
 		it { should respond_to(:sub_end) }
@@ -24,7 +22,6 @@ describe Subscription do
 		it { should respond_to(:canceled_at) }
 		it { should respond_to(:current_period_start) }
 		it { should respond_to(:current_period_end) }
-		it { should respond_to(:ended_at) }
 		it { should respond_to(:trial_start) }
 		it { should respond_to(:trial_end) }
 		it { should respond_to(:user_id) }
@@ -41,21 +38,11 @@ describe Subscription do
       sub = FactoryGirl.create(:subscription)
       sub.should be_valid
     end
-    
-    it "Should not be valid, if plan_id is missing" do
-      @subscription.plan_id = nil
-      @subscription.should_not be_valid
-    end
         
-    it "Should not be valid, if stripe_id is missing" do
-      @subscription.stripe_id = nil
+    it "Should not be valid, if stripe_plan_id is missing" do
+      @subscription.stripe_plan_id = nil
       @subscription.should_not be_valid
-    end
-    
-    it "Should not be valid, if stripe_customer_id is missing" do
-      @subscription.stripe_customer_id = nil
-      @subscription.should_not be_valid
-    end
+    end    
     
     it "Should not be valid, if quantity is missing" do
       @subscription.quantity = nil
@@ -66,11 +53,6 @@ describe Subscription do
       @subscription.sub_start = nil
       @subscription.should_not be_valid
     end    
-    
-    it "Should not be valid, if sub_end is missing" do
-      @subscription.sub_end = nil
-      @subscription.should_not be_valid
-    end
 
     it "Should not be valid, if status is missing" do
       @subscription.status = nil
@@ -85,35 +67,68 @@ describe Subscription do
   
   # STRIPE ACTION TESTS ------------------------------------------------
   describe "Stripe interface tests" do
+  
+    # Credit card and stripe test data
+    let(:cardnum) { "4242424242424242" }
+    let(:email) { "janesmith@example.com" }
+    let(:name) { "Jane Smith" }
+    let(:cvcvalue) { "616" }
+    let(:token) { @token = get_token(name, cardnum, Date.today.month, 
+      (Date.today.year + 1), cvcvalue) }  
+  
+    let(:stripe_customer){ 
+      @customer = create_customer(@token, email) 
+    }
+    
+    before(:each){
+      find_a_subscription
+      stripe_customer
+      @user = FactoryGirl.create(:user_with_account)
+      @user.account.customer_id = @customer.id
+    }
+  
+    after(:each){
+      User.destroy_all
+      delete_customer(@customer)
+    }
+    
     describe "Create subscription examples" do
-      let(:get_stripe_id) {
-        @subscription = Subscription.first
-        @stripe_id = @subscription.stripe_id
-      }
-
-      it "Should not be valid without a stripe_id" do
-          get_stripe_id
-          @subscription.stripe_id = nil
-          @subscription.should_not be_valid
-          @subscription.should have(1).error_on(:stripe_id)
+      it "should return a Stripe.com subscription object with no options" do
+        expect {
+          @subscription.subscribe(@account, 
+            Subscription::PLAN_OPTIONS[:silver][:plan_id])
+        }.to_not raise_error
       end
+      
+      it "should specify the correct plan for the subscription" do
+        pending
+      end
+      
     end
     
     describe "Update subscription examples" do
-      let(:get_stripe_id) {
-        @subscription = Subscription.first
-        @stripe_id = @subscription.stripe_id
-      }
-
-      it "Should not be valid without a stripe_id" do
-          get_stripe_id
-          @subscription.stripe_id = nil
-          @subscription.should_not be_valid
-          @subscription.should have(1).error_on(:stripe_id)
+      it "should update the customer's plan" do
+        expect {
+          @subscription.subscribe(@account, 
+            Subscription::PLAN_OPTIONS[:bronze][:plan_id])
+        }.to_not raise_error
       end
+      
+      it "should specify the correct plan for the subscription" do
+        pending
+      end      
     end
     
     describe "Delete subscription" do
+      it "should remove the subscription from the customer's account" do
+        expect {
+          @subscription.cancel_subscription(@account)
+        }.to_not raise_error
+      end
+      
+      it "should cancel a subscription when the user is deleted" do
+        pending
+      end
     end 
   end
 end

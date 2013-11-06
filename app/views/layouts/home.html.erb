@@ -55,10 +55,10 @@
           <a class="brand" href="#">Web Services</a>
           <div class="container-fluid nav-collapse">
             <ul class="nav pull-right">
-              <li class="<%= @home_active %>"><%= link_to "Home", home_index_url  %></li>
-              <li class="<%= @support_active %>"><%= link_to "Support", home_support_url %></li>
-              <li class="<%= @about_active %>"><%= link_to "About", home_about_url  %></li>
-              <li class="<%= @contact_active %>"><%= link_to "Contact", home_contact_url  %></li>
+              <li <%= @home_active %> ><%= link_to "Home", home_index_url  %></li>
+              <li <%= @support_active %> ><%= link_to "Support", home_support_url %></li>
+              <li <%= @about_active %> ><%= link_to "About", home_about_url  %></li>
+              <li <%= @contact_active %> ><%= link_to "Contact", home_contact_url  %></li>
               
               <!-- Check to see if we are seeing a Devise action -->
               <% if controller.controller_name == "registrations" &&  
@@ -189,5 +189,18 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <%= javascript_include_tag "application" %>
 
+    <!-- TinyMCE initializer after all javascripts have loaded -->
+    <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
+    <script>
+      tinymce.init({
+        mode : "specific_textareas",
+        editor_selector : "tinymce",
+        resize: "both",
+        width: "75%",
+        browser_spellcheck : true,
+        content_css : "/assets/tinymce_content.css",
+        body_class: "tinymce_body",
+      });
+    </script>	
   </body>
 </html>

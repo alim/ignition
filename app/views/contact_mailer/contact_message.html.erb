@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+
+    <h3>Contact Message Received</h3>
+    <p>
+     	The service has received a contact request with the following
+     	information:
+    </p>
+    <ul>
+      <li>From:  <%= @contact.name %></li>
+      <li>Email: <%= @contact.email %></li>
+      <li>Phone: <%= @contact.phone %></li>
+    </ul>
+    
+    <h3>Message body</h3>
+    <p><%= @contact.body %></p>
+    <br/>
+
+  </body>
+</html>

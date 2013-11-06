@@ -12,23 +12,59 @@ class HomeController < ApplicationController
   # page for the service.
   ######################################################################
   def index
-  	@home_active="active"
+  	@home_active="class=active"
   end
 
-  ######################################################################
-  # The contact action will present a contact form and email a copy of
-  # the contents to the configured address. See the corresponding the
-  # application.yml for configuring the contact reply_to address.
-  ######################################################################
+
+	# CONTACT METHODS ---------------------------------------------------
+
+	#####################################################################
+	# The contact method presents a form for contacting us. The form
+	# then calls the create_contact method for sending us the email.
+	#####################################################################
   def contact
-  	@contact_active="active"
+  	@contact_active = "class=active"
+  	@contact = Contact.new
+
   end
 
+  #####################################################################
+  # The create_contact method uses a mailer class to generate an email
+  # message to us via our website.
+  #####################################################################
+  def create_contact
+  	@contact_active = "class=active"
+		@contact = Contact.new(params[:contact])
+
+		if @contact.valid?
+		  begin
+			  ContactMailer.contact_message(@contact).deliver
+
+        redirect_to(home_contact_url, notice:
+          "Contact request was successfully submitted.")
+          
+      rescue Timeout::Error, Net::SMTP, Net::SMTPAuthenticationError, 
+        Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, 
+        Net::SMTPUnknownError => e
+        logger.error("Unable to send email to: #{@contact.email} - error = #{e}")
+        flash[:alert] = "Contact delivery error sending email - #{e.message}"
+        redirect_to home_contact_url
+      end
+      
+		else
+			# Create a hash that holds the request options
+			@verrors = @contact.errors.full_messages
+			render action: "contact"
+		end
+  end
+  
+  ## -------------------------------------------------------------------
+  
   ######################################################################
   # The support acction will present a support page to the customer.
   ######################################################################
   def support 
-  	@support_active="active"
+  	@support_active="class=active"
   end
   
   ######################################################################
@@ -36,7 +72,7 @@ class HomeController < ApplicationController
   # your web service or company.
   ######################################################################
   def about
-  	@about_active="active"
+  	@about_active="class=active"
   end
 
 end

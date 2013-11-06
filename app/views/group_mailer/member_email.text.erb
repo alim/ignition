@@ -15,7 +15,7 @@ Group Description:
 <% if @group.description.empty? %>
  No description provided
 <% else %>
- <%= @group.description %>
+ <%= ActionView::Base.full_sanitizer.sanitize(@group.description) %>
 <% end %>
 
 Your account: <%= @user.email %>

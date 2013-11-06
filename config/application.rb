@@ -30,5 +30,8 @@ module Ignition
     
     # Default local host for mailer - over ride in different environments
     config.action_mailer.default_url_options = { host: "localhost:3000" }
+    
+    # Raise mailer exceptions
+    config.action_mailer.raise_delivery_errors = true
   end
 end

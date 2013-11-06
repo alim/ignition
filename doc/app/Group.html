@@ -129,6 +129,10 @@
   
     <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
   
+    <li><a href="./Contact.html">Contact</a>
+  
+    <li><a href="./ContactMailer.html">ContactMailer</a>
+  
     <li><a href="./Group.html">Group</a>
   
     <li><a href="./GroupMailer.html">GroupMailer</a>
@@ -235,7 +239,7 @@ membership list in the form of a list of individual email address.</p>
 
           
           <div class="method-source-code" id="members-source">
-            <pre><span class="ruby-comment"># File app/models/group.rb, line 45</span>
+            <pre><span class="ruby-comment"># File app/models/group.rb, line 49</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">members</span>
   <span class="ruby-ivar">@members</span>
 <span class="ruby-keyword">end</span></pre>
@@ -265,7 +269,7 @@ membership list in the form of a list of individual email address.</p>
 
           
           <div class="method-source-code" id="members-3D-source">
-            <pre><span class="ruby-comment"># File app/models/group.rb, line 49</span>
+            <pre><span class="ruby-comment"># File app/models/group.rb, line 53</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">members=</span>(<span class="ruby-identifier">value</span>)
   <span class="ruby-ivar">@members</span>=<span class="ruby-identifier">value</span>
 <span class="ruby-keyword">end</span></pre>
@@ -297,7 +301,7 @@ email format.</p>
 
           
           <div class="method-source-code" id="members_list-source">
-            <pre><span class="ruby-comment"># File app/models/group.rb, line 59</span>
+            <pre><span class="ruby-comment"># File app/models/group.rb, line 63</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">members_list</span>
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">members</span>.<span class="ruby-identifier">present?</span>
     <span class="ruby-identifier">email_list</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">members</span>.<span class="ruby-identifier">split</span>

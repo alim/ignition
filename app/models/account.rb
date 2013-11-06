@@ -53,6 +53,7 @@ class Account
 
   
   # RELATIONSHIPS ------------------------------------------------------
+  
   embedded_in :user
 
   

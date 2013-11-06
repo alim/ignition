@@ -139,6 +139,10 @@
   
     <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
   
+    <li><a href="./Contact.html">Contact</a>
+  
+    <li><a href="./ContactMailer.html">ContactMailer</a>
+  
     <li><a href="./Group.html">Group</a>
   
     <li><a href="./GroupMailer.html">GroupMailer</a>
@@ -363,7 +367,7 @@ stored customer_id.</p>
 
           
           <div class="method-source-code" id="destroy-source">
-            <pre><span class="ruby-comment"># File app/models/account.rb, line 214</span>
+            <pre><span class="ruby-comment"># File app/models/account.rb, line 215</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
   
   <span class="ruby-comment"># Destroy the customer account on Stripe.com if the id is present.</span>
@@ -425,7 +429,7 @@ the card is deliquent</p>
 
           
           <div class="method-source-code" id="get_customer-source">
-            <pre><span class="ruby-comment"># File app/models/account.rb, line 92</span>
+            <pre><span class="ruby-comment"># File app/models/account.rb, line 93</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_customer</span>
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">customer_id</span>.<span class="ruby-identifier">present?</span>
 
@@ -492,7 +496,7 @@ update methods. This params hash should include:</p>
 
           
           <div class="method-source-code" id="save_with_stripe-source">
-            <pre><span class="ruby-comment"># File app/models/account.rb, line 132</span>
+            <pre><span class="ruby-comment"># File app/models/account.rb, line 133</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">save_with_stripe</span>(<span class="ruby-identifier">params</span>)
   <span class="ruby-identifier">account_valid</span> = <span class="ruby-keyword">true</span>
 
@@ -551,7 +555,7 @@ returns the account status in string format</p>
 
           
           <div class="method-source-code" id="status_str-source">
-            <pre><span class="ruby-comment"># File app/models/account.rb, line 64</span>
+            <pre><span class="ruby-comment"># File app/models/account.rb, line 65</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">status_str</span>
   <span class="ruby-keyword">case</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">status</span>
   <span class="ruby-keyword">when</span> <span class="ruby-constant">ACTIVE</span>
@@ -600,7 +604,7 @@ update methods.</p>
 
           
           <div class="method-source-code" id="update_with_stripe-source">
-            <pre><span class="ruby-comment"># File app/models/account.rb, line 172</span>
+            <pre><span class="ruby-comment"># File app/models/account.rb, line 173</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">update_with_stripe</span>(<span class="ruby-identifier">params</span>)
   <span class="ruby-identifier">account_valid</span> = <span class="ruby-keyword">true</span>
 
@@ -671,7 +675,7 @@ account.</p>
 
           
           <div class="method-source-code" id="get_default_card-source">
-            <pre><span class="ruby-comment"># File app/models/account.rb, line 259</span>
+            <pre><span class="ruby-comment"># File app/models/account.rb, line 260</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_default_card</span>(<span class="ruby-identifier">customer</span>)
   <span class="ruby-identifier">default_card</span> = <span class="ruby-keyword">nil</span>
   
@@ -715,7 +719,7 @@ returned from the Stipe.com service.</p>
 
           
           <div class="method-source-code" id="is_valid-source">
-            <pre><span class="ruby-comment"># File app/models/account.rb, line 276</span>
+            <pre><span class="ruby-comment"># File app/models/account.rb, line 277</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">is_valid</span>(<span class="ruby-identifier">params</span>)
   <span class="ruby-identifier">account_valid</span> = <span class="ruby-keyword">true</span>
 
@@ -763,7 +767,7 @@ instance variables for the <a href="Account.html">Account</a> model.</p>
 
           
           <div class="method-source-code" id="load_customer_info-source">
-            <pre><span class="ruby-comment"># File app/models/account.rb, line 241</span>
+            <pre><span class="ruby-comment"># File app/models/account.rb, line 242</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">load_customer_info</span>(<span class="ruby-identifier">customer</span>)
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">customer_id</span> = <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">id</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">cardholder_email</span> = <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">email</span>

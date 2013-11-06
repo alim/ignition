@@ -1,74 +1,67 @@
-<p id="notice"><%= notice %></p>
+<%- model_class = Project -%>
+<div class="page-header">
+  <h1>Your Subscription</h1>
+  <p>
+    The information on this page shows your current subscription. The
+    subscription billing is handled by our billing partner Stripe.com.
+  </p>
+</div>
+<%= render partial: 'shared/flash', locals: { flash: flash } %>
 
-<p>
-  <strong>Plan:</strong>
-  <%= @subscription.plan_id %>
-</p>
+<dl class="dl-horizontal">
+  <dt><strong>Plan Name:</strong></dt>
+  <dd><%= @subscription.plan_str %></dd>
+  
+  <dt><strong>Plan Start:</strong></dt>
+  <dd><%= @subscription.sub_start.to_date.to_formatted_s(:long) %></dd>
+ 
+  <% if @subscription.sub_end.present? %>
+    <dt><strong>Plan Start:</strong></dt>
+    <dd><%= @subscription.sub_end.to_date.to_formatted_s(:long) %></dd>
+  <% end %>
+  
+  <dt><strong>Plan status:</strong></dt>
+  <dd><%= @subscription.status.capitalize %></dd>  
+  
+  <br/>
+  <dt><strong>Trial Period Start:</strong></dt>
+  <% if @subscription.trial_start.present? %>
+    <dd><%= @subscription.trial_start.to_date.to_formatted_s(:long) %></dd>   
+  <% else %>
+    <dd>No trial period found.</dd>
+  <% end %>
+  
+  <dt><strong>Trial Period End:</strong></dt>
+  <% if @subscription.trial_end.present? %>
+    <dd><%= @subscription.trial_end.to_date.to_formatted_s(:long) %></dd> 
+  <% else %>
+    <dd>No trial period found</dd>
+  <% end %>
+  
+  <br/>
+  
+  <% if @subscription.current_period_start.present? %>
+    <dt><strong>Billing Period Start</strong></dt>
+    <dd> <%= @subscription.current_period_start.to_date.to_formatted_s(:long) %></dd>
+  <% end %>
 
-<p>
-  <strong>Stripe:</strong>
-  <%= @subscription.stripe_id %>
-</p>
+  <% if @subscription.current_period_end.present? %>
+    <dt><strong>Billing Period End</strong></dt>
+    <dd> <%= @subscription.current_period_end.to_date.to_formatted_s(:long) %></dd>
+  <% end %>
+  
+  <% if @subscription.canceled_at.present? %>
+    <dt><strong>Canceled on:</strong></dt>
+    <dd><%= @subscription.canceled_at.to_date.to_formatted_s(:long) %></dd>
+  <% end %>
+  
+</dl>
 
-<p>
-  <strong>Cancel at period end:</strong>
-  <%= @subscription.cancel_at_period_end %>
-</p>
 
-<p>
-  <strong>Stripe customer:</strong>
-  <%= @subscription.stripe_customer_id %>
-</p>
+<div class="form-actions">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              admin_index_path, :class => 'btn'  %>
+  <%= link_to 'Change Plan',
+              edit_subscription_path(@subscription), class: 'btn btn-primary' %>
+</div>
 
-<p>
-  <strong>Quantity:</strong>
-  <%= @subscription.quantity %>
-</p>
-
-<p>
-  <strong>Sub start:</strong>
-  <%= @subscription.sub_start %>
-</p>
-
-<p>
-  <strong>Sub end:</strong>
-  <%= @subscription.sub_end %>
-</p>
-
-<p>
-  <strong>Status:</strong>
-  <%= @subscription.status %>
-</p>
-
-<p>
-  <strong>Canceled at:</strong>
-  <%= @subscription.canceled_at %>
-</p>
-
-<p>
-  <strong>Current period start:</strong>
-  <%= @subscription.current_period_start %>
-</p>
-
-<p>
-  <strong>Current period end:</strong>
-  <%= @subscription.current_period_end %>
-</p>
-
-<p>
-  <strong>Ended at:</strong>
-  <%= @subscription.ended_at %>
-</p>
-
-<p>
-  <strong>Trial start:</strong>
-  <%= @subscription.trial_start %>
-</p>
-
-<p>
-  <strong>Trial end:</strong>
-  <%= @subscription.trial_end %>
-</p>
-
-<%= link_to 'Edit', edit_subscription_path(@subscription) %> |
-<%= link_to 'Back', subscriptions_path %>

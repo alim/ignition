@@ -40,7 +40,6 @@ gem 'twitter-bootstrap-rails', '~> 2.2.0'
 gem 'will_paginate'
 gem 'less-rails'
 
-
 gem 'strip_attributes'
 
 # Authentication and Authorization
@@ -48,7 +47,7 @@ gem 'devise', "~> 3.0.1"
 gem 'cancan', "~> 1.6.10"
 
 # Paperclip GEM for handling file attachments
-gem 'paperclip'
+gem "mongoid-paperclip", :require => "mongoid_paperclip"
 gem 'aws-sdk'
 
 # GEM for reading environment variables from a configuration file

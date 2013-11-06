@@ -1,6 +1,18 @@
-<h1>Editing subscription</h1>
+<div class="page-header">
+  <h1>Change Subscription Plan</h1>
+  <p>
+    On this page you have the option to change your subscription plan
+    to a different one from the one you currently have. Your options
+    are shown below, as well as, the plan you currently have.
+  </p>
+  <dl class="dl-horizontal">
+    <dt><strong>Current Plan:</strong></dt>
+    <dd><%= @subscription.plan_str.capitalize %></dd>
+  </dl>
+
+</div>
+
+<%= render partial: 'plan_options' %>
+
 
 <%= render 'form' %>
-
-<%= link_to 'Show', @subscription %> |
-<%= link_to 'Back', subscriptions_path %>

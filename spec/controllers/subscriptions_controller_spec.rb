@@ -20,11 +20,12 @@ require 'spec_helper'
 
 describe SubscriptionsController do
   include_context 'user_setup'
-  
-  # This should return the minimal set of attributes required to create a valid
-  # Subscription. As you add validations to Subscription, be sure to
-  # adjust the attributes here as well.
-  let(:valid_attributes) { { "plan_id" => "1" } }
+  include_context 'subscription_setup'
+ 
+  let(:subscription_fake_customers) { 
+    create_subscriptions
+    @fake_subscription = Subscription.last
+  }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
@@ -34,59 +35,92 @@ describe SubscriptionsController do
   before(:each){
     signin_customer
 		subject.current_user.should_not be_nil
+		subscription_fake_customers
+		
+		# Add the subscription to the current signed in user
+		@signed_in_user.subscriptions << @fake_subscription
   }
 
 	after(:each) {
 		delete_users
+		Subscription.destroy_all
   }
 
   describe "GET index" do
     it "assigns all subscriptions as @subscriptions" do
-      subscription = Subscription.create! valid_attributes
-      get :index, {}, valid_session
+      get :index
       assigns(:subscriptions).should be_present
     end
   end
 
   describe "GET show" do
+    let(:show_params) {
+      {id: @fake_subscription }
+    }
+    
     it "assigns the requested subscription as @subscription" do
-      subscription = Subscription.create! valid_attributes
-      get :show, {:id => subscription.to_param}, valid_session
-      assigns(:subscription).should eq(subscription)
+     
+      get :show, show_params
+      assigns(:subscription).should eq(@fake_subscription)
     end
   end
 
   describe "GET new" do
     it "assigns a new subscription as @subscription" do
-      get :new, {}, valid_session
+      get :new
       assigns(:subscription).should be_a_new(Subscription)
     end
   end
 
   describe "GET edit" do
+   
+    let(:edit_params){
+      {
+        id: @fake_subscription.id,
+      }
+    }
+    
     it "assigns the requested subscription as @subscription" do
-      subscription = Subscription.create! valid_attributes
-      get :edit, {:id => subscription.to_param}, valid_session
-      assigns(:subscription).should eq(subscription)
+      get :edit, edit_params
+      assigns(:subscription).should eq(@fake_subscription)
     end
   end
 
   describe "POST create" do
+    let(:create_params) {
+      {subscription: 
+        {
+          stripe_plan_id: @fake_subscription.stripe_plan_id,
+          cancel_at_period_end: @fake_subscription.cancel_at_period_end,
+          quantity: @fake_subscription.quantity,
+          sub_start: @fake_subscription.sub_start,
+          sub_end: @fake_subscription.sub_end,
+          status: @fake_subscription.status,
+          canceled_at: @fake_subscription.canceled_at,
+          current_period_start: @fake_subscription.current_period_start,
+          current_period_end: @fake_subscription.current_period_end,
+          trial_start: @fake_subscription.trial_start,
+          trial_end: @fake_subscription.trial_end,
+          user_id: @fake_subscription.user_id,
+        }
+      }
+    }
+    
     describe "with valid params" do
-      it "creates a new Subscription" do
+      it "creates a new Subscription" do 
         expect {
-          post :create, {:subscription => valid_attributes}, valid_session
+          post :create, create_params
         }.to change(Subscription, :count).by(1)
       end
 
       it "assigns a newly created subscription as @subscription" do
-        post :create, {:subscription => valid_attributes}, valid_session
+        post :create, create_params
         assigns(:subscription).should be_a(Subscription)
         assigns(:subscription).should be_persisted
       end
 
       it "redirects to the created subscription" do
-        post :create, {:subscription => valid_attributes}, valid_session
+        post :create, create_params
         response.should redirect_to subscription_url(assigns(:subscription))
       end
     end
@@ -95,74 +129,76 @@ describe SubscriptionsController do
       it "assigns a newly created but unsaved subscription as @subscription" do
         # Trigger the behavior that occurs when invalid params are submitted
         Subscription.any_instance.stub(:save).and_return(false)
-        post :create, {:subscription => { "plan_id" => "invalid value" }}, valid_session
+        post :create, create_params
         assigns(:subscription).should be_a_new(Subscription)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
         Subscription.any_instance.stub(:save).and_return(false)
-        post :create, {:subscription => { "plan_id" => "invalid value" }}, valid_session
+        post :create, create_params
         response.should render_template("new")
       end
     end
   end
 
   describe "PUT update" do
+    let(:new_fake_stripe_plan_id){ "999999999" }
+  
+    
+    let(:update_params){
+      {
+        id: @fake_subscription.id,
+        subscription: {
+          stripe_plan_id: new_fake_stripe_plan_id,
+        }
+      }
+    }
+    
     describe "with valid params" do
       it "updates the requested subscription" do
-        subscription = Subscription.create! valid_attributes
-        # Assuming there are no other subscriptions in the database, this
-        # specifies that the Subscription created on the previous line
-        # receives the :update_attributes message with whatever params are
-        # submitted in the request.
-        Subscription.any_instance.should_receive(:update).with({ "plan_id" => "1" })
-        put :update, {:id => subscription.to_param, :subscription => { "plan_id" => "1" }}, valid_session
+        put :update, update_params
+        assigns(:subscription).stripe_plan_id.should eq(new_fake_stripe_plan_id)
       end
 
       it "assigns the requested subscription as @subscription" do
-        subscription = Subscription.create! valid_attributes
-        put :update, {:id => subscription.to_param, :subscription => valid_attributes}, valid_session
-        assigns(:subscription).should eq(subscription)
+        put :update, update_params
+        assigns(:subscription).should eq(@fake_subscription)
       end
 
       it "redirects to the subscription" do
-        subscription = Subscription.create! valid_attributes
-        put :update, {:id => subscription.to_param, :subscription => valid_attributes}, valid_session
-        response.should redirect_to(subscription)
+        put :update, update_params
+        response.should redirect_to(@fake_subscription)
       end
     end
 
     describe "with invalid params" do
       it "assigns the subscription as @subscription" do
-        subscription = Subscription.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
         Subscription.any_instance.stub(:save).and_return(false)
-        put :update, {:id => subscription.to_param, :subscription => { "plan_id" => "invalid value" }}, valid_session
-        assigns(:subscription).should eq(subscription)
+        put :update, update_params
+        assigns(:subscription).should eq(@fake_subscription)
       end
 
       it "re-renders the 'edit' template" do
-        subscription = Subscription.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Subscription.any_instance.stub(:save).and_return(false)
-        put :update, {:id => subscription.to_param, :subscription => { "plan_id" => "invalid value" }}, valid_session
+        put :update, update_params
         response.should render_template("edit")
       end
     end
   end
 
   describe "DELETE destroy" do
+    let(:destroy_params){ {id: @fake_subscription.id } }
+    
     it "destroys the requested subscription" do
-      subscription = Subscription.create! valid_attributes
       expect {
-        delete :destroy, {:id => subscription.to_param}, valid_session
+        delete :destroy, destroy_params
       }.to change(Subscription, :count).by(-1)
     end
 
     it "redirects to the subscriptions list" do
-      subscription = Subscription.create! valid_attributes
-      delete :destroy, {:id => subscription.to_param}, valid_session
+      delete :destroy, destroy_params
       response.should redirect_to(subscriptions_url)
     end
   end

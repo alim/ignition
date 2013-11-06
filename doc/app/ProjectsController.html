@@ -121,6 +121,10 @@
   
     <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
   
+    <li><a href="./Contact.html">Contact</a>
+  
+    <li><a href="./ContactMailer.html">ContactMailer</a>
+  
     <li><a href="./Group.html">Group</a>
   
     <li><a href="./GroupMailer.html">GroupMailer</a>
@@ -220,7 +224,7 @@ that the user selected.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>
   <span class="ruby-ivar">@project</span> = <span class="ruby-constant">Project</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">project_params</span>)
   <span class="ruby-ivar">@project</span>.<span class="ruby-identifier">user</span> = <span class="ruby-identifier">current_user</span>
-  
+
   <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">if</span> <span class="ruby-ivar">@project</span>.<span class="ruby-identifier">save</span>
       <span class="ruby-ivar">@project</span>.<span class="ruby-identifier">group_relate</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:project</span>][<span class="ruby-value">:group_ids</span>])

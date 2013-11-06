@@ -1,42 +1,44 @@
 <div class="row">
-	<div class="span1">
-	</div>
-	
-	<div class="span11">
-		<div class="page-header">
-			<h2>Login</h2>
-			<br/>
-			<p>
-				You can access the service features for registered customers by
-				using the login form below. If you do not have an account, you can
-				use the <em>Sign up</em> link at the bottom of the form.
-			</p>
-		</div>
+  <div class="span1">
+  </div>
+  
+  <div class="span11">
+    <div class="page-header">
+      <h2>Login</h2>
+      <br/>
+      <p>
+        You can access the service features for registered customers by
+        using the login form below. If you do not have an account, you can
+        use the <em>Sign up</em> link at the bottom of the form.
+      </p>
+    </div>
+   
+    <%= render partial: 'shared/flash', locals: { flash: flash } %>
 
-		<%= form_for(resource, as: resource_name, url: session_path(resource_name),
-			html: {class: 'form-horizontal'}) do |f| %>
-			
-			<div class='control-label'><%= f.label :email %></div>
-			<div class='controls'><%= f.email_field :email, autofocus: true %></div>
-			<br />
-			
-			<div class='control-label'><%= f.label :password %></div>
-			<div class='controls'><%= f.password_field :password %></div>
-			<br />
-			
-			<div class="form-actions">
-				<%= f.submit "Login", class: 'btn btn-primary' %>
-				<br/>
-				<% if devise_mapping.rememberable? -%>
-					<label class='checkbox'>
-						<%= f.check_box :remember_me %> Remember my login
-					</label>
-				<% end -%>
-			</div>
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name),
+      html: {class: 'form-horizontal'}) do |f| %>
+      
+      <div class='control-label'><%= f.label :email %></div>
+      <div class='controls'><%= f.email_field :email, autofocus: true %></div>
+      <br />
+      
+      <div class='control-label'><%= f.label :password %></div>
+      <div class='controls'><%= f.password_field :password %></div>
+      <br />
+      
+      <div class="form-actions">
+        <%= f.submit "Login", class: 'btn btn-primary' %>
+        <br/>
+        <% if devise_mapping.rememberable? -%>
+          <label class='checkbox'>
+            <%= f.check_box :remember_me %> Remember my login
+          </label>
+        <% end -%>
+      </div>
 
-		<% end %>
+    <% end %>
 
-		<%= render "devise/shared/links" %>
-		<br/><br/>
-	</div>
+    <%= render "devise/shared/links" %>
+    <br/><br/>
+  </div>
 </div>
