@@ -17,6 +17,10 @@
   <div class="control-group">
     <label class="control-label">Charter Document</label>
     <div class="controls">
+      <% if @project.charter_doc.present? %>
+        Current file is - <%= @project.charter_doc_file_name  %>
+        <br/>
+      <% end %>
       <%= f.file_field :charter_doc %>
     </div>
   </div>
