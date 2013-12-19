@@ -77,9 +77,10 @@ describe ProjectsController do
       end
     
       it "assigns all projects as @projects" do
-        project_ids = Project.all.pluck(:id).sort
+        count = Project.all.count 
+        count = ApplicationController::PAGE_COUNT if count > ApplicationController::PAGE_COUNT
         get :index
-        assigns(:projects).pluck(:id).sort.should eq(project_ids)
+        assigns(:projects).count.should eq(count)
       end
       
       it "should set the menu active flag for admin menu" do

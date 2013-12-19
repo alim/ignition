@@ -37,7 +37,7 @@ gem 'bson_ext'
 
 # UI Related Gems
 gem 'twitter-bootstrap-rails', '~> 2.2.0'
-gem 'will_paginate'
+gem 'will_paginate_mongoid'
 gem 'less-rails'
 
 gem 'strip_attributes'

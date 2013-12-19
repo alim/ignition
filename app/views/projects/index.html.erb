@@ -23,42 +23,54 @@
 </div>
 <%= render partial: 'shared/flash', locals: { flash: flash } %>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Project Name</th>
-      <th>Description</th>
-      <th>Project Owner</th>
-      <th>Groups</th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @projects.each do |project| %>
+<% if @projects.present? %>
+  <table class="table table-striped">
+    <thead>
       <tr>
-        <td><%= link_to project.name, project_path(project) %></td>
-        <td><%= project.description.html_safe %></td>
-        <td><%= project.user.first_name %> <%= project.user.last_name %></td>
-        <td>
-          <% project.groups.each do |group| %>
-            <%= group.name %><br/>
-          <% end %>
-        </td>
-        <td>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_project_path(project), :class => 'btn btn-mini' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      project_path(project),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-mini btn-danger' %>
-        </td>
+        <th>Project Name</th>
+        <th>Description</th>
+        <th>Project Owner</th>
+        <th>Groups</th>
+        <th><%=t '.actions', :default => t("helpers.actions") %></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @projects.each do |project| %>
+        <tr>
+          <td><%= link_to project.name, project_path(project) %></td>
+          <td><%= project.description.html_safe %></td>
+          <td><%= project.user.first_name %> <%= project.user.last_name %></td>
+          <td>
+            <% project.groups.each do |group| %>
+              <%= group.name %><br/>
+            <% end %>
+          </td>
+          <td>
+            <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                        edit_project_path(project), :class => 'btn btn-mini' %>
+            <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                        project_path(project),
+                        :method => :delete,
+                        :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                        :class => 'btn btn-mini btn-danger' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>
+    No projects have been created yet. Click on the <strong>New</strong>
+    button below to create your first one.
+  </p>
+<% end %>
 
+<div class='digg_pagination'>
+  <%= will_paginate @projects %>
+</div>
+
+<div class='form-actions'>
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_project_path,
             :class => 'btn btn-primary' %>
-<p><br/></p>
+</div>
