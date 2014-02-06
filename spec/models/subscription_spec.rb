@@ -6,7 +6,7 @@ describe Subscription do
   let(:find_a_subscription) {
     @subscription = Subscription.last
   }
-  
+
   before(:each) { create_subscriptions }
   
   after(:each) { Subscription.destroy_all }
@@ -70,65 +70,101 @@ describe Subscription do
   
     # Credit card and stripe test data
     let(:cardnum) { "4242424242424242" }
-    let(:email) { "janesmith@example.com" }
-    let(:name) { "Jane Smith" }
-    let(:cvcvalue) { "616" }
+    let(:email) { "johnsmith@example.com" }
+    let(:name) { "John Smith" }
+    let(:cvcvalue) { "313" }
     let(:token) { @token = get_token(name, cardnum, Date.today.month, 
       (Date.today.year + 1), cvcvalue) }  
-  
+
+      # STRIPE COUPON AND PLAN IDs -------------------------------------------
+
+    let(:coupon_code) { "FREE" }
+    let(:bronze_plan_id) { "BRONZE" }
+    let(:silver_plan_id) { "SILVER" }
+    let(:compare_plan_id) { "NONE" }
+
+      # CREATE STRIPE CUSTOMER FUNCTION ----------------------------------------
+
     let(:stripe_customer){ 
       @customer = create_customer(@token, email) 
+      @user = FactoryGirl.create(:user_with_account)
+      @user.account.customer_id = @customer.id
+
+      # Setup for the stripe interactions
+
+        @params = {
+                    cardholder_name: name,
+                    cardholder_email: email,
+                    account: {stripe_cc_token: token.id}
+        }
+
+      @user.account.save_with_stripe(@params)
     }
     
+      # FIND SUBSCRIPTION AND CREATE CUSTOMER ---------------------------------
+
     before(:each){
       find_a_subscription
       stripe_customer
-      @user = FactoryGirl.create(:user_with_account)
-      @user.account.customer_id = @customer.id
     }
-  
+
+      # DELETE ALL USERS AND CUSTOMERS ---------------------------------
+
     after(:each){
       User.destroy_all
       delete_customer(@customer)
     }
     
+  # STRIPE CREATE SUBSCRIPTION TEST ------------------------------------
+
     describe "Create subscription examples" do
-      it "should return a Stripe.com subscription object with no options" do
+      it "should return subscription object" do
         expect {
-          @subscription.subscribe(@account, 
-            Subscription::PLAN_OPTIONS[:silver][:plan_id])
+          @subscription.subscribe(@user.account,
+            silver_plan_id, coupon_code)
+#            Subscription::PLAN_OPTIONS[:silver][:plan_id])
         }.to_not raise_error
       end
       
       it "should specify the correct plan for the subscription" do
-        pending
+         @subscription.subscribe(@user.account, silver_plan_id, coupon_code).stripe_plan_id.should eql silver_plan_id
       end
       
     end
     
+  # STRIPE UPDATE SUBSCRIPTION TEST ------------------------------------
+
     describe "Update subscription examples" do
       it "should update the customer's plan" do
+       @subscription.subscribe(@user.account, silver_plan_id, coupon_code)
         expect {
-          @subscription.subscribe(@account, 
-            Subscription::PLAN_OPTIONS[:bronze][:plan_id])
+          @subscription.subscribe(@user.account, 
+            bronze_plan_id, coupon_code)
+#            Subscription::PLAN_OPTIONS[:bronze][:plan_id])
         }.to_not raise_error
       end
       
       it "should specify the correct plan for the subscription" do
-        pending
+         @subscription.subscribe(@user.account, bronze_plan_id, coupon_code).stripe_plan_id.should eql bronze_plan_id
       end      
     end
     
+  # STRIPE DELETE SUBSCRIPTION TEST ------------------------------------
+
     describe "Delete subscription" do
       it "should remove the subscription from the customer's account" do
+       @subscription.subscribe(@user.account, silver_plan_id, coupon_code)
         expect {
-          @subscription.cancel_subscription(@account)
+          @subscription.cancel_subscription(@user.account)
         }.to_not raise_error
       end
       
       it "should cancel a subscription when the user is deleted" do
-        pending
+       @subscription.subscribe(@user.account, silver_plan_id, coupon_code)
+        expect {
+          @subscription.destroy()
+        }.to_not raise_error
       end
     end 
-  end
+   end 
 end

@@ -58,7 +58,7 @@ class SubscriptionsController < ApplicationController
     else
       # No account and no subscription plan - Redirect to update
       # user account with notice to add credit card.
-      redirect_to new_user_account(current_user.id)
+      redirect_to new_user_account_url(current_user.id)
     end
   end
 
@@ -87,6 +87,8 @@ class SubscriptionsController < ApplicationController
     # STUB METHOD WHILE INSTANCE METHOD IS BEING DEVELOPERED.
     # THE REAL CALL WILL BE @subscription.subscribe(current_user.account,
     # params[:plan_id], coupon: params[:coupon_code]
+    @subscription.subscribe(current_user.account, params[:plan_id], coupon: params[:coupon_code])
+
     update_subscription(@subscription)
     
     respond_to do |format|

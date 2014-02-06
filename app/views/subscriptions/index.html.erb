@@ -26,10 +26,8 @@
   <tbody>
     <% @subscriptions.each do |subscription| %>
       <tr>
-        <td><%= subscription.plan_id %></td>
-        <td><%= subscription.stripe_id %></td>
+        <td><%= subscription.stripe_plan_id %></td>
         <td><%= subscription.cancel_at_period_end %></td>
-        <td><%= subscription.stripe_customer_id %></td>
         <td><%= subscription.quantity %></td>
         <td><%= subscription.sub_start %></td>
         <td><%= subscription.sub_end %></td>
@@ -37,7 +35,6 @@
         <td><%= subscription.canceled_at %></td>
         <td><%= subscription.current_period_start %></td>
         <td><%= subscription.current_period_end %></td>
-        <td><%= subscription.ended_at %></td>
         <td><%= subscription.trial_start %></td>
         <td><%= subscription.trial_end %></td>
         <td><%= link_to 'Show', subscription %></td>
