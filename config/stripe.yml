@@ -1,0 +1,11 @@
+development:
+  api_key: sk_test_A1CLvWhLUM8ONPUKHue9fUVS
+  pub_key: pk_test_bd0pqF70dLyO1ujUub3qp9eD
+
+test:
+  api_key: sk_test_A1CLvWhLUM8ONPUKHue9fUVS
+  pub_key: pk_test_bd0pqF70dLyO1ujUub3qp9eD
+
+production:
+  api_key: insert_production_api_key
+  pub_key: insert_production_publishable_key
