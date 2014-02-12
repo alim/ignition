@@ -1,0 +1,16 @@
+language: ruby
+rvm:
+- 1.9.3
+services:
+- mongodb
+env:
+  global:
+  - CONTACT_EMAILBOX='operations@example.com'
+  - CONTACT_FROM='no-reply-mailbox@example.com'
+  - CONTACT_SUBJECT='New Contact Request'
+  - GROUP_FROM_EMAIL="no-reply-mailbox@example.com"
+  - GROUP_EMAIL_SUBJECT="Group Membership Notification"
+branches:
+  only:
+  - master
+  - development
