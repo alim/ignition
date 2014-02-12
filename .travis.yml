@@ -16,3 +16,9 @@ branches:
   only:
   - master
   - development
+notifications:
+  email:
+    - fimbrogno@nspartners.com
+    - jmilligan@nspartners.com
+    - alim@nspartners.com
+    
