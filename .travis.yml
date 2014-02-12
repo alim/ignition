@@ -5,6 +5,8 @@ services:
 - mongodb
 env:
   global:
+  - secure: "R6kDOjGX0IpxKicXs4YBNFVjHZ+YQxsRfqXNmzG1xK04CQtRS8cO592/v5PufarNl8+lYyOorW37u06dQPQqAdlPFkI2IPNT69+Jb9o/o4ccaLpIRIKdBhtnK/tXE3behI13DNGTGAwWOYvyb3es4uPbDwcr0T6ndYCdqnmku/s="
+  - secure: "bQQzaiS3RQMOAxpr6lXsVH/93MeNN4yY7eG9pP82N8ZdXrcYwneNMfdrKJFryuvGt/QkKGB2ggjtzyozqyvQ/vzT1LmYBVuznzKjIAyPpegpiJ2iGcvpAtUWfRlEWgNv/0viOORWf/hEWZm9ZUV0asM5rFaFllSbbJYH2/gAHTs="
   - CONTACT_EMAILBOX='operations@example.com'
   - CONTACT_FROM='no-reply-mailbox@example.com'
   - CONTACT_SUBJECT='New Contact Request'
