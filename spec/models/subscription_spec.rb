@@ -101,14 +101,14 @@ describe Subscription do
       @user.account.save_with_stripe(@params)
     }
     
-      # FIND SUBSCRIPTION AND CREATE CUSTOMER ---------------------------------
+    # FIND SUBSCRIPTION AND CREATE CUSTOMER ---------------------------------
 
     before(:each){
       find_a_subscription
       stripe_customer
     }
 
-      # DELETE ALL USERS AND CUSTOMERS ---------------------------------
+    # DELETE ALL USERS AND CUSTOMERS ---------------------------------
 
     after(:each){
       User.destroy_all
