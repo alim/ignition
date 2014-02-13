@@ -60,8 +60,7 @@ gem 'stripe'
 group :test, :development do
 	gem "factory_girl_rails"
 	gem 'rspec-rails'
-#	gem "cucumber-rails", :require => false
-#	gem "capybara"
+	gem "capybara"
 #	gem "webrat"
 end
 
