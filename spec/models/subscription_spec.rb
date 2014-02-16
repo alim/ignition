@@ -76,14 +76,54 @@ describe Subscription do
     let(:token) { @token = get_token(name, cardnum, Date.today.month, 
       (Date.today.year + 1), cvcvalue) }  
 
-      # STRIPE COUPON AND PLAN IDs -------------------------------------------
+  # STRIPE COUPON AND PLAN IDs -------------------------------------------
 
-    let(:coupon_code) { "FREE" }
+    let(:coupon_code) { "DISCOUNT" }
+    let(:coupon_percent_off) { 25 }
+    let(:coupon_duration) { "repeating" }
+    let(:coupon_duration_months) { 3 }
     let(:bronze_plan_id) { "BRONZE" }
     let(:silver_plan_id) { "SILVER" }
     let(:compare_plan_id) { "NONE" }
+    let(:bronze_plan_amount) { 2500 }
+    let(:silver_plan_amount) { 3000 }
+    let(:bronze_plan_name) { "Bronze Plan" }
+    let(:silver_plan_name) { "Silver Plan" }
+    let(:plan_interval) { "month" }
+    let(:plan_currency) { "usd" }
 
-      # CREATE STRIPE CUSTOMER FUNCTION ----------------------------------------
+  # CREATE STRIPE COUPON ----------------------------------------
+
+   let(:create_stripe_coupon){
+     @new_coupon = create_coupon(coupon_code, coupon_percent_off, coupon_duration,coupon_duration_months)
+   }
+
+  # DELETE STRIPE COUPON ----------------------------------------
+
+   let(:delete_stripe_coupon){
+     @new_coupon = delete_coupon(coupon_code)
+   }
+
+  # CREATE STRIPE SUBSCRIPTION PLANS ----------------------------------------
+
+   let(:create_silver_plan){
+     @new_plan = create_plan(silver_plan_id, silver_plan_name, silver_plan_amount, plan_interval, plan_currency)
+   }
+   let(:create_bronze_plan){
+     @new_plan = create_plan(bronze_plan_id, bronze_plan_name, bronze_plan_amount, plan_interval, plan_currency)
+   }
+
+  # DELETE STRIPE SUBSCRIPTION PLANS ----------------------------------------
+
+   let(:delete_silver_plan){
+     @new_plan = delete_plan(silver_plan_id)
+   }
+
+   let(:delete_bronze_plan){
+     @new_plan = delete_plan(bronze_plan_id)
+   }
+
+  # CREATE STRIPE CUSTOMER FUNCTION ----------------------------------------
 
     let(:stripe_customer){ 
       @customer = create_customer(@token, email) 
@@ -101,18 +141,24 @@ describe Subscription do
       @user.account.save_with_stripe(@params)
     }
     
-      # FIND SUBSCRIPTION AND CREATE CUSTOMER ---------------------------------
+    # FIND SUBSCRIPTION AND CREATE CUSTOMER ---------------------------------
 
     before(:each){
       find_a_subscription
       stripe_customer
+      create_stripe_coupon
+      create_silver_plan
+      create_bronze_plan
     }
 
-      # DELETE ALL USERS AND CUSTOMERS ---------------------------------
+    # DELETE ALL USERS AND CUSTOMERS ---------------------------------
 
     after(:each){
       User.destroy_all
       delete_customer(@customer)
+      delete_stripe_coupon
+      delete_silver_plan
+      delete_bronze_plan
     }
     
   # STRIPE CREATE SUBSCRIPTION TEST ------------------------------------
