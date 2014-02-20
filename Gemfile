@@ -37,7 +37,7 @@ gem 'bson_ext'
 
 # UI Related Gems
 gem 'twitter-bootstrap-rails', '~> 2.2.0'
-gem 'will_paginate'
+gem 'will_paginate_mongoid'
 gem 'less-rails'
 
 gem 'strip_attributes'
@@ -60,8 +60,9 @@ gem 'stripe'
 group :test, :development do
 	gem "factory_girl_rails"
 	gem 'rspec-rails'
-#	gem "cucumber-rails", :require => false
-#	gem "capybara"
+	gem "capybara"
+	gem 'pry-nav'
+	gem 'pry-rails', :group => :development
 #	gem "webrat"
 end
 
