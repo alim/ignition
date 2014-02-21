@@ -47,4 +47,7 @@ RSpec.configure do |config|
   
   # Include Stripe.com test helpers
   config.include StripeTestHelpers  
+  
+  # Include Stripe.com test helpers
+  config.include SubscriptionTestHelpers  
 end

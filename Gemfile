@@ -61,6 +61,8 @@ group :test, :development do
 	gem "factory_girl_rails"
 	gem 'rspec-rails'
 	gem "capybara"
+	gem 'pry-nav'
+	gem 'pry-rails', :group => :development
 #	gem "webrat"
 end
 
