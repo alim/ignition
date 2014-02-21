@@ -1,15 +1,16 @@
 require 'spec_helper'
 
-# Specs in this file have access to a helper object that includes
-# the UsersHelper. For example:
-#
-# describe UsersHelper do
-#   describe "string concat" do
-#     it "concats two strings with spaces" do
-#       expect(helper.concat_strings("this","that")).to eq("this that")
-#     end
-#   end
-# end
 describe UsersHelper do
-  pending "add some examples to (or delete) #{__FILE__}"
+	include_context 'group_setup'
+
+  describe "list_groups" do
+  	let(:groups) { Group.all }
+  	before(:each){ single_group_with_users }
+
+  	it "should generate an HTML list of group labels" do
+  		labels = ""
+  		groups.each { |group| labels = labels + '<span class="label">' + group.name + '</span> &nbsp;'}
+  		list_groups(groups).should eq(labels)
+  	end
+  end
 end
