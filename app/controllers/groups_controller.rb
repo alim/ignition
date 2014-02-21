@@ -7,15 +7,15 @@ class GroupsController < ApplicationController
   include GroupRelations
   
   # RESCUE SETTINGS ----------------------------------------------------
-	rescue_from Mongoid::Errors::DocumentNotFound, with: :missing_document
+  rescue_from Mongoid::Errors::DocumentNotFound, with: :missing_document
   rescue_from CanCan::AccessDenied, with: :access_denied
-	
-	# BEFORE CALLBACKS ---------------------------------------------------
-	before_filter :authenticate_user!
-	
+  
+  # BEFORE CALLBACKS ---------------------------------------------------
+  before_filter :authenticate_user!
+  
   before_action :set_group, only: [:show, :edit, :update, :notify, 
-  	:remove_member, :destroy]
-  	
+    :remove_member, :destroy]
+    
   before_action :set_group_class
 
   # CANCAN AUTHORIZATION -----------------------------------------------
@@ -24,21 +24,26 @@ class GroupsController < ApplicationController
   authorize_resource
   
   
-	######################################################################
+  ######################################################################
   # GET /groups
   # GET /groups.json
   #
   # Standard listing of user groups and membership.
   ######################################################################
   def index 
+
+    # Get page number
+    page = params[:page].nil? ? 1 : params[:page]  
+  
     if current_user.role == User::SERVICE_ADMIN
-      @groups = Group.all
+      @groups = Group.all.paginate(page: page, per_page: PAGE_COUNT)  
     else
-      @groups = Group.where(owner_id: current_user.id)
+      @groups = Group.where(owner_id: current_user.id).paginate(
+        page: page,  per_page: PAGE_COUNT)  
     end
   end
 
-	######################################################################
+  ######################################################################
   # GET /groups/1
   # GET /groups/1.json
   #
@@ -46,15 +51,15 @@ class GroupsController < ApplicationController
   # allows you to re-send the group invite to a given user.
   ######################################################################
   def show
-	  @user = User.find(@group.owner_id)
-	  @owner_email = @user.email
-	
-	  # Get list of associated users and resources
-	  @users = @group.users
-	  @resources = @group.send(Group::RESOURCE_CLASS.downcase.pluralize)
+    @user = User.find(@group.owner_id)
+    @owner_email = @user.email
+  
+    # Get list of associated users and resources
+    @users = @group.users
+    @resources = @group.send(Group::RESOURCE_CLASS.downcase.pluralize)
   end
 
-	######################################################################
+  ######################################################################
   # GET /groups/new
   #
   # Since we support a resource based authorization system, the new
@@ -67,7 +72,7 @@ class GroupsController < ApplicationController
     @group = Group.new
   end
 
-	######################################################################
+  ######################################################################
   # GET /groups/1/edit
   #
   # This action present the edit view with the list of resources that
@@ -77,7 +82,7 @@ class GroupsController < ApplicationController
   def edit
   end
 
-	######################################################################
+  ######################################################################
   # POST /groups
   # POST /groups.json
   #
@@ -87,34 +92,34 @@ class GroupsController < ApplicationController
   # will be created. All members will be notified by email.
   ######################################################################
   def create
-  	respond_to do |format|
-		  @group = current_user.groups.new(group_params)
-			@group.owner_id = current_user.id
+    respond_to do |format|
+      @group = current_user.groups.new(group_params)
+      @group.owner_id = current_user.id
 
-			if @group.save
-			
-				# Lookup membership list to see if they already exists
-				@members = lookup_users(@group)
-			
-				# Create and notify group members of their inclusion into the group
-				create_notify(@members, @group) if @members.present?
-	          	  		
-	      # Relate resources from injected methods in GroupRelations 
-			  # module. It relates the current set of resources to the group
-	      relate_resources(resource_ids: params[:group][:resource_ids],
-	        group: @group, class: Group::RESOURCE_CLASS)
-	      
-	      format.html { redirect_to @group, notice: 'Group was successfully created.' }
-	      format.json { render action: 'show', status: :created, location: @group }
-	    else
-	    	@verrors = @group.errors.full_messages
-	      format.html { render action: 'new' }
-	      format.json { render json: @group.errors, status: :unprocessable_entity }
-	    end
+      if @group.save
+      
+        # Lookup membership list to see if they already exists
+        @members = lookup_users(@group)
+      
+        # Create and notify group members of their inclusion into the group
+        create_notify(@members, @group) if @members.present?
+                    
+        # Relate resources from injected methods in GroupRelations 
+        # module. It relates the current set of resources to the group
+        relate_resources(resource_ids: params[:group][:resource_ids],
+          group: @group, class: Group::RESOURCE_CLASS)
+        
+        format.html { redirect_to @group, notice: 'Group was successfully created.' }
+        format.json { render action: 'show', status: :created, location: @group }
+      else
+        @verrors = @group.errors.full_messages
+        format.html { render action: 'new' }
+        format.json { render json: @group.errors, status: :unprocessable_entity }
+      end
     end
   end
 
-	######################################################################
+  ######################################################################
   # PATCH/PUT /groups/1
   # PATCH/PUT /groups/1.json
   #
@@ -125,16 +130,16 @@ class GroupsController < ApplicationController
     respond_to do |format|
       if @group.update_attributes(group_params)
       
-			  # Relate resources from injected methods in GroupRelations 
-			  # module. It relates the current set of resources to the group
-			  relate_resources(resource_ids: params[:group][:resource_ids],
-	        group: @group, class: Group::RESOURCE_CLASS)
-			
-			  # Lookup membership list to see if they already exists
-			  @members = lookup_users(@group)
-		
-			  # Create and notify group members of their inclusion into the group
-			  create_notify(@members, @group) if @members.present?      
+        # Relate resources from injected methods in GroupRelations 
+        # module. It relates the current set of resources to the group
+        relate_resources(resource_ids: params[:group][:resource_ids],
+          group: @group, class: Group::RESOURCE_CLASS)
+      
+        # Lookup membership list to see if they already exists
+        @members = lookup_users(@group)
+    
+        # Create and notify group members of their inclusion into the group
+        create_notify(@members, @group) if @members.present?      
       
         format.html { redirect_to @group, notice: 'Group was successfully updated.' }
         format.json { head :no_content }
@@ -146,7 +151,7 @@ class GroupsController < ApplicationController
     end
   end
 
-	######################################################################
+  ######################################################################
   # DELETE /groups/1
   # DELETE /groups/1.json
   #
@@ -156,61 +161,61 @@ class GroupsController < ApplicationController
   # unrelate_resources might not be needed.
   ######################################################################
   def destroy
-	  @group.destroy
-	  respond_to do |format|
-	    format.html { redirect_to groups_url, notice: "Group was successfully deleted." }
-	    format.json { head :no_content }
-	  end
+    @group.destroy
+    respond_to do |format|
+      format.html { redirect_to groups_url, notice: "Group was successfully deleted." }
+      format.json { head :no_content }
+    end
   end
 
-	## CUSTOM ACTIONS ----------------------------------------------------
-	
-	######################################################################
-	# PUT /groups/1/notify
-	#
-	# The notify method will resend a group invite notification message
-	# to a single group member and re-display the show template.
-	######################################################################
-	def notify
-    respond_to do |format|	
-	    @user = @group.users.find(params[:uid])
-	
-	    if invite_member(@group, @user)			
-		    format.html { redirect_to @group, 
-		      notice: "Group invite resent to #{@user.email}."}
-		    format.json { head :no_content }
-	    else
-		    format.html { redirect_to @group, 
-		      alert: "Group invite faild to #{@user.email}."}
-		    format.json { head :no_content }
-	    end
-	  end    
-	end
+  ## CUSTOM ACTIONS ----------------------------------------------------
+  
+  ######################################################################
+  # PUT /groups/1/notify
+  #
+  # The notify method will resend a group invite notification message
+  # to a single group member and re-display the show template.
+  ######################################################################
+  def notify
+    respond_to do |format|  
+      @user = @group.users.find(params[:uid])
+  
+      if invite_member(@group, @user)      
+        format.html { redirect_to @group, 
+          notice: "Group invite resent to #{@user.email}."}
+        format.json { head :no_content }
+      else
+        format.html { redirect_to @group, 
+          alert: "Group invite faild to #{@user.email}."}
+        format.json { head :no_content }
+      end
+    end    
+  end
 
-	######################################################################
-	# PUT groups/1/remove_member
-	#
-	# The remove_member method will remove one group member.
-	######################################################################
-	def remove_member
+  ######################################################################
+  # PUT groups/1/remove_member
+  #
+  # The remove_member method will remove one group member.
+  ######################################################################
+  def remove_member
 
     respond_to do |format|
-    	# Delete the user association
-    	user = User.find(params[:uid])
-    	@group.users.delete(user)
-    	@group.reload
+      # Delete the user association
+      user = User.find(params[:uid])
+      @group.users.delete(user)
+      @group.reload
       
-  		format.html { redirect_to edit_group_url(@group), 
-  		  notice: "Group member #{user.email} has been removed from the group, but NOT deleted from the system."}
-  		format.json { head :no_content }
-	  end
+      format.html { redirect_to edit_group_url(@group), 
+        notice: "Group member #{user.email} has been removed from the group, but NOT deleted from the system."}
+      format.json { head :no_content }
+    end
 
-	end
+  end
 
 
-	## PROTECTED INSTANCE METHODS ----------------------------------------
-	
-	protected
+  ## PROTECTED INSTANCE METHODS ----------------------------------------
+  
+  protected
 
   ######################################################################
   # The create_notify method will take a hash of email addresses and
@@ -224,34 +229,34 @@ class GroupsController < ApplicationController
   # * group - Group object to which we associate each user
   ######################################################################
   def create_notify(members, group)
-  	plen = 12
+    plen = 12
 
-  	members.each do |member, user|
-  		if user.nil?
-  			# Create a new user
-  			new_password = Devise.friendly_token.first(plen)
-  			new_user = User.create!(first_name: '*None*', last_name: '*None*',
-  				role: User::CUSTOMER, email: member.dup, password: new_password, 
-  				password_confirmation: new_password, phone: '888.555.1212')
-				
-				# Associate new user to the group
-				group.users << new_user
-				
-  			# Email user
-  			GroupMailer.member_email(new_user, group).deliver  			
-  		else
-  			# Associate User record to group
-  			group.users << user
-  			
-  			# Notify current user that they are now a member of the group
-  			# We do not need to send the user password, since they should
-  			# have it.
-  			GroupMailer.member_email(user, group).deliver  			
-  		end
-  	end
+    members.each do |member, user|
+      if user.nil?
+        # Create a new user
+        new_password = Devise.friendly_token.first(plen)
+        new_user = User.create!(first_name: '*None*', last_name: '*None*',
+          role: User::CUSTOMER, email: member.dup, password: new_password, 
+          password_confirmation: new_password, phone: '888.555.1212')
+        
+        # Associate new user to the group
+        group.users << new_user
+        
+        # Email user
+        GroupMailer.member_email(new_user, group).deliver        
+      else
+        # Associate User record to group
+        group.users << user
+        
+        # Notify current user that they are now a member of the group
+        # We do not need to send the user password, since they should
+        # have it.
+        GroupMailer.member_email(user, group).deliver        
+      end
+    end
   end
 
- 	######################################################################
+  ######################################################################
   # The invite_member method will resend an membership notification 
   # to an existing member. If the member has not ever logged into the
   # service the member will be sent a new password.
@@ -260,24 +265,24 @@ class GroupsController < ApplicationController
   # * user - User object to notify
   ######################################################################
   def invite_member(group, user)
-  	plen = 12
+    plen = 12
 
-		if user.sign_in_count == 0
-    	# Create a new password
-  		new_password = Devise.friendly_token.first(plen)
+    if user.sign_in_count == 0
+      # Create a new password
+      new_password = Devise.friendly_token.first(plen)
       user.password = new_password
       user.password_confirmation = new_password
       if user.save
         
-			  # Email user
+        # Email user
         GroupMailer.member_email(user, group).deliver
       else
         groups_alert("We could not reset the password for User - #{user.email}")
       end
-  	else 		
-			# Notify current user that they are now a member of the group
-			GroupMailer.member_email(user, group).deliver
-  	end
+    else     
+      # Notify current user that they are now a member of the group
+      GroupMailer.member_email(user, group).deliver
+    end
   end
   
   ######################################################################
@@ -292,47 +297,47 @@ class GroupsController < ApplicationController
   # email list.
   ######################################################################
   def lookup_users(group)
-  	users = {} 		# Hash for returning results
+    users = {}     # Hash for returning results
 
-		if group.members.present?
-			elist = group.members.split
+    if group.members.present?
+      elist = group.members.split
 
-			# Look for a current user
-			elist.each do |email|
-				if (user = User.where(email: email).first).present?
-					users[email] = user
-				else
-					users[email] = nil
-				end 
-			end
-  	end
-  	users
+      # Look for a current user
+      elist.each do |email|
+        if (user = User.where(email: email).first).present?
+          users[email] = user
+        else
+          users[email] = nil
+        end 
+      end
+    end
+    users
   end 
 
 
-	## PRIVATE INSTANCE METHODS ------------------------------------------
+  ## PRIVATE INSTANCE METHODS ------------------------------------------
 
   private
   
-	####################################################################
+  ####################################################################
   # Use callbacks to share common setup or constraints between actions.
   # We do the following actions:
   # * Try to lookup the resource
   # * Catch the error if not found and set instance variable to nil
   ####################################################################
   def set_group
-  	@group = Group.find(params[:id])
+    @group = Group.find(params[:id])
   end
 
-	######################################################################
-	# The set_group_class method sets an instance variable for the CSS
-	# class that will highlight the menu item. 
-	######################################################################
-	def set_group_class
-		@groups_active = "class=active" 
-	end
-	
-	######################################################################
+  ######################################################################
+  # The set_group_class method sets an instance variable for the CSS
+  # class that will highlight the menu item. 
+  ######################################################################
+  def set_group_class
+    @groups_active = "class=active" 
+  end
+  
+  ######################################################################
   # Never trust parameters from the scary internet, only allow the 
   # white list through.
   ######################################################################
@@ -345,10 +350,10 @@ class GroupsController < ApplicationController
   # the user to the groups#index view.
   ######################################################################
   def groups_alert(msg)
-  	respond_to do |format| 
-  		format.html { redirect_to groups_url, alert: msg }
-  		format.json { head :no_content }
-  	end
+    respond_to do |format| 
+      format.html { redirect_to groups_url, alert: msg }
+      format.json { head :no_content }
+    end
   end 
   
   ######################################################################

@@ -121,7 +121,7 @@ if account_user.customer_id.present?
 
     self.save
 
-      rescue Stripe::StripeError => stripe_error
+  rescue Stripe::StripeError => stripe_error
       logger.debug("[Subscription.update_with_stripe] error = #{stripe_error.message}")
       errors[:customer_id] << stripe_error.message
       return nil
@@ -157,7 +157,7 @@ def cancel_subscription(account_user)
 
     customer.cancel_subscription()
 
-    rescue Stripe::StripeError => stripe_error
+  rescue Stripe::StripeError => stripe_error
     logger.debug("[Subscription.cancel_with_stripe] error = #{stripe_error.message}")
     errors[:customer_id] << stripe_error.message
     subscription_cancelled = false
@@ -186,7 +186,7 @@ def destroy
    customer = Stripe::Customer.retrieve("#{self.customer_id}")
    customer.delete
 
-   rescue Stripe::StripeError => stripe_error
+  rescue Stripe::StripeError => stripe_error
    logger.debug("[Subscription.cancel_with_stripe] error = #{stripe_error.message}")
    errors[:customer_id] << stripe_error.message
    

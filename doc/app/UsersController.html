@@ -147,6 +147,10 @@
   
     <li><a href="./ProjectsHelper.html">ProjectsHelper</a>
   
+    <li><a href="./SharedClassMethods.html">SharedClassMethods</a>
+  
+    <li><a href="./SharedInstanceMethods.html">SharedInstanceMethods</a>
+  
     <li><a href="./Subscription.html">Subscription</a>
   
     <li><a href="./SubscriptionsController.html">SubscriptionsController</a>
@@ -211,7 +215,7 @@ contained within the /admin namespace.</p>
           
           <p>POST /admin/users</p>
 
-<p>The create enables creation of a new user account by a service 
+<p>The create enables creation of a new user account by a service
 administrator. Once a new user account is created, the user will receive an
 email message with the new account information. They will be prompted to
 change their password on first login.</p>
@@ -219,14 +223,14 @@ change their password on first login.</p>
 
           
           <div class="method-source-code" id="create-source">
-            <pre><span class="ruby-comment"># File app/controllers/users_controller.rb, line 142</span>
+            <pre><span class="ruby-comment"># File app/controllers/users_controller.rb, line 151</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>
   <span class="ruby-ivar">@verrors</span> = <span class="ruby-keyword">nil</span>
-    
+
   <span class="ruby-ivar">@user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">user_params</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">save</span>
     <span class="ruby-comment"># Email user the account information</span>
-    <span class="ruby-constant">UserMailer</span>.<span class="ruby-identifier">new_account</span>(<span class="ruby-ivar">@user</span>).<span class="ruby-identifier">deliver</span>    
+    <span class="ruby-constant">UserMailer</span>.<span class="ruby-identifier">new_account</span>(<span class="ruby-ivar">@user</span>).<span class="ruby-identifier">deliver</span>
     <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@user</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;New user account created and user email sent.&quot;</span>
   <span class="ruby-keyword">else</span>
     <span class="ruby-ivar">@verrors</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">full_messages</span>
@@ -263,7 +267,7 @@ any dependent destroy specifications.</p>
 
           
           <div class="method-source-code" id="destroy-source">
-            <pre><span class="ruby-comment"># File app/controllers/users_controller.rb, line 163</span>
+            <pre><span class="ruby-comment"># File app/controllers/users_controller.rb, line 172</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
   <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">destroy</span>
   <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">users_url</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-node">&quot;User account - #{@user.email} - deleted.&quot;</span>
@@ -296,7 +300,7 @@ any dependent destroy specifications.</p>
 
           
           <div class="method-source-code" id="edit-source">
-            <pre><span class="ruby-comment"># File app/controllers/users_controller.rb, line 93</span>
+            <pre><span class="ruby-comment"># File app/controllers/users_controller.rb, line 102</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">edit</span>
 
 <span class="ruby-keyword">end</span></pre>
@@ -334,7 +338,7 @@ system administrator to search for an acount by:</p>
 </li></ul>
 
 <p>It will also enable filtering the view by user roles. All results will be
-paginated. This action is designed only to be used via  a web interface.</p>
+paginated. This action is designed only to be used via a web interface.</p>
           
 
           
@@ -342,38 +346,47 @@ paginated. This action is designed only to be used via  a web interface.</p>
             <pre><span class="ruby-comment"># File app/controllers/users_controller.rb, line 40</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">index</span>
   <span class="ruby-ivar">@search_options</span> = [
-    [<span class="ruby-string">'Email'</span>, <span class="ruby-string">'email'</span>], 
+    [<span class="ruby-string">'Email'</span>, <span class="ruby-string">'email'</span>],
     [<span class="ruby-string">'First name'</span>, <span class="ruby-string">'first_name'</span>],
     [<span class="ruby-string">'Last name'</span>, <span class="ruby-string">'last_name'</span>]
   ]
-  
+
+  <span class="ruby-comment"># Get page number</span>
+  <span class="ruby-identifier">page</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:page</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-operator">?</span> <span class="ruby-value">1</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:page</span>]
+
   <span class="ruby-comment"># Check to see if we want to search for a subset of users</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:search</span>].<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:stype</span>].<span class="ruby-identifier">present?</span>
-    
+
     <span class="ruby-comment"># Check for the type of search we are doing</span>
     <span class="ruby-keyword">case</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:stype</span>]
     <span class="ruby-keyword">when</span> <span class="ruby-string">'email'</span>
       <span class="ruby-ivar">@users</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">by_email</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:search</span>])
     <span class="ruby-keyword">when</span> <span class="ruby-string">'first_name'</span>
       <span class="ruby-ivar">@users</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">by_first_name</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:search</span>])
-    <span class="ruby-keyword">when</span> <span class="ruby-string">'last_name'</span>  
+    <span class="ruby-keyword">when</span> <span class="ruby-string">'last_name'</span>
       <span class="ruby-ivar">@users</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">by_last_name</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:search</span>])
     <span class="ruby-keyword">else</span> <span class="ruby-comment"># Unrecognized search type so return all</span>
       <span class="ruby-ivar">@users</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">all</span>
     <span class="ruby-keyword">end</span>
-    
+
   <span class="ruby-keyword">else</span> <span class="ruby-comment"># No search criteria, so we start off with all Users</span>
     <span class="ruby-ivar">@users</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">all</span>
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:role_filter</span>].<span class="ruby-identifier">present?</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:role_filter</span>] <span class="ruby-operator">==</span> <span class="ruby-string">'customer'</span>
-      <span class="ruby-ivar">@users</span> =  <span class="ruby-ivar">@users</span>.<span class="ruby-identifier">by_role</span>(<span class="ruby-constant">User</span><span class="ruby-operator">::</span><span class="ruby-constant">CUSTOMER</span>)
+      <span class="ruby-ivar">@users</span> =  <span class="ruby-ivar">@users</span>.<span class="ruby-identifier">by_role</span>(<span class="ruby-constant">User</span><span class="ruby-operator">::</span><span class="ruby-constant">CUSTOMER</span>).<span class="ruby-identifier">paginate</span>(<span class="ruby-identifier">page</span><span class="ruby-operator">:</span> <span class="ruby-identifier">page</span>,
+        <span class="ruby-identifier">per_page</span><span class="ruby-operator">:</span> <span class="ruby-constant">PAGE_COUNT</span>)
     <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:role_filter</span>] <span class="ruby-operator">==</span> <span class="ruby-string">'service_admin'</span>
-      <span class="ruby-ivar">@users</span> =  <span class="ruby-ivar">@users</span>.<span class="ruby-identifier">by_role</span>(<span class="ruby-constant">User</span><span class="ruby-operator">::</span><span class="ruby-constant">SERVICE_ADMIN</span>)
+      <span class="ruby-ivar">@users</span> =  <span class="ruby-ivar">@users</span>.<span class="ruby-identifier">by_role</span>(<span class="ruby-constant">User</span><span class="ruby-operator">::</span><span class="ruby-constant">SERVICE_ADMIN</span>).<span class="ruby-identifier">paginate</span>(
+        <span class="ruby-identifier">page</span><span class="ruby-operator">:</span> <span class="ruby-identifier">page</span>, <span class="ruby-identifier">per_page</span><span class="ruby-operator">:</span> <span class="ruby-constant">PAGE_COUNT</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-ivar">@users</span> = <span class="ruby-ivar">@users</span>.<span class="ruby-identifier">paginate</span>(<span class="ruby-identifier">page</span><span class="ruby-operator">:</span> <span class="ruby-identifier">page</span>, <span class="ruby-identifier">per_page</span><span class="ruby-operator">:</span> <span class="ruby-constant">PAGE_COUNT</span>)
     <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@users</span> = <span class="ruby-ivar">@users</span>.<span class="ruby-identifier">paginate</span>(<span class="ruby-identifier">page</span><span class="ruby-operator">:</span> <span class="ruby-identifier">page</span>, <span class="ruby-identifier">per_page</span><span class="ruby-operator">:</span> <span class="ruby-constant">PAGE_COUNT</span>)
   <span class="ruby-keyword">end</span>
-  
+
 <span class="ruby-keyword">end</span></pre>
           </div><!-- index-source -->
           
@@ -405,7 +418,7 @@ a random 10 digit password.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File app/controllers/users_controller.rb, line 127</span>
+            <pre><span class="ruby-comment"># File app/controllers/users_controller.rb, line 136</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">new</span>
   <span class="ruby-identifier">random_password</span> = <span class="ruby-constant">Devise</span>.<span class="ruby-identifier">friendly_token</span>.<span class="ruby-identifier">first</span>(<span class="ruby-value">10</span>)
@@ -441,7 +454,7 @@ does not show first login time, ip address, and token.</p>
 
           
           <div class="method-source-code" id="show-source">
-            <pre><span class="ruby-comment"># File app/controllers/users_controller.rb, line 82</span>
+            <pre><span class="ruby-comment"># File app/controllers/users_controller.rb, line 91</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">show</span>
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">present?</span>
     <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">get_customer</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">customer_id</span>.<span class="ruby-identifier">present?</span>
@@ -476,16 +489,16 @@ href="User.html">User</a> record.</p>
 
           
           <div class="method-source-code" id="update-source">
-            <pre><span class="ruby-comment"># File app/controllers/users_controller.rb, line 103</span>
+            <pre><span class="ruby-comment"># File app/controllers/users_controller.rb, line 112</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>
   <span class="ruby-ivar">@verrors</span> = <span class="ruby-keyword">nil</span>
-  
+
   <span class="ruby-comment"># Delete the password parameters if they have been submitted blank</span>
   <span class="ruby-identifier">params</span>[<span class="ruby-value">:user</span>].<span class="ruby-identifier">delete</span>(<span class="ruby-value">:password</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:user</span>][<span class="ruby-value">:password</span>].<span class="ruby-identifier">blank?</span>
-  <span class="ruby-identifier">params</span>[<span class="ruby-value">:user</span>].<span class="ruby-identifier">delete</span>(<span class="ruby-value">:password_confirmation</span>) <span class="ruby-keyword">if</span> 
-    <span class="ruby-identifier">params</span>[<span class="ruby-value">:user</span>][<span class="ruby-value">:password</span>].<span class="ruby-identifier">blank?</span> <span class="ruby-keyword">and</span> 
+  <span class="ruby-identifier">params</span>[<span class="ruby-value">:user</span>].<span class="ruby-identifier">delete</span>(<span class="ruby-value">:password_confirmation</span>) <span class="ruby-keyword">if</span>
+    <span class="ruby-identifier">params</span>[<span class="ruby-value">:user</span>][<span class="ruby-value">:password</span>].<span class="ruby-identifier">blank?</span> <span class="ruby-keyword">and</span>
     <span class="ruby-identifier">params</span>[<span class="ruby-value">:user</span>][<span class="ruby-value">:password_confirmation</span>].<span class="ruby-identifier">blank?</span>
-    
+
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">update_attributes</span>(<span class="ruby-identifier">user_params</span>)
     <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">user_url</span>(<span class="ruby-ivar">@user</span>), <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;User account succesfully updated.&quot;</span>
   <span class="ruby-keyword">else</span>

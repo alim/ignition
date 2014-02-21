@@ -36,10 +36,14 @@ class ProjectsController < ApplicationController
   # listed.
   ######################################################################
   def index
+ 
+    # Get page number
+		page = params[:page].nil? ? 1 : params[:page]
+		 
     if current_user.role == User::SERVICE_ADMIN
-      @projects = Project.all
+      @projects = Project.all.paginate(page: page,	per_page: PAGE_COUNT)	
     else
-      @projects = current_user.projects
+      @projects = current_user.projects.paginate(page: page,	per_page: PAGE_COUNT)	
     end
   end
 

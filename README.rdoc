@@ -18,6 +18,16 @@ The project is based on the following technology components:
 * Stripe.com subscription billing
 * Openshift PaaS hosting integration scripts
 
+= Build Status
+
+We are using Travis CI for this project handle continuous integration
+services. The build status is shown below for:
+
+* Development Branch - {<img src="https://travis-ci.org/alim/ignition.png?branch=development" alt="Build Status" />}[https://travis-ci.org/alim/ignition]
+
+* Master Branch - 
+
+
 = Getting Started
 
 To get this web-based application framework up and running, you will

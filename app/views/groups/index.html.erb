@@ -51,6 +51,10 @@
 	</p>
 <% end %>
 
+<div class='digg_pagination'>
+  <%= will_paginate @groups %>
+</div>
+
 <div class='form-actions'>
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_group_path,
