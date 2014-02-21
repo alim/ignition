@@ -29,8 +29,8 @@
   <dd><%= @user.role_str %></dd>
   <dt><strong>Groups:</strong></dt>
   <dd>
-    <% if @user.group_ids.present? %>
-      <%= @user.group_ids %>
+    <% if @user.groups.present? %>
+      <%= list_groups(@user.groups) %>
     <% else %>
       None
     <% end %>
@@ -67,43 +67,46 @@
   </dd>
   <br/>
   
-  <dt><strong>Credit Card:</strong></dt>
-  <dd>
-    <% if @user.account.present? %>
-      <% if @user.account.customer_id.present? %>
-        Last 4 digits of credit card - <%= @user.account.last4 %><br/>
-        Card type - <%= @user.account.card_type %><br/>
-        Card expiration - <%= @user.account.expiration %>
+  <% if ENV['SUBSCRIPTION_ENABLED'] =~ /true/i %>
+    <dt><strong>Credit Card:</strong></dt>
+    <dd>
+      <% if @user.account.present? %>
+        <% if @user.account.customer_id.present? %>
+          Last 4 digits of credit card - <%= @user.account.last4 %><br/>
+          Card type - <%= @user.account.card_type %><br/>
+          Card expiration - <%= @user.account.expiration %>
+        <% else %>
+          No credit card associated with your account yet.
+        <% end %>
       <% else %>
         No credit card associated with your account yet.
       <% end %>
-    <% else %>
-      No credit card associated with your account yet.
-    <% end %>
-  </dd>
-  
+    </dd>
+  <% end %>
 </dl>
 
-<div id="credit_card_area">
-  <dl class="dl-horizontal">
-    <dt></dt>
-    <dd>
-      <% if !@user.account.present?  %>
-        <%= link_to 'Add Credit Card', new_user_account_url(@user), 
-		      class: 'btn btn-info' %>
-		  <% else %>
-		    <% if @user.account.customer_id.present? %>
-		      <%= link_to 'Update Credit Card', edit_user_account_url(@user, @user.account), 
-		        class: 'btn btn-info' %>
-		    <% else %>
-		      <%= link_to 'Add Credit Card', new_user_account_url(@user), 
-		        class: 'btn btn-info' %>
-		    <% end %>
-      <% end %>
-    </dd>
-  </dl>
-</div>
- 
+<% if ENV['SUBSCRIPTION_ENABLED'] =~ /true/i %>
+  <div id="credit_card_area">
+    <dl class="dl-horizontal">
+      <dt></dt>
+      <dd>
+        <% if !@user.account.present?  %>
+          <%= link_to 'Add Credit Card', new_user_account_url(@user), 
+            class: 'btn btn-info' %>
+        <% else %>
+          <% if @user.account.customer_id.present? %>
+            <%= link_to 'Update Credit Card', edit_user_account_url(@user, @user.account), 
+              class: 'btn btn-info' %>
+          <% else %>
+            <%= link_to 'Add Credit Card', new_user_account_url(@user), 
+              class: 'btn btn-info' %>
+          <% end %>
+        <% end %>
+      </dd>
+    </dl>
+  </div>
+<% end %>
+
 <div class="form-actions">
   <%= link_to t('.back', default: t("helpers.links.back")),
               users_path, class: 'btn'  %>

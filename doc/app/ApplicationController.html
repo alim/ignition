@@ -159,6 +159,10 @@
   
     <li><a href="./ProjectsHelper.html">ProjectsHelper</a>
   
+    <li><a href="./SharedClassMethods.html">SharedClassMethods</a>
+  
+    <li><a href="./SharedInstanceMethods.html">SharedInstanceMethods</a>
+  
     <li><a href="./Subscription.html">Subscription</a>
   
     <li><a href="./SubscriptionsController.html">SubscriptionsController</a>
@@ -195,6 +199,19 @@
     
 
     
+    <!-- Constants -->
+    <section id="constants-list" class="section">
+      <h3 class="section-header">Constants</h3>
+      <dl>
+      
+        <dt id="PAGE_COUNT">PAGE_COUNT
+        
+        <dd class="description"><p>CONSTANTS ———————————————————</p>
+        
+      
+      </dl>
+    </section>
+    
 
     
 
@@ -223,7 +240,7 @@ unauthorized action. The user will be redirected to the admin_oops_url</p>
 
           
           <div class="method-source-code" id="access_denied-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 92</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 96</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">access_denied</span>(<span class="ruby-identifier">exception</span>)
   <span class="ruby-identifier">msg</span> = <span class="ruby-node">&quot;You are not authorized to access the requested #{exception.subject.class}.&quot;</span>
   <span class="ruby-identifier">display_alert</span>(<span class="ruby-identifier">message</span><span class="ruby-operator">:</span> <span class="ruby-identifier">msg</span>, <span class="ruby-identifier">target</span><span class="ruby-operator">:</span> <span class="ruby-constant">Oops</span><span class="ruby-operator">::</span><span class="ruby-constant">ADMIN</span>)
@@ -258,15 +275,15 @@ information.</p>
 
           
           <div class="method-source-code" id="after_sign_in_path_for-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 30</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 34</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">after_sign_in_path_for</span>(<span class="ruby-identifier">resource</span>)
-        <span class="ruby-keyword">if</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">User</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">resource</span>.<span class="ruby-identifier">first_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">'*None*'</span> <span class="ruby-operator">||</span> 
-                <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">last_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">'*None*'</span>)
-                <span class="ruby-identifier">edit_user_registration_path</span>
-        <span class="ruby-keyword">else</span>
-                <span class="ruby-keyword">super</span>
-                <span class="ruby-identifier">admin_url</span>
-        <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">User</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">resource</span>.<span class="ruby-identifier">first_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">'*None*'</span> <span class="ruby-operator">||</span> 
+    <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">last_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">'*None*'</span>)
+    <span class="ruby-identifier">edit_user_registration_path</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">super</span>
+    <span class="ruby-identifier">admin_url</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- after_sign_in_path_for-source -->
           
@@ -295,9 +312,9 @@ have signed out the system.</p>
 
           
           <div class="method-source-code" id="after_sign_out_path_for-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 21</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 25</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">after_sign_out_path_for</span>(<span class="ruby-identifier">resource</span>)
-        <span class="ruby-identifier">root_url</span>
+  <span class="ruby-identifier">root_url</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- after_sign_out_path_for-source -->
           
@@ -327,15 +344,15 @@ href="README_rdoc.html">README</a> file for more details.</p>
 
           
           <div class="method-source-code" id="configure_permitted_parameters-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 62</span>
-      <span class="ruby-keyword">def</span> <span class="ruby-identifier">configure_permitted_parameters</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 66</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">configure_permitted_parameters</span>
   <span class="ruby-identifier">devise_parameter_sanitizer</span>.<span class="ruby-identifier">for</span>(<span class="ruby-value">:account_update</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">permit</span>(
-      <span class="ruby-value">:email</span>, <span class="ruby-value">:password</span>, <span class="ruby-value">:password_confirmation</span>, <span class="ruby-value">:current_password</span>,
-      <span class="ruby-value">:first_name</span>, <span class="ruby-value">:last_name</span>, <span class="ruby-value">:phone</span>, <span class="ruby-value">:role</span>
+    <span class="ruby-value">:email</span>, <span class="ruby-value">:password</span>, <span class="ruby-value">:password_confirmation</span>, <span class="ruby-value">:current_password</span>,
+    <span class="ruby-value">:first_name</span>, <span class="ruby-value">:last_name</span>, <span class="ruby-value">:phone</span>, <span class="ruby-value">:role</span>
   ) }
   <span class="ruby-identifier">devise_parameter_sanitizer</span>.<span class="ruby-identifier">for</span>(<span class="ruby-value">:sign_up</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">permit</span>(
-      <span class="ruby-value">:email</span>, <span class="ruby-value">:password</span>, <span class="ruby-value">:password_confirmation</span>, <span class="ruby-value">:current_password</span>,
-      <span class="ruby-value">:first_name</span>, <span class="ruby-value">:last_name</span>, <span class="ruby-value">:phone</span>, <span class="ruby-value">:role</span>
+    <span class="ruby-value">:email</span>, <span class="ruby-value">:password</span>, <span class="ruby-value">:password_confirmation</span>, <span class="ruby-value">:current_password</span>,
+    <span class="ruby-value">:first_name</span>, <span class="ruby-value">:last_name</span>, <span class="ruby-value">:phone</span>, <span class="ruby-value">:role</span>
   ) }
 <span class="ruby-keyword">end</span></pre>
           </div><!-- configure_permitted_parameters-source -->
@@ -365,12 +382,12 @@ use.</p>
 
           
           <div class="method-source-code" id="layout_by_resource-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 77</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 81</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">layout_by_resource</span>
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">HomeController</span>)
-      <span class="ruby-string">&quot;home&quot;</span>
+    <span class="ruby-string">&quot;home&quot;</span>
   <span class="ruby-keyword">elsif</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">DeviseController</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">user_signed_in?</span>
-                      <span class="ruby-string">&quot;devise&quot;</span>
+    <span class="ruby-string">&quot;devise&quot;</span>
   <span class="ruby-keyword">else</span>
     <span class="ruby-string">&quot;admin&quot;</span>
   <span class="ruby-keyword">end</span>
@@ -405,7 +422,7 @@ Mongoid::Errors::DocumentNotFound exception across all controller actions.
 
           
           <div class="method-source-code" id="missing_document-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 103</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 107</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">missing_document</span>(<span class="ruby-identifier">exception</span>)
   <span class="ruby-identifier">msg</span> = <span class="ruby-node">&quot;We are unable to find the requested #{exception.klass} - ID ##{exception.params[0]}&quot;</span>
   <span class="ruby-identifier">display_alert</span>(<span class="ruby-identifier">message</span><span class="ruby-operator">:</span> <span class="ruby-identifier">msg</span>, <span class="ruby-identifier">target</span><span class="ruby-operator">:</span> <span class="ruby-constant">Oops</span><span class="ruby-operator">::</span><span class="ruby-constant">ADMIN</span>)
@@ -439,7 +456,7 @@ CSS class to active.</p>
 
           
           <div class="method-source-code" id="set_menu_active-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 46</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 50</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">set_menu_active</span>
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Devise</span><span class="ruby-operator">::</span><span class="ruby-constant">RegistrationsController</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">user_signed_in?</span> <span class="ruby-operator">&amp;&amp;</span> 
     <span class="ruby-identifier">params</span>[<span class="ruby-value">:action</span>] <span class="ruby-operator">==</span> <span class="ruby-string">'edit'</span>

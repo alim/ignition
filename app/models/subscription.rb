@@ -98,8 +98,6 @@ class Subscription
 
 def subscribe(account_user, plan_id, coupon_code)
 
- subscription_valid = true
-
 if account_user.customer_id.present?
 
   begin
@@ -121,16 +119,14 @@ if account_user.customer_id.present?
     self.trial_start = customer_subscription.trial_start
     self.trial_end = customer_subscription.trial_end
 
-    subscription_valid = self.save ? true : false
+    self.save
 
-      rescue Stripe::StripError => stripe_error
+  rescue Stripe::StripeError => stripe_error
       logger.debug("[Subscription.update_with_stripe] error = #{stripe_error.message}")
       errors[:customer_id] << stripe_error.message
-      subscription_valid = false
       return nil
   end
  else 
-  subscription_valid = false
   return nil
  end
 
@@ -161,7 +157,7 @@ def cancel_subscription(account_user)
 
     customer.cancel_subscription()
 
-    rescue Stripe::StripError => stripe_error
+  rescue Stripe::StripeError => stripe_error
     logger.debug("[Subscription.cancel_with_stripe] error = #{stripe_error.message}")
     errors[:customer_id] << stripe_error.message
     subscription_cancelled = false
@@ -190,7 +186,7 @@ def destroy
    customer = Stripe::Customer.retrieve("#{self.customer_id}")
    customer.delete
 
-   rescue Stripe::StripError => stripe_error
+  rescue Stripe::StripeError => stripe_error
    logger.debug("[Subscription.cancel_with_stripe] error = #{stripe_error.message}")
    errors[:customer_id] << stripe_error.message
    
