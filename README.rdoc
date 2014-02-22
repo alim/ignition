@@ -41,7 +41,7 @@ need to do the following:
     rhc app create someapp ruby-1.9 mongodb-2.2 rockmongo-1.1 --from-code https://github.com/alim/ignition.git
     rhc app show-app someapp
    
-1. Create a text file to hold environment varilables for setting up email and default administrator login. We will call this file 'varaibles.txt'. This file should not be included in your git repository. Example file contents are below:
+1. Create a text file to hold environment variables for setting up email and default administrator login. We will call this file 'variables.txt'. This file should not be included in your git repository. Example file contents are below:
     SMTP_HOST=smtpout.someserver.net
     SMTP_PORT=3535
     SMTP_DOMAIN=somedomain.com
@@ -82,7 +82,7 @@ need to do the following:
 1. Push the application
     git push
     
-1. Point your browser to the applicatin URL. You should now be able to log into the application using the email and password that you entered in the application.yml file.
+1. Point your browser to the application URL. You should now be able to log into the application using the email and password that you entered in the application.yml file.
 
    
 = License
