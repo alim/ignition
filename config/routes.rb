@@ -11,6 +11,7 @@ Ignition::Application.routes.draw do
 		end
 	end
 
+  # The path_prefix sets up path helpers to prepend /auth to them
   devise_for :users, path_prefix: 'auth'
 
 	resources :users do

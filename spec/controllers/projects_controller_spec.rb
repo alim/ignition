@@ -313,11 +313,6 @@ describe ProjectsController do
         get :edit, edit_params
         assigns(:project).id.should eq(@project.id)
       end
-
-      it "should set the menu active flag for admin menu" do
-				get :edit, edit_params
-				assigns(:project_active).should eq("class=active")
-			end
 		end # Valid tests
 
 		describe "Invalid tests" do
