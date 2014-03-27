@@ -15,14 +15,11 @@
       <!-- Form for submitting a search request -->
       <%= form_tag users_url, method: :get do %>
         <div class='input-prepend'>
-
-            <%= select_tag(:stype, options_for_select(@search_options), 
-              class: 'btn span4') %>
-            <%= text_field_tag :search, nil, placeholder: "Search term" %>
+          <%= select_tag(:stype, user_search_options, class: 'btn span4') %>
+          <%= text_field_tag :search, nil, placeholder: "Search term" %>
         </div>
         
         <label class='radio'>Filter results by: &nbsp&nbsp</label>
-       
         
         <%= radio_button_tag(:role_filter, :both, true, class: 'radio') %>
         <label class='radio'>Both &nbsp&nbsp</label>
