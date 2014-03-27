@@ -66,11 +66,6 @@ describe GroupsController do
         assigns(:groups).count.should_not eq(0)
         assigns(:groups).each {|group| @group_ids.should include(group.id)}
       end
-
-      it "should set the menu active flag for admin menu" do
-        get :index
-        assigns(:groups_active).should eq("class=active")
-      end
     end # Valid examples
 
     describe "Invalid examples" do
@@ -154,11 +149,6 @@ describe GroupsController do
         uids = @group.users.all.pluck(:id).sort
         get :show, show_params
         assigns(:group).users.pluck(:id).sort.should eq(uids)
-      end
-
-      it "should set the menu active flag for admin menu" do
-        get :index
-        assigns(:groups_active).should eq("class=active")
       end
     end # Valid examples
 
@@ -270,11 +260,6 @@ describe GroupsController do
         get :new
         assigns(:group).should be_present
       end
-
-      it "should set the menu active flag for admin menu" do
-        get :new
-        assigns(:groups_active).should eq("class=active")
-      end
     end # Valid tests
 
     describe "Invalid tests" do
@@ -321,11 +306,6 @@ describe GroupsController do
       it "Should find the group record" do
         get :edit, edit_params
         assigns(:group).id.should eq(@group.id)
-      end
-
-      it "should set the menu active flag for admin menu" do
-        get :edit, edit_params
-        assigns(:groups_active).should eq("class=active")
       end
     end # Valid tests
 

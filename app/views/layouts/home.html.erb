@@ -33,7 +33,7 @@
     <!-- For all other devices -->
     <!-- Size should be 32 x 32 pixels -->
     <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
-    
+
   </head>
   <body>
 
@@ -41,50 +41,50 @@
     <div class="navbar navbar-static-top">
       <div class="navbar-inner">
         <div class="container-fluid">
-        
+
         	<!-- Insert your logo here -->
         	<%= image_tag 'logo.png', class: 'pull-left logo'%>
-        	
+
           <a class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
-         
+
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-          
+
           </a>
           <a class="brand" href="#">Web Services</a>
           <div class="container-fluid nav-collapse">
             <ul class="nav pull-right">
-              <li <%= @home_active %> ><%= link_to "Home", home_index_url  %></li>
-              <li <%= @support_active %> ><%= link_to "Support", home_support_url %></li>
-              <li <%= @about_active %> ><%= link_to "About", home_about_url  %></li>
-              <li <%= @contact_active %> ><%= link_to "Contact", home_contact_url  %></li>
-              
-              <!-- Check to see if we are seeing a Devise action -->
-              <% if controller.controller_name == "registrations" &&  
-              	controller.action_name == "new"%>
-              	<li class="active">
-              <% else %>
-              	<li>
-              <% end %>
-              <%= link_to "Signup", new_user_registration_url  %></li>
+              <li <%= "class=#{active(home_index_path)}" %> ><%= link_to "Home", home_index_path %></li>
+              <li <%= "class=#{active(home_support_path)}" %> ><%= link_to "Support", home_support_path %></li>
+              <li <%= "class=#{active(home_about_path)}" %> ><%= link_to "About", home_about_path %></li>
+              <li <%= "class=#{active(home_contact_path)}" %> ><%= link_to "Contact", home_contact_path  %></li>
 
-              <% if controller.controller_name == "sessions" &&  
+              <!-- Check to see if we are seeing a Devise action -->
+              <% if controller.controller_name == "registrations" &&
               	controller.action_name == "new"%>
               	<li class="active">
               <% else %>
               	<li>
               <% end %>
-              <%= link_to "Login", new_user_session_url  %></li>
+              <%= link_to "Signup", new_user_registration_path  %></li>
+
+              <% if controller.controller_name == "sessions" &&
+              	controller.action_name == "new"%>
+              	<li class="active">
+              <% else %>
+              	<li>
+              <% end %>
+              <%= link_to "Login", new_user_session_path  %></li>
 
             </ul>
           </div><!--/.nav-collapse -->
         </div>
       </div>
     </div>
-		
+
 		<!-- CAROUSEL SECTION ------------------------------------------ -->
-		
+
 		<!-- Image container -->
 		<div class="container-fluid">
 			<!-- Slide indicators -->
@@ -94,7 +94,7 @@
 					<li data-target="#myCarousel" data-slide-to="1"></li>
 					<li data-target="#myCarousel" data-slide-to="2"></li>
 				</ol>
-			
+
 				<!-- Carousel items -->
 				<div data-interval="3000" class="carousel-inner">
 
@@ -103,7 +103,7 @@
 						<div class="carousel-caption">
 							<h4>Caption 1</h4>
 							<p>
-								Pellentesque habitant morbi tristique senectus et netus 
+								Pellentesque habitant morbi tristique senectus et netus
 								et malesuada fames ac turpis egestas.
 							</p>
 						</div>
@@ -114,7 +114,7 @@
 						<div class="carousel-caption">
 							<h4>Caption 2</h4>
 							<p>
-								Pellentesque habitant morbi tristique senectus et netus 
+								Pellentesque habitant morbi tristique senectus et netus
 								et malesuada fames ac turpis egestas.
 							</p>
 						</div>
@@ -125,9 +125,9 @@
 						<div class="carousel-caption">
 							<h4>Caption 3</h4>
 							<p>
-								Pellentesque habitant morbi tristique senectus et netus 
+								Pellentesque habitant morbi tristique senectus et netus
 								et malesuada fames ac turpis egestas.
-							</p>					
+							</p>
 						</div>
 					</div>
 				</div>
@@ -137,7 +137,7 @@
 				<a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
 			</div>
 		</div>
-		
+
 		<!-- MAIN BODY SECTION -->
     <div class="container-fluid">
       <div class="row-fluid">
@@ -177,7 +177,7 @@
       			<h5>Copyright & Credits</h5>
       			<p>&copy; Acme Web Services 2013</p>
       			<p>Photo credit under Creative Commons license - Moyan Brenn</p>
-      		</div>      		      		      	
+      		</div>
       	</div>
 
       </footer>
@@ -201,6 +201,6 @@
         content_css : "/assets/tinymce_content.css",
         body_class: "tinymce_body",
       });
-    </script>	
+    </script>
   </body>
 </html>

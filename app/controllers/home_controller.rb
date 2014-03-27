@@ -2,7 +2,7 @@
 # The HomeController is responsible for presenting the public interface
 # to the web service. Most web services will have a public facing site
 # that presents the customer with a series of pages that describe the
-# the service and gives them access to public information. This 
+# the service and gives them access to public information. This
 # controller is designed to support this feature.
 ########################################################################
 class HomeController < ApplicationController
@@ -12,7 +12,6 @@ class HomeController < ApplicationController
   # page for the service.
   ######################################################################
   def index
-  	@home_active="class=active"
   end
 
 
@@ -23,9 +22,7 @@ class HomeController < ApplicationController
 	# then calls the create_contact method for sending us the email.
 	#####################################################################
   def contact
-  	@contact_active = "class=active"
   	@contact = Contact.new
-
   end
 
   #####################################################################
@@ -33,7 +30,6 @@ class HomeController < ApplicationController
   # message to us via our website.
   #####################################################################
   def create_contact
-  	@contact_active = "class=active"
 		@contact = Contact.new(params[:contact])
 
 		if @contact.valid?
@@ -42,37 +38,35 @@ class HomeController < ApplicationController
 
         redirect_to(home_contact_url, notice:
           "Contact request was successfully submitted.")
-          
-      rescue Timeout::Error, Net::SMTP, Net::SMTPAuthenticationError, 
-        Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError, 
+
+      rescue Timeout::Error, Net::SMTP, Net::SMTPAuthenticationError,
+        Net::SMTPServerBusy, Net::SMTPSyntaxError, Net::SMTPFatalError,
         Net::SMTPUnknownError => e
         logger.error("Unable to send email to: #{@contact.email} - error = #{e}")
         flash[:alert] = "Contact delivery error sending email - #{e.message}"
         redirect_to home_contact_url
       end
-      
+
 		else
 			# Create a hash that holds the request options
 			@verrors = @contact.errors.full_messages
 			render action: "contact"
 		end
   end
-  
+
   ## -------------------------------------------------------------------
-  
+
   ######################################################################
-  # The support acction will present a support page to the customer.
+  # The support action will present a support page to the customer.
   ######################################################################
-  def support 
-  	@support_active="class=active"
+  def support
   end
-  
+
   ######################################################################
   # The about page will present a page for telling the customer about
   # your web service or company.
   ######################################################################
   def about
-  	@about_active="class=active"
   end
 
 end

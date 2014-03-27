@@ -7,8 +7,8 @@
     <title><%= content_for?(:title) ? yield(:title) : "Ignition" %></title>
     <%= csrf_meta_tags %>
 		<%= javascript_include_tag "https://js.stripe.com/v2/" %>
-		<%= tag :meta, name: "pub_key", content: ENV['PUB_KEY'] %>	
-		
+		<%= tag :meta, name: "pub_key", content: ENV['PUB_KEY'] %>
+
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
       <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
@@ -46,74 +46,74 @@
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span2">
-          
+
           <!-- Main menu section -->
           <ul class="well nav nav-list">
             <li class="nav-header">Main Menu</li>
-            <li <%= @admin_active %>>
-              <%= link_to '<i class="icon-home"></i> Dashboard'.html_safe, admin_url  %></li>
-            
+            <li <%= "class=#{active(admin_path)}" %>>
+              <%= link_to '<i class="icon-home"></i> Dashboard'.html_safe, admin_path  %></li>
+
             <!-- accordion menu item -->
 
-         		<li <%= @settings_active %> >
+         		<li <%= "class=#{active('/settings')}" %> >
          			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
          			  <i class="icon-list-alt"></i> Settings <b class="icon-angle-down pull-right"></b></a>
          		</li>
 
 						<div id="collapseOne" class="accordion-body collapse out">
            		<ul class="accordion-inner nav nav-list">
-           		
+
            		  <!-- User account profile -->
-                <li <%= @account_active %> >
+                <li <%= "class=#{active(edit_user_registration_path)}" %> >
                   <%= link_to '<i class="icon-user"></i> Profile'.html_safe,
-                    edit_user_registration_url %>
+                    edit_user_registration_path %>
                 </li>
-                
+
                 <!-- Projects -->
-                <li <%= @project_active %> >
+                <li <%= "class=#{active(projects_path)}" %> >
                   <%= link_to '<i class="icon-book"></i> Projects'.html_safe,
-                    projects_url %>
+                    projects_path %>
                 </li>
-                
+
                 <!-- User groups -->
-                <li <%= @groups_active %>>
-                  <%= link_to '<i class="icon-th"></i> Groups'.html_safe, 
-                    groups_url  %>
+                <li <%= "class=#{active(groups_path)}" %>>
+                  <%= link_to '<i class="icon-th"></i> Groups'.html_safe,
+                    groups_path  %>
                 </li>
 
                 <!-- Subscription -->
-                <li <%= @subscriptions_active %> >
+                <li <%= "class=#{active(new_subscription_path)}" %> >
                   <%= link_to '<i class="icon-repeat"></i> Subscribe'.html_safe,
-                    new_subscription_url %>
+                    new_subscription_path %>
                 </li>
            		</ul>
             </div> <!-- collapsible section -->
           </ul> <!-- Main menu -->
 
           <br/>
-          
+
           <!-- Service Administration Menu ========================= -->
           <% if current_user.role == User::SERVICE_ADMIN %>
-		    
+
 		        <ul class="well nav nav-list">
 		          <li class="nav-header">Service Admin.</li>
-		          
-		          <li <%= @users_active %> >
-		            <%= link_to '<i class="icon-user"></i> Users'.html_safe, 
-		              users_url %>
+
+		          <li <%= "class=#{active(users_path)}" %> >
+		            <%= link_to '<i class="icon-user"></i> Users'.html_safe,
+		              users_path %>
 		          </li>
-		          
-		          <li <%= @groups_active %> >
-		            <%= link_to '<i class="icon-th"></i> Groups'.html_safe, 
-		              groups_url %>
+
+		          <li <%= "class=#{active(groups_path)}" %> >
+		            <%= link_to '<i class="icon-th"></i> Groups'.html_safe,
+		              groups_path %>
 		          </li>
-		          
+
 		        </ul>
-		     
+
 		      <% end %>
-		      
+
         </div> <!-- span for sidebar -->
-        
+
         <div class="span10">
           <%= yield %>
         </div>
@@ -129,7 +129,7 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <%= javascript_include_tag "application" %>
-    
+
     <!-- TinyMCE initializer after all javascripts have loaded -->
     <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
     <script>
@@ -142,6 +142,6 @@
         content_css : "/assets/tinymce_content.css",
         body_class: "tinymce_body",
       });
-    </script>	
+    </script>
   </body>
 </html>
