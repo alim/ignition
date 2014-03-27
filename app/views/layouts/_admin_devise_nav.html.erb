@@ -8,11 +8,11 @@
       </a>
       <!-- Insert your logo here -->
       <%= link_to image_tag('logo.png', class: 'pull-left logo'), root_url %>
-      
+
       <div class="container-fluid nav-collapse">
         <ul class="nav pull-right">
-          <% if user_signed_in? -%>        	
-          	<li <%= @help_admin_active%>><%= link_to "Help", admin_help_url  %></li>
+          <% if user_signed_in? -%>
+          	<li <%= "class=#{active(admin_help_path)}" %>><%= link_to "Help", admin_help_path %></li>
 						<li>
 							<%= link_to('Logout', destroy_user_session_path, :method => :delete) %>
 						</li>

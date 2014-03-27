@@ -8,11 +8,11 @@
 class SubscriptionsController < ApplicationController
   # Before filters & actions -------------------------------------------
   before_filter :authenticate_user!
-  
+
   before_action :set_subscription, only: [:show, :edit, :update, :destroy]
 
   before_action :set_active # Sets the variable for active CSS class
-  
+
   ######################################################################
   # GET /subscriptions
   # GET /subscriptions.json
@@ -44,17 +44,17 @@ class SubscriptionsController < ApplicationController
   ######################################################################
   def new
     @subscription = Subscription.new
-    
+
     # Check to see if the logged in user has a subscription already
     @subplan = Subscription.where(user_id: current_user.id).first
-    
+
     if @subplan.present?
       # Subscription plan is active
       redirect_to subscription_url(@subplan)
-      
+
     elsif current_user.account.present?
       # We have an account for signing up a subscription
-      
+
     else
       # No account and no subscription plan - Redirect to update
       # user account with notice to add credit card.
@@ -66,7 +66,7 @@ class SubscriptionsController < ApplicationController
   # GET /subscriptions/1/edit
   #
   # Standard edit action and view. Instructions added to the view
-  # about updating their subscription plan. We added a partial to 
+  # about updating their subscription plan. We added a partial to
   # display the plan options.
   ######################################################################
   def edit
@@ -77,20 +77,20 @@ class SubscriptionsController < ApplicationController
   # POST /subscriptions.json
   #
   # The create method will fill out the subscription options and calls
-  # the model instance method for creating a subscription on the 
+  # the model instance method for creating a subscription on the
   # Stripe.com
   ######################################################################
   def create
     @subscription = Subscription.new(subscription_params)
     current_user.subscriptions << @subscription
-    
+
     # STUB METHOD WHILE INSTANCE METHOD IS BEING DEVELOPERED.
     # THE REAL CALL WILL BE @subscription.subscribe(current_user.account,
     # params[:plan_id], coupon: params[:coupon_code]
     @subscription.subscribe(current_user.account, params[:plan_id], coupon: params[:coupon_code])
 
     update_subscription(@subscription)
-    
+
     respond_to do |format|
       if @subscription.save
         format.html { redirect_to @subscription, notice: 'Subscription was successfully created.' }
@@ -127,7 +127,7 @@ class SubscriptionsController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
+
   ## PRIVATE INSTANCE METHODS ------------------------------------------
 
   private
@@ -136,8 +136,8 @@ class SubscriptionsController < ApplicationController
       subscription.quantity = 1
       subscription.sub_start = DateTime.now
     end
-  
-  
+
+
     ####################################################################
     # Use callbacks to share common setup or constraints between actions.
     ####################################################################
@@ -146,21 +146,13 @@ class SubscriptionsController < ApplicationController
     end
 
     ####################################################################
-    # Never trust parameters from the scary internet, only allow the 
+    # Never trust parameters from the scary internet, only allow the
     # white list through.
     ####################################################################
     def subscription_params
-      params.require(:subscription).permit(:stripe_plan_id, 
-        :cancel_at_period_end, :quantity, :sub_start, :sub_end, :status, 
-        :canceled_at, :current_period_start, :current_period_end, 
+      params.require(:subscription).permit(:stripe_plan_id,
+        :cancel_at_period_end, :quantity, :sub_start, :sub_end, :status,
+        :canceled_at, :current_period_start, :current_period_end,
         :ended_at, :trial_start, :trial_end, :coupon_code)
-    end
-    
-    ####################################################################
-    # Little helper method to set an instance varialble that is used
-    # to flag menu items with an active CSS class for highlighting.
-    ####################################################################
-    def set_active
-      @subscriptions_active="class=active"
     end
 end
