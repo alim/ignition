@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
 
-<title>module ProjectsHelper - Rails Application Documentation</title>
+<title>module SharedInstanceMethods - Rails Application Documentation</title>
 
 <link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
 
@@ -47,7 +47,7 @@
     <nav id="file-list-section" class="section">
   <h3 class="section-header">Defined In</h3>
   <ul>
-    <li>app/helpers/projects_helper.rb
+    <li>lib/shared_instance_methods.rb
   </ul>
 </nav>
 
@@ -64,7 +64,7 @@
 
   <ul class="link-list">
     
-    <li><a href="#method-i-project_list">#project_list</a>
+    <li><a href="#method-i-attribute_str">#attribute_str</a>
     
   </ul>
 </nav>
@@ -154,10 +154,18 @@
 </nav>
 
 <div id="documentation">
-  <h1 class="module">module ProjectsHelper</h1>
+  <h1 class="module">module SharedInstanceMethods</h1>
 
   <div id="description" class="description">
     
+<p>The <a href="SharedInstanceMethods.html">SharedInstanceMethods</a> module
+is used for storing methods that will be accross multiple Rails model
+classes. To use these methods, you will need to:</p>
+
+<pre>include SharedInstanceMethods</pre>
+
+<p>in your model class definition</p>
+
   </div><!-- description -->
 
   
@@ -178,52 +186,54 @@
       <h3 class="section-header">Public Instance Methods</h3>
 
     
-      <div id="method-i-project_list" class="method-detail ">
+      <div id="method-i-attribute_str" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">project_list</span><span
-            class="method-args">(user)</span>
+          <span class="method-name">attribute_str</span><span
+            class="method-args">(ahash, value)</span>
           <span class="method-click-advice">click to toggle source</span>
         </div>
         
 
         <div class="method-description">
           
-          <p>The <a href="ProjectsHelper.html#method-i-project_list">#project_list</a>
-method will return a list of projects that are accessible by the user. If
-no projects are found for the user then nil will be returned. The method
-takes a parameter:</p>
+          <p>The <a
+href="SharedInstanceMethods.html#method-i-attribute_str">#attribute_str</a>
+method is a utility instance method that is used to print the human
+readable string associated with an attribute value. It takes two parameters
+as follows:</p>
 <ul><li>
-<p>user: The owner of the projects</p>
+<p>ahash - is a hash that stores possible values for an attribute the key is
+assumed to be the label</p>
+</li><li>
+<p>value - is the value of the attribute that is stored in the object.</p>
 </li></ul>
-
-<p>The method also sets a variable called list_name that is returned as the
-second return value. This variable can be used in view as a label for the
-selection list.</p>
           
 
           
-          <div class="method-source-code" id="project_list-source">
-            <pre><span class="ruby-comment"># File app/helpers/projects_helper.rb, line 14</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">project_list</span>(<span class="ruby-identifier">user</span>)
-  <span class="ruby-keyword">begin</span>
-    <span class="ruby-identifier">owned_projects</span> = <span class="ruby-constant">Project</span>.<span class="ruby-identifier">find_with_groups</span>(<span class="ruby-identifier">user</span>)
-    <span class="ruby-identifier">list_name</span> = <span class="ruby-string">'Available Projects'</span>
+          <div class="method-source-code" id="attribute_str-source">
+            <pre><span class="ruby-comment"># File lib/shared_instance_methods.rb, line 20</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">attribute_str</span>(<span class="ruby-identifier">ahash</span>, <span class="ruby-identifier">value</span>)
+  <span class="ruby-identifier">str</span> = <span class="ruby-string">'Unknown'</span>
 
-    <span class="ruby-keyword">return</span> <span class="ruby-identifier">owned_projects</span>, <span class="ruby-identifier">list_name</span>
-
-  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Mongoid</span><span class="ruby-operator">::</span><span class="ruby-constant">Errors</span><span class="ruby-operator">::</span><span class="ruby-constant">DocumentNotFound</span>
-    <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">ahash</span>.<span class="ruby-identifier">present?</span> &amp; <span class="ruby-identifier">value</span>.<span class="ruby-identifier">present?</span>
+    <span class="ruby-identifier">ahash</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">label</span>, <span class="ruby-identifier">hash_value</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">hash_value</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">value</span>
+        <span class="ruby-identifier">str</span> = <span class="ruby-identifier">label</span>
+        <span class="ruby-keyword">break</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">str</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- project_list-source -->
+          </div><!-- attribute_str-source -->
           
         </div>
 
         
 
         
-      </div><!-- project_list-method -->
+      </div><!-- attribute_str-method -->
 
     
     </section><!-- public-instance-method-details -->

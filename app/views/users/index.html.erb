@@ -94,6 +94,10 @@
   </tbody>
 </table>
 
+<div class='digg_pagination'>
+  <%= will_paginate @users %>
+</div>
+
 <div class="form-actions">
   <%= link_to t('.new', default: t("helpers.links.new")),
     new_user_path, class: 'btn btn-primary' %>

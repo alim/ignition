@@ -1,0 +1,9 @@
+<!-- The partial for generating a drop down list of projects -->
+
+<% @owned_projects, @list_name = project_list(current_user) %>
+
+<% if @owned_projects.present? %>
+  <label class='control-label'><%= @list_name %></label>
+  <%= f.select(:project_id, options_from_collection_for_select(
+    @owned_projects, :id, :name), {}, {class: html_class}) %>
+<% end %>
