@@ -1,0 +1,30 @@
+
+[1mFrom:[0m /home/ajazzman/ignition/app/controllers/subscriptions_controller.rb @ line 138 SubscriptionsController#destroy:
+
+    [1;34m134[0m: [32mdef[0m [1;34mdestroy[0m
+    [1;34m135[0m:   [1;30m# First cancel the Stripe subscription[0m
+    [1;34m136[0m: 
+    [1;34m137[0m:  [32mbegin[0m
+ => [1;34m138[0m:   binding.pry
+    [1;34m139[0m:   @subscription.cancel_subscription(current_user.account)
+    [1;34m140[0m:   binding.pry
+    [1;34m141[0m:   [1;30m# Then destroy the subscription record[0m
+    [1;34m142[0m:   @subscription.destroy
+    [1;34m143[0m:   binding.pry
+    [1;34m144[0m: 
+    [1;34m145[0m:  [32mrescue[0m [1;34;4mActiveRecord[0m::[1;34;4mRecordNotFound[0m
+    [1;34m146[0m:   logger.debug([31m[1;31m"[0m[31mSubscription Record Not Found to delete[1;31m"[0m[31m[0m)
+    [1;34m147[0m:  [32mrescue[0m [1;34;4mActiveRecord[0m::[1;34;4mActiveRecordError[0m
+    [1;34m148[0m:   logger.debug([31m[1;31m"[0m[31mSubscription Record ActiveRecordError[1;31m"[0m[31m[0m)
+    [1;34m149[0m:  [32mrescue[0m
+    [1;34m150[0m:   logger.debug([31m[1;31m"[0m[31mSubscription Standard Error[1;31m"[0m[31m[0m)
+    [1;34m151[0m:  [32mrescue[0m [1;34;4mException[0m
+    [1;34m152[0m:   logger.debug([31m[1;31m"[0m[31mSubscription Exception[1;31m"[0m[31m[0m)
+    [1;34m153[0m:  [32mend[0m
+    [1;34m154[0m: 
+    [1;34m155[0m:   respond_to [32mdo[0m |format|
+    [1;34m156[0m:     format.html { redirect_to subscriptions_url }
+    [1;34m157[0m:     format.json { head [33m:no_content[0m }
+    [1;34m158[0m:   [32mend[0m
+    [1;34m159[0m: [32mend[0m
+
