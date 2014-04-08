@@ -21,7 +21,6 @@ class GroupsController < ApplicationController
   # or checks Class permissions
   authorize_resource
 
-
   ######################################################################
   # GET /groups
   # GET /groups.json
@@ -126,6 +125,8 @@ class GroupsController < ApplicationController
   ######################################################################
   def update
     respond_to do |format|
+      remove_members(params[:group][:user_ids], @group) if params[:group][:user_ids]
+
       if @group.update_attributes(group_params)
 
         # Relate resources from injected methods in GroupRelations
@@ -190,30 +191,25 @@ class GroupsController < ApplicationController
     end
   end
 
-  ######################################################################
-  # PUT groups/1/remove_member
-  #
-  # The remove_member method will remove one group member.
-  ######################################################################
-  def remove_member
-
-    respond_to do |format|
-      # Delete the user association
-      user = User.find(params[:uid])
-      @group.users.delete(user)
-      @group.reload
-
-      format.html { redirect_to edit_group_url(@group),
-        notice: "Group member #{user.email} has been removed from the group, but NOT deleted from the system."}
-      format.json { head :no_content }
-    end
-
-  end
-
 
   ## PROTECTED INSTANCE METHODS ----------------------------------------
 
   protected
+
+  ######################################################################
+  # The remove_member method will remove selected group members
+  # The parameter is a list of group members that represents an array,
+  # which includes user ID's of the members to disassociate from the
+  # group
+  ######################################################################
+  def remove_members(members, group)
+    members.each do |uid|
+      user = User.find(uid)
+      group.users.delete(user)
+    end
+    group.reload
+  end
+
 
   ######################################################################
   # The create_notify method will take a hash of email addresses and
@@ -325,6 +321,14 @@ class GroupsController < ApplicationController
   ####################################################################
   def set_group
     @group = Group.find(params[:id])
+  end
+
+  ######################################################################
+  # The set_group_class method sets an instance variable for the CSS
+  # class that will highlight the menu item.
+  ######################################################################
+  def set_group_class
+    @groups_active = "class=active"
   end
 
   ######################################################################

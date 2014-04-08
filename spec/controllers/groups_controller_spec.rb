@@ -547,6 +547,18 @@ describe GroupsController do
         end
       end
 
+      it "Should allow us to delete an existing member" do
+        member_count = @group.users.count + new_members.split.count
+        put :update, update_params
+        assigns(:group).users.count.should == member_count
+
+        put :update, {
+          id: @group.id,
+          group: { user_ids: ["#{@group.users.last.id}","#{@group.users.first.id}"] }
+        }
+        assigns(:group).users.count.should == (member_count - 2)
+      end
+
       it "Should notify each user of their account" do
         put :update, update_params
         ActionMailer::Base.deliveries.each do |delivery|
@@ -896,109 +908,5 @@ describe GroupsController do
       end
     end # Authorization examples for notify
   end # Notify
-
-  # REMOVE_MEMBER ACTION TESTS -----------------------------------------
-
-  describe "Remove_member tests" do
-    let(:remove_params) {
-      {
-        id: @group.id,
-        uid: @group.users.last.id
-      }
-    }
-
-    describe "Valid examples" do
-      it "Should redirect to group_url" do
-        put :remove_member, remove_params
-        response.should redirect_to edit_group_url(assigns(:group))
-      end
-
-      it "Should flash a success notice" do
-        put :remove_member, remove_params
-        flash[:notice].should match(/Group member .* has been removed from the group, but NOT deleted from the system./)
-      end
-
-      it "Should find the matching group" do
-        put :remove_member, remove_params
-        assigns(:group).id.should eq(@group.id)
-      end
-
-      it "Should remove the requested user from the group" do
-        put :remove_member, remove_params
-        assigns(:group).users.pluck(:id).include?(@group.users.last.id).should be_false
-      end
-
-    end # Valid examples
-
-    describe "Invalid examples" do
-      it "Should redirect to sign_in, if not logged in" do
-        sign_out @signed_in_user
-        put :remove_member, remove_params
-        response.should redirect_to new_user_session_url
-      end
-
-      it "Should redirect to groups_url if bad group id" do
-        remove_params[:id] = '99999'
-        put :remove_member, remove_params
-        response.should redirect_to groups_url
-      end
-
-      it "Should flash an alert message if bad group id" do
-        remove_params[:id] = '99999'
-        put :remove_member, remove_params
-        flash[:alert].should match(/We are unable to find the requested Group/)
-      end
-
-      it "Should redirect to groups_url if bad user id" do
-        remove_params[:uid] = '99999'
-        put :remove_member, remove_params
-        response.should redirect_to groups_url
-      end
-
-      it "Should flash an alert message if bad user id" do
-        remove_params[:uid] = '99999'
-        put :remove_member, remove_params
-        flash[:alert].should match(/We are unable to find the requested User/)
-      end
-
-    end # Invalid examples
-
-    describe "Authorization examples" do
-      it "Should redirect to group_url, upon succesfull removal of owned group" do
-        put :remove_member, remove_params
-        response.should redirect_to edit_group_url(assigns(:group))
-      end
-
-      it "Notified group should have same owner id as login" do
-        put :remove_member, remove_params
-        assigns(:group).owner_id.should eq(@signed_in_user.id)
-      end
-
-      it "Should redirect to group_url, upon succesfull removal of group as admin" do
-        login_admin
-        put :remove_member, remove_params
-        response.should redirect_to edit_group_url(assigns(:group))
-      end
-
-      it "Removal group should have different owner id from admin" do
-        login_admin
-        put :remove_member, remove_params
-        assigns(:group).owner_id.should_not eq(@signed_in_user.id)
-      end
-
-      it "Should redirect to admin oops for non-owner access" do
-        login_nonowner
-        put :remove_member, remove_params
-        response.should redirect_to admin_oops_url
-      end
-
-      it "Should flash alert for non-owner access" do
-        login_nonowner
-        put :remove_member, remove_params
-        flash[:alert].should match(/You are not authorized to access the requested #{@group.class}/)
-      end
-    end # Authorization examples for notify
-
-  end # Remove_member
 
 end

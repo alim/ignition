@@ -1,32 +1,27 @@
 class AccountsController < ApplicationController
 
-  # RESCUE SETTINGS ----------------------------------------------------
-  rescue_from Mongoid::Errors::DocumentNotFound, with: :missing_document
-  rescue_from CanCan::AccessDenied, with: :access_denied 
-  
-  
   # Before filters -----------------------------------------------------
   before_filter :authenticate_user!
-  
+
   before_action :set_user
 
   # CANCAN AUTHORIZATION -----------------------------------------------
   # This helper assumes that the instance variable @group is loaded
   # or checks Class permissions
   authorize_resource
-  
-    
+
+
   ######################################################################
   # GET    /admin/users/:user_id/accounts/new(.:format)
   #
   # The new action will present a AJAX based form to user as part of
-  # the User views. If there is an error it will redirect to the 
+  # the User views. If there is an error it will redirect to the
   # admin_oops_url with a corresponding error message.
   ######################################################################
   def new
     respond_to do |format|
       begin
-        @user.account = Account.new          
+        @user.account = Account.new
         @user.reload
         @account = @user.account
       	format.html
@@ -36,11 +31,11 @@ class AccountsController < ApplicationController
       end
     end
   end
-  
+
   ######################################################################
-  # POST   /admin/users/:user_id/accounts(.:format) 
+  # POST   /admin/users/:user_id/accounts(.:format)
   #
-  # The create method will update the account settings with the 
+  # The create method will update the account settings with the
   # stripe.com customer_id and set the status of the account to ACTIVE
   ######################################################################
   def create
@@ -63,10 +58,10 @@ class AccountsController < ApplicationController
       end
     end
   end
-  
+
   ######################################################################
   # GET    /admin/users/:user_id/accounts/:id/edit
-  # 
+  #
   # The edit action will present the user with a form for editing the
   # account record for credit card updates.
   ######################################################################
@@ -83,9 +78,9 @@ class AccountsController < ApplicationController
         flash[:alert] = "We could not find the requested credit card account."
         format.html {redirect_to admin_oops_url}
       end
-    end  
+    end
   end
-  
+
   ######################################################################
   # PUT or PATCH  /admin/users/:user_id/accounts/:id(.:format)
   #
@@ -112,16 +107,16 @@ class AccountsController < ApplicationController
 
           format.html { render action: :edit }
         end
-        
+
       else
         flash[:alert] = "We could not find the requested credit card account."
         format.html {redirect_to user_url(@user)}
       end
     end
   end
-  
+
   ######################################################################
-  # DELETE /admin/users/:user_id/accounts/:id(.:format) 
+  # DELETE /admin/users/:user_id/accounts/:id(.:format)
   #
   # The destroy method will destroy the account record associated with
   # the user and destory the customer record on the stripe.com service.
@@ -130,12 +125,12 @@ class AccountsController < ApplicationController
     # Added the following check, because we could not CANCAN ability to
     # operate correctly.
     if (@user.id != current_user.id) && (current_user.role == User::CUSTOMER)
-    
+
       flash[:alert] = "You are not authorized to access the requested User."
       redirect_to admin_oops_url
-      
+
     else
-    
+
       if @account.present?
         begin
           @user.account.destroy
@@ -147,13 +142,13 @@ class AccountsController < ApplicationController
       else
         flash[:alert] = "Could not find user credit card account to delete."
         redirect_to user_url(@user)
-      end    
-       
+      end
+
     end
-    
+
   end
-  
-  
+
+
   # PROTECTED INSTANCE METHODS =----------------------------------------
   protected
 
@@ -166,9 +161,9 @@ class AccountsController < ApplicationController
   def set_user
     @user = User.find(params[:user_id])
     authorize! :update, @user
-    
+
     if @user.account.present? && @user.account.id.to_s == params[:id]
-      @account = @user.account 
+      @account = @user.account
     else
       @account = nil
     end
@@ -180,11 +175,11 @@ class AccountsController < ApplicationController
   # controller actions.
   ######################################################################
   def missing_document(exception)
-	  respond_to do |format| 
+	  respond_to do |format|
 	    msg = "We are unable to find the requested User account - ID ##{exception.params[0]}"
   		format.html { redirect_to admin_oops_url, alert: msg }
   		format.json { head :no_content }
-  	end  
+  	end
   end
 
 end

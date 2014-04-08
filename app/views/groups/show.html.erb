@@ -4,10 +4,10 @@
   <p>
     The user group definition is shown below. You can update the
     group membership by selecting the <em>Edit</em> button at the
-    bottom on the page. 
+    bottom on the page.
   </p>
 </div>
-<%= render partial: 'shared/flash', locals: { flash: flash } %>  
+<%= render partial: 'shared/flash', locals: { flash: flash } %>
 
 <dl class="dl-horizontal">
   <dt><strong>Name:</strong></dt>
@@ -37,7 +37,7 @@
           <td><%= user.last_name %></td>
           <td><%= user.email %></td>
           <td>
-    				<%= form_tag notify_group_url, method: :put do %>
+    				<%= form_tag notify_group_url(@group), method: :put do %>
     					<%= hidden_field_tag :uid, user.id %>
     					<%= submit_tag 'Send Invite', class: "btn btn-mini" %>
     				<% end %>
@@ -54,13 +54,13 @@
 
 
 <h3>Related Resources</h3>
-	  
+
 <% if @resources.present? %>
   <p>
     The resources that are accessible by this group are listed in the
     table below:
   </p>
-  <%= render partial: 'resource_list', locals: { resources: @resources } %> 
+  <%= render partial: 'resource_list', locals: { resources: @resources } %>
 <% else %>
   <p>
     There are no resources associated with this group.
