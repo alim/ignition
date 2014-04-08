@@ -7,21 +7,14 @@
 ########################################################################
 class UsersController < ApplicationController
 
-  # RESCUE SETTINGS ----------------------------------------------------
-  rescue_from Mongoid::Errors::DocumentNotFound, with: :missing_document
-  rescue_from CanCan::AccessDenied, with: :access_denied
-
   # Before filters -----------------------------------------------------
   before_filter :authenticate_user!
-
   before_action :set_user, only: [:show, :edit, :update, :destroy]
-  before_action :set_users_class
 
   # CANCAN AUTHORIZATION -----------------------------------------------
   # This helper assumes that the instance variable @group is loaded
   # or checks Class permissions
   authorize_resource
-
 
   ######################################################################
   # GET /admin/users
@@ -185,15 +178,6 @@ class UsersController < ApplicationController
   ####################################################################
   def set_user
     @user = User.find(params[:id])
-  end
-
-
-  ######################################################################
-  # The set_users_class method sets an instance variable for the CSS
-  # class that will highlight the menu item.
-  ######################################################################
-  def set_users_class
-    @users_active = "class=active"
   end
 
   ######################################################################

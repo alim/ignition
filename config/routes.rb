@@ -7,7 +7,6 @@ Ignition::Application.routes.draw do
   	# Route for notifying and re-invite
 		member do
 			put 'notify'
-			put 'remove_member'
 		end
 	end
 

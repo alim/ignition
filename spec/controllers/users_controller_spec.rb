@@ -50,11 +50,6 @@ describe UsersController do
         assigns(:users).count.should eq(ApplicationController::PAGE_COUNT)
       end
 
-      it "should set the menu active flag for admin menu" do
-        get :index
-        assigns(:users_active).should eq("class=active")
-      end
-
       it "should render index template" do
         get :index
         response.should render_template :index

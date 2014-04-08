@@ -6,12 +6,10 @@
 # setup on the Stripe.com service for charging.
 ########################################################################
 class SubscriptionsController < ApplicationController
+
   # Before filters & actions -------------------------------------------
   before_filter :authenticate_user!
-
   before_action :set_subscription, only: [:show, :edit, :update, :destroy]
-
-  before_action :set_active # Sets the variable for active CSS class
 
   ######################################################################
   # GET /subscriptions
