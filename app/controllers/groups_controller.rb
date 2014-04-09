@@ -324,14 +324,6 @@ class GroupsController < ApplicationController
   end
 
   ######################################################################
-  # The set_group_class method sets an instance variable for the CSS
-  # class that will highlight the menu item.
-  ######################################################################
-  def set_group_class
-    @groups_active = "class=active"
-  end
-
-  ######################################################################
   # Never trust parameters from the scary internet, only allow the
   # white list through.
   ######################################################################
