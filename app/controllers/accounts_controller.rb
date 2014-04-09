@@ -1,3 +1,8 @@
+#######################################################################
+# The Accounts controller manages the users interaction associated
+# with setting up a payment account. The payment account information
+# is associated with the Stripe.com service.
+#######################################################################
 class AccountsController < ApplicationController
 
   # Before filters -----------------------------------------------------

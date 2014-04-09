@@ -6,10 +6,6 @@
 class GroupsController < ApplicationController
   include GroupRelations
 
-  # RESCUE SETTINGS ----------------------------------------------------
-  rescue_from Mongoid::Errors::DocumentNotFound, with: :missing_document
-  rescue_from CanCan::AccessDenied, with: :access_denied
-
   # BEFORE CALLBACKS ---------------------------------------------------
   before_filter :authenticate_user!
 

@@ -1,4 +1,11 @@
+########################################################################
+# The admin controller provides the private facing user interface for
+# the application. It requires authentication/login in order to access
+# the actions. Update to the ability.rb file for CanCan authorization
+# can also be done.
+########################################################################
 class AdminController < ApplicationController
+
 	before_filter :authenticate_user!
 
 	layout 'admin'
