@@ -1,4 +1,14 @@
 module ApplicationHelper
+
+  #####################################################################
+  # A little helper method to display the page title. To use the
+  # method:
+  #     <% title "your title here" %>
+  #####################################################################
+  def title(page_title)
+    content_for(:title) { page_title }
+  end
+
   #####################################################################
   # The active method is a helper function that returns "active" or
   # empty string. It is used to set a CSS class to active for
@@ -9,7 +19,7 @@ module ApplicationHelper
        (path == '/settings' && (request.fullpath =~ /^\/group/).present?) ||
        (path == '/settings' && (request.fullpath =~ /^\/project/).present?) ||
        (path == '/settings' && (request.fullpath =~ /^\/auth\/users\/edit/).present?) ||
-        request.fullpath =~ /^#{path}/
+        request.fullpath == path
       'active'
     end
   end

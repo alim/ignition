@@ -1,23 +1,18 @@
-<div class="navbar navbar-fluid-top">
-  <div class="navbar-inner">
-    <div class="container-fluid">
-      <a class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
-      <!-- Insert your logo here -->
-      <%= link_to image_tag('logo.png', class: 'pull-left logo'), root_url %>
-
-      <div class="container-fluid nav-collapse">
-        <ul class="nav pull-right">
-          <% if user_signed_in? -%>
-          	<li <%= "class=#{active(admin_help_path)}" %>><%= link_to "Help", admin_help_path %></li>
-						<li>
-							<%= link_to('Logout', destroy_user_session_path, :method => :delete) %>
-						</li>
-					<% end -%>
-      </div><!--/.nav-collapse -->
-    </div>
-  </div>
-</div>
+<!-- Navigation Menu ------------------------------------------ -->
+<nav class="top-bar" data-topbar>
+  <ul class="title-area">
+    <li><%= image_tag('ignition_logo.svg', class: 'logo') %></li>
+    <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
+  </ul>
+  <section class="top-bar-section">
+    <!-- Right Nav Section -->
+    <ul class="right">
+       <% if user_signed_in? -%>
+        <li <%= "class=#{active(admin_help_path)}" %>><%= link_to "Help", admin_help_path %></li>
+        <li>
+          <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>
+        </li>
+      <% end -%>
+    </ul>
+  </section>
+</nav>

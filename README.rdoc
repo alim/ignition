@@ -2,7 +2,7 @@
 
 The Ignition project is a small effort to provide a Quickstart framework
 for building online web-based subscription services. This particular
-project is targeted to support Openshift deployment. 
+project is targeted to support Openshift deployment.
 
 = Components
 
@@ -10,7 +10,7 @@ The project is based on the following technology components:
 
 * Ruby On Rails 4
 * MongoDB using Mongoid ORM
-* Twitter Bootstrap
+* Zurb Foundation
 * Devise authentication
 * Cancan authorization
 * Figaro environment variable utility
@@ -25,7 +25,7 @@ services. The build status is shown below for:
 
 * Development Branch - {<img src="https://travis-ci.org/alim/ignition.png?branch=development" alt="Build Status" />}[https://travis-ci.org/alim/ignition]
 
-* Master Branch - 
+* Master Branch - {<img src="https://travis-ci.org/alim/ignition.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/alim/ignition]
 
 
 = Getting Started
@@ -40,20 +40,20 @@ need to do the following:
 1. Create a rails application and check the results. You can name the application whatever you want. In the example, we use "someapp".
     rhc app create someapp ruby-1.9 mongodb-2.2 rockmongo-1.1 --from-code https://github.com/alim/ignition.git
     rhc app show-app someapp
-   
+
 1. Create a text file to hold environment variables for setting up email and default administrator login. We will call this file 'variables.txt'. This file should not be included in your git repository. Example file contents are below:
     SMTP_HOST=smtpout.someserver.net
     SMTP_PORT=3535
     SMTP_DOMAIN=somedomain.com
     SMTP_USER=someuser@somedomain.com
     SMTP_PASSWORD=somepassword
-    
+
     ADMIN_FIRST_NAME=Some
     ADMIN_LAST_NAME=Admin
     ADMIN_PHONE=800.555.1212
     ADMIN_EMAIL=sadmin@example.com
     ADMIN_PASSWORD=somepassword
-    
+
     TEST_API_KEY='your stripe test api/private key'
     TEST_PUB_KEY='your stripe test public key'
     PROD_API_KEY='your stripe production api/private key'
@@ -64,27 +64,27 @@ need to do the following:
     export CONTACT_SUBJECT='New Contact Request'
 
     export GROUP_FROM_EMAIL="no-reply-mailbox@example.com"
-    export GROUP_EMAIL_SUBJECT="Group Membership Notification"      
-      
+    export GROUP_EMAIL_SUBJECT="Group Membership Notification"
+
 1. Run the rhc command to install these environment variables for your application. You can then destroy the text file you created in the previous step.
     rhc set-env /path/to/variables.txt -a someapp
- 
+
 1. Generate a new secret token and copy the output of the following command.
     cd someapp
     rake secret
 
 1. Replace the secret token stored in the config/initializers/secret_token.rb file with the one generated from the rake secret command.
-   
+
 1. Commit the merged changes
     git add --all
     git commit -m "Put your commit message here"
 
 1. Push the application
     git push
-    
+
 1. Point your browser to the application URL. You should now be able to log into the application using the email and password that you entered in the application.yml file.
 
-   
+
 = License
 
 The Ignition project is available as GPLV3 licensed software. For more

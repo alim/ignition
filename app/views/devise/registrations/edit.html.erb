@@ -1,40 +1,36 @@
-
 <div class="row">
-	<div class="span1">
-	</div>
-	
-	<div class="span11">
-		<div class="page-header">
-			<h2>Edit <%= resource_name.to_s.humanize %></h2>
+  <div class="small-12 columns">
+    <div class="page-header">
+			<h2>Edit Profile</h2>
 			<p>
 				Edit your profile information using the form below. You will
 				need to provide your current pasword in order to use it. Your
-				account must already be confirmed using the	confirmation email 
+				account must already be confirmed using the	confirmation email
 				that was sent to you.
 			</p>
 		</div>
 
 		<%= form_for(resource, as: resource_name, url: registration_path(
 			resource_name), html: {method: :put, class: 'form-horizontal' }) do |f| %>
-			
+
 			<%= devise_error_messages! %>
 
 			<div class='control-label'><%= f.label :first_name %></div>
 			<div class='controls'><%= f.text_field :first_name, :autofocus => true %></div>
 			<br/>
-			
+
 			<div class='control-label'><%= f.label :last_name %></div>
 			<div class='controls'><%= f.text_field :last_name %></div>
 			<br/>
-			
+
 			<div class='control-label'><%= f.label :phone %></div>
 			<div class='controls'><%= f.text_field :phone %></div>
 			<br/>
-			
+
 			<div class='control-label'><%= f.label :email %></div>
 			<div class='controls'><%= f.email_field :email %></div>
 			<br/>
-			
+
 			<% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
 				<div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
 			<% end %>
@@ -42,11 +38,11 @@
 			<div class='control-label'><%= f.label :password %></div>
 			<div class='controls'><%= f.password_field :password, autocomplete: "off" %></div>
 			<br />
-			
+
 			<div class='control-label'><%= f.label :password_confirmation %></div>
 			<div class='controls'><%= f.password_field :password_confirmation %></div>
    		<br />
-   		
+
 			<div class='control-label'><%= f.label :current_password %></div>
 			<div class='controls'><%= f.password_field :current_password %></div>
 			<br />
@@ -62,13 +58,13 @@
           </dl>
         </div>
       <% end %>
-  			
+
 			<div class='form-actions'>
 				<%= f.submit "Update", class: 'btn btn-primary' -%>
 				<%= link_to "Back", :back, class: 'btn' %>
-				<%= link_to "Cancel My Account", registration_path(resource_name), 
-					method: :delete, 
-					data: {confirm: "Are you sure?"}, 
+				<%= link_to "Cancel My Account", registration_path(resource_name),
+					method: :delete,
+					data: {confirm: "Are you sure?"},
 					class: 'pull-right btn btn-danger' -%>
 			</div>
 		<% end %>

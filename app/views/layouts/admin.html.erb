@@ -1,129 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title><%= content_for?(:title) ? yield(:title) : "Ignition" %></title>
+
+    <%= stylesheet_link_tag    "application" %>
+
+    <%= javascript_include_tag "https://js.stripe.com/v2/" %>
+    <%= tag :meta, name: "pub_key", content: ENV['PUB_KEY'] %>
+
+    <%= javascript_include_tag "vendor/modernizr" %>
     <%= csrf_meta_tags %>
-		<%= javascript_include_tag "https://js.stripe.com/v2/" %>
-		<%= tag :meta, name: "pub_key", content: ENV['PUB_KEY'] %>
 
-    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
-    <!--[if lt IE 9]>
-      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
-    <![endif]-->
-
-    <%= stylesheet_link_tag "application", :media => "all" %>
-
-    <!-- For third-generation iPad with high-resolution Retina display: -->
-    <!-- Size should be 144 x 144 pixels -->
-    <%= favicon_link_tag 'apple-touch-icon-144x144-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '144x144' %>
-
-    <!-- For iPhone with high-resolution Retina display: -->
-    <!-- Size should be 114 x 114 pixels -->
-    <%= favicon_link_tag 'apple-touch-icon-114x114-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '114x114' %>
-
-    <!-- For first- and second-generation iPad: -->
-    <!-- Size should be 72 x 72 pixels -->
-    <%= favicon_link_tag 'apple-touch-icon-72x72-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '72x72' %>
-
-    <!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
-    <!-- Size should be 57 x 57 pixels -->
-    <%= favicon_link_tag 'apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png' %>
-
-    <!-- For all other devices -->
-    <!-- Size should be 32 x 32 pixels -->
     <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
   </head>
   <body>
 
 		<%= render :partial => 'layouts/admin_devise_nav'%>
 
-    <!-- SideBar Navigation
-    ================================================== -->
+    <div class='row'>
+      <div class='small-2 columns'>
 
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span2">
+        <!-- SideBar Navigation
+        ================================================== -->
+        <br/>
+        <div class='side-panel radius'>
+        <ul class='ignition-side-nav'>
+          <li class='heading'>Main Menu</li>
+          <li <%= "class=#{active(admin_path)}" %>>
+            <%= link_to '<i class="fi-home"></i> Dashboard'.html_safe, admin_path %>
+          </li>
 
-          <!-- Main menu section -->
-          <ul class="well nav nav-list">
-            <li class="nav-header">Main Menu</li>
-            <li <%= "class=#{active(admin_path)}" %>>
-              <%= link_to '<i class="icon-home"></i> Dashboard'.html_safe, admin_path  %></li>
+          <div class="side-nav-accordion">
+            <dl class="accordion" data-accordion>
+              <dd>
+                <%= link_to '<i class="fi-wrench"></i> Settings'.html_safe,
+                  '#settings_menu' %>
 
-            <!-- accordion menu item -->
+                <div id='settings_menu' class='content'>
+                  <ul class='side-nav'>
+                    <li <%= "class=#{active(edit_user_registration_path)}" %> >
+                      <%= link_to 'Profile', edit_user_registration_path %>
+                    </li>
 
-         		<li <%= "class=#{active('/settings')}" %> >
-         			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
-         			  <i class="icon-list-alt"></i> Settings <b class="icon-angle-down pull-right"></b></a>
-         		</li>
+                    <!-- Projects -->
+                    <li <%= "class=#{active(projects_path)}" %> >
+                      <%= link_to 'Projects', projects_path %>
+                    </li>
 
-						<div id="collapseOne" class="accordion-body collapse out">
-           		<ul class="accordion-inner nav nav-list">
+                    <!-- User groups -->
+                    <li <%= "class=#{active(groups_path)}" %>>
+                      <%= link_to 'Groups', groups_path  %>
+                    </li>
 
-           		  <!-- User account profile -->
-                <li <%= "class=#{active(edit_user_registration_path)}" %> >
-                  <%= link_to '<i class="icon-user"></i> Profile'.html_safe,
-                    edit_user_registration_path %>
-                </li>
-
-                <!-- Projects -->
-                <li <%= "class=#{active(projects_path)}" %> >
-                  <%= link_to '<i class="icon-book"></i> Projects'.html_safe,
-                    projects_path %>
-                </li>
-
-                <!-- User groups -->
-                <li <%= "class=#{active(groups_path)}" %>>
-                  <%= link_to '<i class="icon-th"></i> Groups'.html_safe,
-                    groups_path  %>
-                </li>
-
-                <!-- Subscription -->
-                <li <%= "class=#{active(new_subscription_path)}" %> >
-                  <%= link_to '<i class="icon-repeat"></i> Subscribe'.html_safe,
-                    new_subscription_path %>
-                </li>
-           		</ul>
-            </div> <!-- collapsible section -->
-          </ul> <!-- Main menu -->
-
-          <br/>
+                    <!-- Subscription -->
+                    <li <%= "class=#{active(new_subscription_path)}" %> >
+                      <%= link_to '<i class="icon-repeat"></i> Subscribe'.html_safe,
+                        new_subscription_path %>
+                    </li>
+                  </ul>
+                </div>
+              </dd>
+            </dl>
+          </div>
 
           <!-- Service Administration Menu ========================= -->
           <% if current_user.role == User::SERVICE_ADMIN %>
+            <br/>
+            <li class="heading">Service Admin.</li>
 
-		        <ul class="well nav nav-list">
-		          <li class="nav-header">Service Admin.</li>
+            <li <%= "class=#{active(users_path)}" %> >
+              <%= link_to '<i class="icon-user"></i> Users'.html_safe,
+                users_path %>
+            </li>
 
-		          <li <%= "class=#{active(users_path)}" %> >
-		            <%= link_to '<i class="icon-user"></i> Users'.html_safe,
-		              users_path %>
-		          </li>
+            <li <%= "class=#{active(groups_path)}" %> >
+              <%= link_to '<i class="icon-th"></i> Groups'.html_safe,
+                groups_path %>
+            </li>
 
-		          <li <%= "class=#{active(groups_path)}" %> >
-		            <%= link_to '<i class="icon-th"></i> Groups'.html_safe,
-		              groups_path %>
-		          </li>
+          <% end %>
+        </ul>
+      </div> <!-- columns -->
+      </div>
 
-		        </ul>
+      <div class="small-10 columns">
+        <%= yield %>
+      </div>
+    </div> <!-- row -->
 
-		      <% end %>
-
-        </div> <!-- span for sidebar -->
-
-        <div class="span10">
-          <%= yield %>
-        </div>
-      </div><!--/row-->
+    <div class='row'>
 
       <footer>
         <p>&copy; Company 2013</p>
       </footer>
 
-    </div> <!-- /container -->
+    </div> <!-- row -->
 
     <!-- Javascripts
     ================================================== -->

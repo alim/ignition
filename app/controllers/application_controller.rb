@@ -86,7 +86,8 @@ class ApplicationController < ActionController::Base
     if self.is_a?(HomeController)
       "home"
     elsif self.is_a?(DeviseController) && !user_signed_in?
-      "devise"
+      "home"
+      #"devise"
     else
       "admin"
     end
