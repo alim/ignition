@@ -20,7 +20,7 @@ module ApplicationHelper
        (path == '/settings' && (request.fullpath =~ /^\/project/).present?) ||
        (path == '/settings' && (request.fullpath =~ /^\/auth\/users\/edit/).present?) ||
         request.fullpath == path
-      'active'
+      "class=active"
     end
   end
 

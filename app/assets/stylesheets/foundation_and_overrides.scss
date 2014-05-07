@@ -1320,16 +1320,16 @@ $border-color: #888;
 
 // Admin. Side Nav ----------------------------------------------------
 
+$side-bar-bg-color: #555;
+
 .ignition-side-nav {
   @include side-nav(
-    // Border color of divider
-    $divider-color: '#ccc',
-    // Color of navigation links
-    $link-color:'#ccc',
-    // Color of navigation links on hover
+    $divider-color: #ccc,
+    $link-color: $primary-color,
     $link-color-hover: '#444'
   );
   padding: 0 0 0 0;
+
 }
 
 ul.ignition-side-nav li.heading {
@@ -1337,19 +1337,22 @@ ul.ignition-side-nav li.heading {
   font-weight: bold;
   color: #ddd;
   background-color: #333;
-  padding-top: rem-calc(5);
-  padding-bottom: rem-calc(5);
+  padding-top: rem-calc(2);
+  padding-bottom: rem-calc(2);
 }
 
-div.side-nav-accordion dl.accordion dd a {
+.accordion .content.active {
+  background-color: $side-bar-bg-color;
+  padding: 0 0 0 rem-calc(15);
+}
+
+.side-nav-accordion dl.accordion dd a {
   color: $primary-color;
-  padding: rem-calc(2) 0 0 0;
-  background-color: #fff;
+  padding: 0 0 0 0;
+  background-color: $side-bar-bg-color;
 }
 
-.side-panel {
-  @include panel();
-  margin-top: rem-calc(16);
-  padding: 0 0 0 0;
-  background-color: $topbar-bg-color;
+.side-bar {
+  min-height: 100vh;
+  background-color: $side-bar-bg-color;
 }

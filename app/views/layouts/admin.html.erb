@@ -21,15 +21,13 @@
 		<%= render :partial => 'layouts/admin_devise_nav'%>
 
     <div class='row'>
-      <div class='small-2 columns'>
+      <div class='small-2 columns side-bar'>
 
         <!-- SideBar Navigation
         ================================================== -->
         <br/>
-        <div class='side-panel radius'>
         <ul class='ignition-side-nav'>
-          <li class='heading'>Main Menu</li>
-          <li <%= "class=#{active(admin_path)}" %>>
+          <li <%= "#{active(admin_path)}" %>>
             <%= link_to '<i class="fi-home"></i> Dashboard'.html_safe, admin_path %>
           </li>
 
@@ -41,49 +39,38 @@
 
                 <div id='settings_menu' class='content'>
                   <ul class='side-nav'>
-                    <li <%= "class=#{active(edit_user_registration_path)}" %> >
-                      <%= link_to 'Profile', edit_user_registration_path %>
+                    <li <%= "#{active(edit_user_registration_path)}" %> >
+                      <%= link_to '<i class="fi-torso"></i> Profile'.html_safe, edit_user_registration_path %>
                     </li>
 
                     <!-- Projects -->
-                    <li <%= "class=#{active(projects_path)}" %> >
-                      <%= link_to 'Projects', projects_path %>
+                    <li <%= "#{active(projects_path)}" %> >
+                      <%= link_to '<i class="fi-list"></i> Projects'.html_safe, projects_path %>
                     </li>
 
                     <!-- User groups -->
-                    <li <%= "class=#{active(groups_path)}" %>>
-                      <%= link_to 'Groups', groups_path  %>
+                    <li <%= "#{active(groups_path)}" %>>
+                      <%= link_to '<i class="fi-torsos-all"></i> Groups'.html_safe, groups_path  %>
                     </li>
 
                     <!-- Subscription -->
-                    <li <%= "class=#{active(new_subscription_path)}" %> >
-                      <%= link_to '<i class="icon-repeat"></i> Subscribe'.html_safe,
+                    <li <%= "#{active(new_subscription_path)}" %> >
+                      <%= link_to '<i class="fi-dollar-bill"></i> Subscribe'.html_safe,
                         new_subscription_path %>
                     </li>
+                    <!-- Service Administration Menu ========================= -->
+                    <% if current_user.role == User::SERVICE_ADMIN %>
+                      <li <%= "#{active(users_path)}" %> >
+                        <%= link_to '<i class="fi-torsos"></i> Users'.html_safe,
+                          users_path %>
+                      </li>
+                    <% end %>
                   </ul>
                 </div>
               </dd>
             </dl>
           </div>
-
-          <!-- Service Administration Menu ========================= -->
-          <% if current_user.role == User::SERVICE_ADMIN %>
-            <br/>
-            <li class="heading">Service Admin.</li>
-
-            <li <%= "class=#{active(users_path)}" %> >
-              <%= link_to '<i class="icon-user"></i> Users'.html_safe,
-                users_path %>
-            </li>
-
-            <li <%= "class=#{active(groups_path)}" %> >
-              <%= link_to '<i class="icon-th"></i> Groups'.html_safe,
-                groups_path %>
-            </li>
-
-          <% end %>
         </ul>
-      </div> <!-- columns -->
       </div>
 
       <div class="small-10 columns">
