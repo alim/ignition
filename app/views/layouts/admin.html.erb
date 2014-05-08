@@ -17,74 +17,33 @@
     <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
   </head>
   <body>
+    <div class="off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+        <%= render partial: 'layouts/admin_devise_nav'%>
+        <%= render partial: 'layouts/admin_side_menu' %>
 
-		<%= render :partial => 'layouts/admin_devise_nav'%>
+        <section class="main-section">
 
-    <div class='row'>
-      <div class='small-2 columns side-bar'>
+          <div class='row'>
 
-        <!-- SideBar Navigation
-        ================================================== -->
-        <br/>
-        <ul class='ignition-side-nav'>
-          <li <%= "#{active(admin_path)}" %>>
-            <%= link_to '<i class="fi-home"></i> Dashboard'.html_safe, admin_path %>
-          </li>
+            <div class="small-10 small-offset-1 columns full-height">
+              <%= yield %>
+            </div>
 
-          <div class="side-nav-accordion">
-            <dl class="accordion" data-accordion>
-              <dd>
-                <%= link_to '<i class="fi-wrench"></i> Settings'.html_safe,
-                  '#settings_menu' %>
+          </div> <!-- row -->
 
-                <div id='settings_menu' class='content'>
-                  <ul class='side-nav'>
-                    <li <%= "#{active(edit_user_registration_path)}" %> >
-                      <%= link_to '<i class="fi-torso"></i> Profile'.html_safe, edit_user_registration_path %>
-                    </li>
+          <div class='row'>
+            <footer>
+              <p>&copy; Company 2013</p>
+            </footer>
+          </div> <!-- row -->
 
-                    <!-- Projects -->
-                    <li <%= "#{active(projects_path)}" %> >
-                      <%= link_to '<i class="fi-list"></i> Projects'.html_safe, projects_path %>
-                    </li>
+        </section>
 
-                    <!-- User groups -->
-                    <li <%= "#{active(groups_path)}" %>>
-                      <%= link_to '<i class="fi-torsos-all"></i> Groups'.html_safe, groups_path  %>
-                    </li>
+        <a class="exit-off-canvas"></a>
 
-                    <!-- Subscription -->
-                    <li <%= "#{active(new_subscription_path)}" %> >
-                      <%= link_to '<i class="fi-dollar-bill"></i> Subscribe'.html_safe,
-                        new_subscription_path %>
-                    </li>
-                    <!-- Service Administration Menu ========================= -->
-                    <% if current_user.role == User::SERVICE_ADMIN %>
-                      <li <%= "#{active(users_path)}" %> >
-                        <%= link_to '<i class="fi-torsos"></i> Users'.html_safe,
-                          users_path %>
-                      </li>
-                    <% end %>
-                  </ul>
-                </div>
-              </dd>
-            </dl>
-          </div>
-        </ul>
       </div>
-
-      <div class="small-10 columns">
-        <%= yield %>
-      </div>
-    </div> <!-- row -->
-
-    <div class='row'>
-
-      <footer>
-        <p>&copy; Company 2013</p>
-      </footer>
-
-    </div> <!-- row -->
+    </div> <!-- off-canvus-wrap -->
 
     <!-- Javascripts
     ================================================== -->

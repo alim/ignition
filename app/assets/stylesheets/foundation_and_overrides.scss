@@ -55,7 +55,7 @@ $total-columns: 12;
 
 // We use these as default colors throughout
 $primary-color: #FF3500;
-// $secondary-color: #e7e7e7;
+$secondary-color: #cccccc;
 // $alert-color: #f04124;
 // $success-color: #43AC6A;
 // $warning-color: #f08a24;
@@ -662,10 +662,10 @@ $include-html-button-classes: $include-html-classes;
 
 // $include-html-off-canvas-classes: $include-html-classes;
 
-// $tabbar-bg: #333;
-// $tabbar-height: rem-calc(45);
-// $tabbar-line-height: $tabbar-height;
-// $tabbar-color: #fff;
+$tabbar-bg: $secondary-color;
+$tabbar-height: rem-calc(50);
+$tabbar-line-height: $tabbar-height;
+$tabbar-color: #000000;
 // $tabbar-middle-padding: 0 rem-calc(10);
 
 // Off Canvas Divider Styles
@@ -696,8 +696,8 @@ $include-html-button-classes: $include-html-classes;
 // $off-canvas-link-border-bottom: 1px solid scale-color($off-canvas-bg, $lightness: -25%);
 
 // Off Canvas Menu Icon Variables
-// $tabbar-menu-icon-color: #fff;
-// $tabbar-menu-icon-hover: scale-color($tabbar-menu-icon-color, $lightness: -30%);
+$tabbar-menu-icon-color: #000;
+$tabbar-menu-icon-hover: #eee;
 
 // $tabbar-menu-icon-text-indent: rem-calc(35);
 // $tabbar-menu-icon-width: $tabbar-height;
@@ -1170,7 +1170,7 @@ $preloader-class: "preloader";
 // $include-html-top-bar-classes: $include-html-classes;
 
 // Background color for the top bar
-$topbar-bg-color: #ddd;
+$topbar-bg-color: $secondary-color;
 $topbar-bg: $topbar-bg-color;
 
 // Height and margin
@@ -1316,6 +1316,16 @@ $border-color: #888;
   @include button;
   background-color: #999;
   margin-left: rem-calc(6);
+}
+
+// Admin section definitions //////////////////////////////////////////
+
+img.admin-logo {
+  height: 80%;
+}
+
+.full-height {
+  height: 100vh;
 }
 
 // Admin. Side Nav ----------------------------------------------------

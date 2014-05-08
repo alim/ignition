@@ -13,7 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require foundation
-//= require turbolinks
+// require turbolinks <- Disable this plugin when using Foundation
 //= require_tree .
 
 $(function(){ $(document).foundation(); });
