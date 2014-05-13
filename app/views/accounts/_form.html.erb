@@ -1,16 +1,15 @@
 
 <%= render partial: 'shared/validation_errors' %>
 
-<div id='stripe_error' class="span10">
+<div id='stripe_error' class="small-10">
 	<noscript>JavaScript is not enabled and is required for this form.
 		First enable it in your web browser settings.</noscript>
 </div>
 
-<%= form_for @account, url: user_accounts_url, method: :post, 
-  html: {class: "form-horizontal stripe_form"} do |f| %>
-  
-	<div class="row-fluid">
-	
+<%= form_for @account, url: user_accounts_url, method: :post do |f| %>
+
+	<div class="row">
+
 		<!-- Setup hidden field for submitting the cc token -->
 		<%= f.hidden_field :stripe_cc_token %>
 
@@ -41,7 +40,7 @@
 			<%= label_tag :card_month, "Card Expiration", class: 'control-label' %>
 			<div class="controls">
 				<%= select_month nil, {}, {name: nil, id: "card_month", class: 'span2'} %>
-				<%= select_year nil, {start_year: Date.today.year, 
+				<%= select_year nil, {start_year: Date.today.year,
 				  end_year: Date.today.year+10}, {name: nil, id: "card_year",
 				  class: 'span2'} %>
 			</div>
@@ -53,7 +52,7 @@
 				<%= text_field_tag :card_code, nil, name: nil %>
 			</div>
 		</div>
-		
+
    <div class="control-group">
 			<div class="controls">
 			  <% @label = controller.action_name == 'edit' ? 'Update Credit Card' : 'Add Credit Card' %>
