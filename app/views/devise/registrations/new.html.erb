@@ -1,8 +1,12 @@
-<div class="page-header">
-	<h2>Sign Up</h2>
-	<p>
-		You can sign for an account using the form below.
-	</p>
+<div class="row">
+  <div class="small-12 columns">
+		<div class="page-header">
+			<h2>Sign Up</h2>
+			<p>
+				You can sign for an account using the form below.
+			</p>
+		</div>
+	</div>
 </div>
 
 <%= form_for(resource, as: resource_name, url: registration_path(
@@ -43,9 +47,14 @@
 		</div>
 	</div>
 
-	<div class='form-actions'>
-		<%= f.submit "Sign Up", class: 'button radius' %>
+	<div class="row">
+	  <div class="small-12 columns">
+			<div class='form-actions'>
+				<%= f.submit "Sign Up", class: 'button radius' %>
+			</div>
+		</div>
 	</div>
+
 <% end %>
 
 <br/>

@@ -1,8 +1,14 @@
-<div class="page-header">
-	<h2>Resend Unlock Instructions</h2>
-	<p>
-		You can resend account unlock instructions using the form below.
-	</p>
+<div class="row">
+  <div class="small-12 columns">
+    <div class="page-header">
+
+			<h2>Resend Unlock Instructions</h2>
+			<p>
+				You can resend account unlock instructions using the form below.
+			</p>
+
+		</div>
+	</div>
 </div>
 
 <%= form_for(resource, as: resource_name, url: unlock_path(resource_name),
@@ -17,7 +23,12 @@
 		</div>
 	</div>
 
-	<div class='form-actions'>
-		<%= f.submit "Resend Unlock Instructions", class: 'button radius' %>
+	<div class="row">
+	  <div class="small-12 columns">
+			<div class='form-actions'>
+				<%= f.submit "Resend Unlock Instructions", class: 'button radius' %>
+			</div>
+		</div>
 	</div>
+
 <% end %>

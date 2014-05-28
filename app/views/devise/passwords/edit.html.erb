@@ -1,8 +1,14 @@
-<div class="page-header">
-	<h2>Change your password</h2>
-	<p>
-		You can use the form below to change your password.
-	</p>
+<div class="row">
+  <div class="small-12 columns">
+    <div class="page-header">
+
+			<h2>Change your password</h2>
+			<p>
+				You can use the form below to change your password.
+			</p>
+
+		</div>
+	</div>
 </div>
 
 <%= form_for(resource, as: resource_name, url: password_path(
@@ -13,17 +19,22 @@
 	<%= f.hidden_field :reset_password_token %>
 	<div class='row'>
 		<div class='small-6 columns'>
-			<%= f.label :password, "New password" %>
+			<label>New password</label>
 			<%= f.password_field :password, :autofocus => true %>
 
-			<%= f.label :password_confirmation, "Confirm new password" %>
+			<label>Confirm new password</label>
 			<%= f.password_field :password_confirmation %>
 		</div>
 	</div>
 
-	<div class='form-actions'>
-		<%= f.submit "Change my password", class: 'button radius' %>
+	<div class="row">
+	  <div class="small-12 columns">
+			<div class='form-actions'>
+				<%= f.submit "Change my password", class: 'button radius' %>
+			</div>
+		</div>
 	</div>
+
 	<br/><br/>
 <% end %>
 

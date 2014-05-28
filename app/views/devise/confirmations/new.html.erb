@@ -1,10 +1,16 @@
-<div class="page-header">
-	<h2>Resend Confirmation Instructions</h2>
-	<br/>
-	<p>
-		You can resend the account confirmation instructions using
-		the form below.
-	</p>
+<div class="row">
+	<div class="small-12 columns">
+		<div class="page-header">
+
+			<h2>Resend Confirmation Instructions</h2>
+			<br/>
+			<p>
+				You can resend the account confirmation instructions using
+				the form below.
+			</p>
+
+		</div>
+	</div>
 </div>
 
 <%= form_for(resource, as: resource_name, url: confirmation_path(
@@ -18,7 +24,11 @@
 		</div>
 	</div>
 
-	<div class='form-actions'>
-		<%= f.submit "Resend Confirmation Instructions", class: 'button radius' %>
+	<div class='row'>
+		<div class="small-12 columns">
+			<div class='form-actions'>
+				<%= f.submit "Resend Confirmation Instructions", class: 'button radius' %>
+			</div>
+		</div>
 	</div>
 <% end %>

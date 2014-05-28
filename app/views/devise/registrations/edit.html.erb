@@ -1,12 +1,17 @@
+<div class="row">
+  <div class="small-12 columns">
+    <div class="page-header">
 
-<div class="page-header">
-<h2>Edit Profile</h2>
-<p>
-	Edit your profile information using the form below. You will
-	need to provide your current password in order to use it. Your
-	account must already be confirmed using the	confirmation email
-	that was sent to you.
-</p>
+      <h2>Edit Profile</h2>
+      <p>
+      	Edit your profile information using the form below. You will
+      	need to provide your current password in order to use it. Your
+      	account must already be confirmed using the	confirmation email
+      	that was sent to you.
+      </p>
+
+    </div>
+  </div>
 </div>
 
 <%= form_for(resource, as: resource_name, url: registration_path(
@@ -60,25 +65,29 @@ resource_name), html: {method: :put, class: 'form-horizontal' }) do |f| %>
     </div>
   </div>
 
+  <div class="row">
+    <div class="small-12 columns">
 
-  <div class='row form-actions'>
-  		<%= f.submit "Update", class: 'button small radius success' %>
+      <div class='row form-actions'>
+      		<%= f.submit "Update", class: 'button small radius success' %>
 
-      <% if controller.action_name == 'edit' %>
-        &nbsp;
-        <%= render partial: 'shared/account_button_link', locals: {
-            user: @user}  %>
-        &nbsp;
-      <% end %>
-
-
-  		<%= link_to "Back", :back, class: 'button small radius secondary' %>
+          <% if controller.action_name == 'edit' %>
+            &nbsp;
+            <%= render partial: 'shared/account_button_link', locals: {
+                user: @user}  %>
+            &nbsp;
+          <% end %>
 
 
-  		<%= link_to "Cancel Account", registration_path(resource_name),
-  			method: :delete,
-  			data: {confirm: "Are you sure?"},
-  			class: 'right button small radius alert' %>
+      		<%= link_to "Back", :back, class: 'button small radius secondary' %>
+
+
+      		<%= link_to "Cancel Account", registration_path(resource_name),
+      			method: :delete,
+      			data: {confirm: "Are you sure?"},
+      			class: 'right button small radius alert' %>
+      </div>
+    </div>
   </div>
 <% end %>
 
