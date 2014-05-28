@@ -48,8 +48,7 @@ class AccountsController < ApplicationController
     if @user.account.save_with_stripe(params)
       redirect_to user_url(@user), notice: 'Account was successfully created.'
     else
-      @verrors = @user.account.errors.full_messages
-      set_account(@user, params)
+      handle_account_errors(@user, params)
       render action: :new
     end
   end
@@ -86,8 +85,7 @@ class AccountsController < ApplicationController
       if @user.account.update_with_stripe(params)
         redirect_to user_url(@user), notice: 'Account was successfully updated.'
       else
-        @verrors = @user.account.errors.full_messages
-        set_account(@user, params)
+        handle_account_errors(@user, params)
         render action: :edit
       end
 
@@ -154,7 +152,8 @@ class AccountsController < ApplicationController
   #####################################################################
   # A helper method for setting the account instance variable.
   #####################################################################
-  def set_account(user, params)
+  def handle_account_errors(user, params)
+    @verrors = user.account.errors.full_messages
     @account = user.account
     @account.stripe_cc_token = @user.account.errors[:customer_id].present? ? nil :
       params[:account][:stripe_cc_token]
