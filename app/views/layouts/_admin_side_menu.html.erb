@@ -1,0 +1,39 @@
+<aside class="left-off-canvas-menu">
+  <ul class="off-canvas-list">
+
+    <li><label>Main Menu</label></li>
+    <li><a href="#">Item 1</a></li>
+    <li><a href="#">Item 2</a></li>
+    <li><a href="#">Item 3</a></li>
+
+    <li><label>Settings</label></li>
+
+    <li <%= "#{active(edit_user_registration_path)}" %> >
+      <%= link_to '<i class="fi-torso"></i> Profile'.html_safe, edit_user_registration_path %>
+    </li>
+
+    <!-- Projects -->
+    <li <%= "#{active(projects_path)}" %> >
+      <%= link_to '<i class="fi-list"></i> Projects'.html_safe, projects_path %>
+    </li>
+
+    <!-- User groups -->
+    <li <%= "#{active(groups_path)}" %>>
+      <%= link_to '<i class="fi-torsos-all"></i> Groups'.html_safe, groups_path  %>
+    </li>
+
+    <!-- Subscription -->
+    <li <%= "#{active(new_subscription_path)}" %> >
+      <%= link_to '<i class="fi-dollar-bill"></i> Subscribe'.html_safe,
+        new_subscription_path %>
+    </li>
+
+    <!-- Service Administration Menu ========================= -->
+    <% if current_user.role == User::SERVICE_ADMIN %>
+      <li <%= "#{active(users_path)}" %> >
+        <%= link_to '<i class="fi-torsos"></i> Users'.html_safe,
+          users_path %>
+      </li>
+    <% end %>
+  </ul>
+</aside>

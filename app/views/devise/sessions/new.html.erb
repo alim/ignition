@@ -1,11 +1,17 @@
-<div class="page-header">
-  <h2>Login</h2>
-  <br/>
-  <p>
-    You can access the service features for registered customers by
-    using the login form below. If you do not have an account, you can
-    use the <em>Sign up</em> link above.
-  </p>
+<div class="row">
+  <div class="small-12 columns">
+    <div class="page-header">
+
+      <h2>Login</h2>
+      <br/>
+      <p>
+        You can access the service features for registered customers by
+        using the login form below. If you do not have an account, you can
+        use the <em>Sign up</em> link above.
+      </p>
+
+    </div>
+  </div>
 </div>
 
 <%= render partial: 'shared/flash', locals: { flash: flash } %>
@@ -13,26 +19,29 @@
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <div class='row'>
     <div class='small-6 columns'>
-      <%= f.label :email %>
+      <label>Email</label>
       <%= f.email_field :email, autofocus: true %>
     </div>
   </div>
 
   <div class='row'>
     <div class='small-6 columns'>
-      <%= f.label :password %>
+      <label>Password</label>
       <%= f.password_field :password %>
     </div>
   </div>
 
-  <div class="form-actions">
-    <%= f.submit "Login", class: 'button small radius' %>
-    <br/>
-    <% if devise_mapping.rememberable? -%>
-      <label class='checkbox'>
-        <%= f.check_box :remember_me %> Remember my login
-      </label>
-    <% end -%>
+  <div class="row">
+    <div class="small-12 columns">
+      <div class="form-actions">
+        <%= f.submit "Login", class: 'button radius' %>
+        <% if devise_mapping.rememberable? -%>
+          <label class='checkbox'>
+            <%= f.check_box :remember_me %> Remember my login
+          </label>
+        <% end -%>
+      </div>
+    </div>
   </div>
 
 <% end %>

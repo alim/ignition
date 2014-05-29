@@ -17,87 +17,33 @@
     <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
   </head>
   <body>
+    <div class="off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+        <%= render partial: 'layouts/admin_devise_nav'%>
+        <%= render partial: 'layouts/admin_side_menu' %>
 
-		<%= render :partial => 'layouts/admin_devise_nav'%>
+        <section class="main-section">
 
-    <div class='row'>
-      <div class='small-2 columns'>
+          <div class='row'>
 
-        <!-- SideBar Navigation
-        ================================================== -->
-        <br/>
-        <div class='side-panel radius'>
-        <ul class='ignition-side-nav'>
-          <li class='heading'>Main Menu</li>
-          <li <%= "class=#{active(admin_path)}" %>>
-            <%= link_to '<i class="fi-home"></i> Dashboard'.html_safe, admin_path %>
-          </li>
+            <div class="small-10 small-offset-1 columns">
+              <%= yield %>
+            </div>
 
-          <div class="side-nav-accordion">
-            <dl class="accordion" data-accordion>
-              <dd>
-                <%= link_to '<i class="fi-wrench"></i> Settings'.html_safe,
-                  '#settings_menu' %>
+          </div> <!-- row -->
 
-                <div id='settings_menu' class='content'>
-                  <ul class='side-nav'>
-                    <li <%= "class=#{active(edit_user_registration_path)}" %> >
-                      <%= link_to 'Profile', edit_user_registration_path %>
-                    </li>
+          <div class='row'>
+            <footer class='admin'>
+              <p>&copy; Company 2013</p>
+            </footer>
+          </div> <!-- row -->
 
-                    <!-- Projects -->
-                    <li <%= "class=#{active(projects_path)}" %> >
-                      <%= link_to 'Projects', projects_path %>
-                    </li>
+        </section>
 
-                    <!-- User groups -->
-                    <li <%= "class=#{active(groups_path)}" %>>
-                      <%= link_to 'Groups', groups_path  %>
-                    </li>
+        <a class="exit-off-canvas"></a>
 
-                    <!-- Subscription -->
-                    <li <%= "class=#{active(new_subscription_path)}" %> >
-                      <%= link_to '<i class="icon-repeat"></i> Subscribe'.html_safe,
-                        new_subscription_path %>
-                    </li>
-                  </ul>
-                </div>
-              </dd>
-            </dl>
-          </div>
-
-          <!-- Service Administration Menu ========================= -->
-          <% if current_user.role == User::SERVICE_ADMIN %>
-            <br/>
-            <li class="heading">Service Admin.</li>
-
-            <li <%= "class=#{active(users_path)}" %> >
-              <%= link_to '<i class="icon-user"></i> Users'.html_safe,
-                users_path %>
-            </li>
-
-            <li <%= "class=#{active(groups_path)}" %> >
-              <%= link_to '<i class="icon-th"></i> Groups'.html_safe,
-                groups_path %>
-            </li>
-
-          <% end %>
-        </ul>
-      </div> <!-- columns -->
       </div>
-
-      <div class="small-10 columns">
-        <%= yield %>
-      </div>
-    </div> <!-- row -->
-
-    <div class='row'>
-
-      <footer>
-        <p>&copy; Company 2013</p>
-      </footer>
-
-    </div> <!-- row -->
+    </div> <!-- off-canvas-wrap -->
 
     <!-- Javascripts
     ================================================== -->

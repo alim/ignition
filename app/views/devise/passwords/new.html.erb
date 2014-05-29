@@ -1,8 +1,14 @@
-<div class="page-header">
-	<h2>Forgot your password?</h2>
-	<p>
-		If you forgot your password, use the form below to reset it.
-	</p>
+<div class="row">
+  <div class="small-12 columns">
+    <div class="page-header">
+
+			<h2>Forgot your password?</h2>
+			<p>
+				If you forgot your password, use the form below to reset it.
+			</p>
+
+		</div>
+	</div>
 </div>
 
 <%= form_for(resource, as: resource_name, url: password_path(
@@ -11,14 +17,18 @@
 
 	<div class='row'>
 		<div class='small-6 columns'>
-			<%= f.label :email %>
+		<label>Email</label>
 			<%= f.email_field :email, autofocus: true %>
 		</div>
 	</div>
 
-	<div class='form-actions'>
-		<%= f.submit "Send password reset instructions", class: 'button small radius' %>
+<div class="row">
+  <div class="small-12 columns">
+		<div class='form-actions'>
+			<%= f.submit "Send Password Reset", class: 'button radius' %>
+		</div>
 	</div>
+</div>
 <% end %>
 
 <br/><br/>

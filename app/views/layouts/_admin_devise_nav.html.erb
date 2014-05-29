@@ -1,18 +1,15 @@
 <!-- Navigation Menu ------------------------------------------ -->
-<nav class="top-bar" data-topbar>
-  <ul class="title-area">
-    <li><%= image_tag('ignition_logo.svg', class: 'logo') %></li>
-    <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
-  </ul>
-  <section class="top-bar-section">
-    <!-- Right Nav Section -->
-    <ul class="right">
-       <% if user_signed_in? -%>
-        <li <%= "class=#{active(admin_help_path)}" %>><%= link_to "Help", admin_help_path %></li>
-        <li>
-          <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>
-        </li>
-      <% end -%>
-    </ul>
+<nav class="tab-bar">
+  <section class="left-small">
+    <a class="left-off-canvas-toggle menu-icon" ><span></span></a>
+  </section>
+
+  <section class="right tab-bar-section">
+
+    <%= image_tag('ignition_logo.svg', class: 'admin-logo') %>
+    <div class='right'>
+      <%= link_to('Logout', destroy_user_session_path, method: :delete, class: 'button tiny radius') %>
+    </div>
+
   </section>
 </nav>
