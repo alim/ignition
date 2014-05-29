@@ -1,50 +1,61 @@
 <div class="row">
-	<div class="span1">
-	</div>
-	
-	<div class="span11">
+  <div class="small-12 columns">
 		<div class="page-header">
 			<h2>Sign Up</h2>
 			<p>
-				You can sign for an account using the form below. 
+				You can sign for an account using the form below.
 			</p>
 		</div>
-	
-		<%= form_for(resource, as: resource_name, url: registration_path(
-			resource_name), html: {class: 'form-horizontal'}) do |f| %>
-		
-			<%= devise_error_messages! %>
-		
-			<div class='control-label'><%= f.label :first_name %></div>
-			<div class='controls'><%= f.text_field :first_name, :autofocus => true %></div>
-			<br/>
-		
-			<div class='control-label'><%= f.label :last_name %></div>
-			<div class='controls'><%= f.text_field :last_name %></div>
-			<br/>
-		
-			<div class='control-label'><%= f.label :phone %></div>
-			<div class='controls'><%= f.text_field :phone %></div>
-			<br/>
-		
-			<div class='control-label'><%= f.label :email %></div>
-			<div class='controls'><%= f.email_field :email %></div>
-			<br/>
-		
-			<div class='control-label'><%= f.label :password %></div>
-			<div class='controls'><%= f.password_field :password %></div>
-			<br/>
-		
-			<div class='control-label'><%= f.label :password_confirmation %></div>
-			<div class='controls'><%= f.password_field :password_confirmation %></div>
-			<br/>
-		
-			<div class='form-actions'>
-				<%= f.submit "Sign Up", class: 'btn btn-primary' %>
-			</div>
-		<% end %>
-
-		<%= render "devise/shared/links" %>
-		<br/><br/>
 	</div>
 </div>
+
+<%= form_for(resource, as: resource_name, url: registration_path(
+	resource_name)) do |f| %>
+
+	<%= devise_error_messages! %>
+
+	<div class='row'>
+		<div class='small-6 columns'>
+			<%= f.label :first_name %>
+			<%= f.text_field :first_name, :autofocus => true %>
+		</div>
+		<div class='small-6 columns'>
+			<%= f.label :last_name %>
+			<%= f.text_field :last_name %>
+		</div>
+	</div>
+
+	<div class='row'>
+		<div class='small-6 columns'>
+			<%= f.label :email %>
+			<%= f.email_field :email %>
+		</div>
+		<div class='small-6 columns'>
+			<%= f.label :phone %>
+			<%= f.text_field :phone %>
+		</div>
+	</div>
+
+	<div class='row'>
+		<div class='small-6 columns'>
+			<%= f.label :password %>
+			<%= f.password_field :password %>
+		</div>
+		<div class='small-6 columns'>
+			<%= f.label :password_confirmation %>
+			<%= f.password_field :password_confirmation %>
+		</div>
+	</div>
+
+	<div class="row">
+	  <div class="small-12 columns">
+			<div class='form-actions'>
+				<%= f.submit "Sign Up", class: 'button radius' %>
+			</div>
+		</div>
+	</div>
+
+<% end %>
+
+<br/>
+<br/>
