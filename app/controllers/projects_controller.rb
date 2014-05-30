@@ -9,6 +9,7 @@
 # a group. See lib/group_access.rb for injected methods.
 ########################################################################
 class ProjectsController < ApplicationController
+  respond_to :html
 
   ## CALL BACKS --------------------------------------------------------
   before_filter :authenticate_user!
@@ -73,7 +74,6 @@ class ProjectsController < ApplicationController
 
   ######################################################################
   # POST /projects
-  # POST /projects.json
   #
   # The create method will create a new project and relate any selected
   # groups that the user selected.
@@ -82,16 +82,12 @@ class ProjectsController < ApplicationController
     @project = Project.new(project_params)
     @project.user = current_user
 
-    respond_to do |format|
-      if @project.save
-        @project.group_relate(params[:project][:group_ids])
-        format.html { redirect_to @project, notice: 'Project was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @project }
-      else
-        @verrors = @project.errors.full_messages
-        format.html { render action: 'new' }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
-      end
+    if @project.save
+      @project.group_relate(params[:project][:group_ids])
+      redirect_to @project, notice: 'Project was successfully created.'
+    else
+      @verrors = @project.errors.full_messages
+      render action: 'new'
     end
   end
 
@@ -110,18 +106,14 @@ class ProjectsController < ApplicationController
     # be cleared.
 		params[:project][:group_ids] ||= []
 
-    respond_to do |format|
-      if @project.update(project_params)
+    if @project.update(project_params)
 
-        @project.group_relate(params[:project][:group_ids])
-        @project.save
+      @project.group_relate(params[:project][:group_ids])
+      @project.save
 
-        format.html { redirect_to @project, notice: 'Project was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
-      end
+      redirect_to @project, notice: 'Project was successfully updated.'
+    else
+      render action: 'edit'
     end
   end
 
@@ -134,11 +126,7 @@ class ProjectsController < ApplicationController
   ######################################################################
   def destroy
     @project.destroy
-    respond_to do |format|
-      format.html { redirect_to projects_url, notice:
-        "Project was successfully deleted." }
-      format.json { head :no_content }
-    end
+    redirect_to projects_url, notice: "Project was successfully deleted."
   end
 
   ## PRIVATE INSTANCE METHODS ------------------------------------------
@@ -168,27 +156,4 @@ class ProjectsController < ApplicationController
     flash[:alert] = msg
     redirect_to projects_url
   end
-
-
-  ######################################################################
-  # The access_denied method is the controller method for catching
-  # a CanCan exception for an unauthorized action. The user will be
-  # redirected to the projects_url
-  ######################################################################
-  def access_denied(exception)
-    msg = "You are not authorized to access the requested #{exception.subject.class}."
-    display_alert_msg(msg)
-  end
-
-
-  ######################################################################
-  # The missing_document method is the controller method for catching
-  # a Mongoid Mongoid::Errors::DocumentNotFound exception across all
-  # controller actions. User will be redirected to the projects_url
-  ######################################################################
-  def missing_document(exception)
-    msg = "We are unable to find the requested #{exception.klass} - ID ##{exception.params[0]}"
-    display_alert_msg(msg)
-  end
-
 end
