@@ -36,6 +36,7 @@ class Project
   belongs_to :user
   has_and_belongs_to_many :groups
   has_mongoid_attached_file :charter_doc
+  do_not_validate_attachment_file_type :charter_doc
 
   ## GROUP METHOD INJECTION --------------------------------------------
 

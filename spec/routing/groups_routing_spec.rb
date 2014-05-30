@@ -34,9 +34,5 @@ describe GroupsController do
 		it "routes to #notify" do
       put("/groups/1/notify").should route_to("groups#notify", :id => "1")
     end
-
-		it "routes to #remove_member" do
-      put("/groups/1/remove_member").should route_to("groups#remove_member", :id => "1")
-    end
   end
 end

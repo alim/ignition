@@ -2,10 +2,10 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
-# Use jQuery, and setup the Stripe publishable key for usage with 
+# Use jQuery, and setup the Stripe publishable key for usage with
 # the API. Then proceed to setting up the new account form.
 jQuery ->
-	Stripe.setPublishableKey($('meta[name="pub_key"]').attr('content'))	
+	Stripe.setPublishableKey($('meta[name="pub_key"]').attr('content'))
 	stripe.setupForm()
 
 # Create a new Javascript object to accept the stripe information
@@ -22,7 +22,7 @@ stripe =
         false
       else
         true
-  
+
   # The proceesCard function will read the values from the form
   # template and submit them to Stripe. It registers a callback
   # function stripe.handleStripeResponse with the createToken
