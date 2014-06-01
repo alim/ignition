@@ -167,7 +167,7 @@ describe GroupsController do
 
       it "Should redirect to #index, if record not found" do
         get :show, {id: '99999'}
-        response.should redirect_to groups_url
+        response.should redirect_to admin_oops_url
       end
 
       it "Should flash an alert message, if record not found" do
@@ -318,7 +318,7 @@ describe GroupsController do
 
       it "Should redirect to groups_url for invalid group id" do
         get :edit, {id: '090909'}
-        response.should redirect_to groups_url
+        response.should redirect_to admin_oops_url
       end
 
       it "Should flash alert message for invalid group id" do
@@ -413,11 +413,6 @@ describe GroupsController do
       it "Should update group with description" do
         post :create, valid_group_params
         assigns(:group).description.should eq(desc)
-      end
-
-      it "Should generate a member list of email addresses" do
-        post :create, valid_group_params
-        assigns(:members).should be_present
       end
 
       it "Should create new user records for each email address" do
@@ -535,11 +530,6 @@ describe GroupsController do
         assigns(:group).description.should eq(new_desc)
       end
 
-      it "Should generate a member list of email addresses" do
-        put :update, update_params
-        assigns(:members).should be_present
-      end
-
       it "Should create new user records for each email address" do
         put :update, update_params
         new_members.split.each do |email|
@@ -591,11 +581,11 @@ describe GroupsController do
         response.should redirect_to new_user_session_url
       end
 
-      it "Should redirect to users#index, if user not found" do
+      it "Should redirect to admin_oops_url if user not found" do
         params = update_params
         params[:id] = '99999'
         put :update, params
-        response.should redirect_to groups_url
+        response.should redirect_to admin_oops_url
       end
 
       it "Should flash error message, if group not found" do
@@ -747,7 +737,7 @@ describe GroupsController do
         params = destroy_params
         params[:id] = '00999'
         delete :destroy, params
-        response.should redirect_to groups_url
+        response.should redirect_to admin_oops_url
       end
 
       it "Should flash an error message, if no group record found" do
@@ -835,10 +825,10 @@ describe GroupsController do
         response.should redirect_to new_user_session_url
       end
 
-      it "Should redirect to groups_url if bad group id" do
+      it "Should redirect to admin_oops_url if bad group id" do
         notify_params[:id] = '99999'
         put :notify, notify_params
-        response.should redirect_to groups_url
+        response.should redirect_to admin_oops_url
       end
 
       it "Should flash an alert message if bad group id" do
@@ -847,10 +837,10 @@ describe GroupsController do
         flash[:alert].should match(/We are unable to find the requested Group/)
       end
 
-      it "Should redirect to groups_url if bad user id" do
+      it "Should redirect to admin_oops_url if bad user id" do
         notify_params[:uid] = '99999'
         put :notify, notify_params
-        response.should redirect_to groups_url
+        response.should redirect_to admin_oops_url
       end
 
       it "Should flash an alert message if bad user id" do
