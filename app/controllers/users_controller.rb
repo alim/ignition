@@ -31,29 +31,13 @@ class UsersController < ApplicationController
   # a web interface.
   ######################################################################
   def index
-    @search_options = [
-      ['Email', 'email'],
-      ['First name', 'first_name'],
-      ['Last name', 'last_name']
-    ]
-
     # Get page number
     page = params[:page].nil? ? 1 : params[:page]
 
     # Check to see if we want to search for a subset of users
     if params[:search].present? && params[:stype].present?
 
-      # Check for the type of search we are doing
-      case params[:stype]
-      when 'email'
-        @users = User.by_email(params[:search])
-      when 'first_name'
-        @users = User.by_first_name(params[:search])
-      when 'last_name'
-        @users = User.by_last_name(params[:search])
-      else # Unrecognized search type so return all
-        @users = User.all
-      end
+      @users = search_by(params[:stype])
 
     else # No search criteria, so we start off with all Users
       @users = User.all
@@ -178,6 +162,24 @@ class UsersController < ApplicationController
   ####################################################################
   def set_user
     @user = User.find(params[:id])
+  end
+
+  #####################################################################
+  # Helper method to return the correct set of user records from a
+  # search request.
+  #####################################################################
+  def search_by(search_type)
+    # Check for the type of search we are doing
+    case search_type
+    when 'email'
+      User.by_email(params[:search])
+    when 'first_name'
+      User.by_first_name(params[:search])
+    when 'last_name'
+      User.by_last_name(params[:search])
+    else # Unrecognized search type so return all
+      User.all
+    end
   end
 
   ######################################################################

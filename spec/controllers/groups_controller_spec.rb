@@ -44,6 +44,7 @@ describe GroupsController do
   after(:each) {
     delete_users
     Group.delete_all
+    ActionMailer::Base.deliveries.clear
   }
 
   # INDEX ACTION TESTS -------------------------------------------------
@@ -856,9 +857,9 @@ describe GroupsController do
       end
 
       it "Should flash an alert to group_url if invite fails" do
-        GroupsController.any_instance.stub(:invite_member).and_return(nil)
+        Group.any_instance.stub(:invite_member).and_return(nil)
         put :notify, notify_params
-        flash[:alert].should match(/Group invite faild to/)
+        flash[:alert].should match(/Group invite failed/)
       end
     end # Invalid examples
 
