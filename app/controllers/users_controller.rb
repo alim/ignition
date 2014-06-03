@@ -34,29 +34,8 @@ class UsersController < ApplicationController
     # Get page number
     page = params[:page].nil? ? 1 : params[:page]
 
-    # Check to see if we want to search for a subset of users
-    if params[:search].present? && params[:stype].present?
-
-      @users = search_by(params[:stype])
-
-    else # No search criteria, so we start off with all Users
-      @users = User.all
-    end
-
-    if params[:role_filter].present?
-      if params[:role_filter] == 'customer'
-        @users =  @users.by_role(User::CUSTOMER).paginate(page: page,
-          per_page: PAGE_COUNT)
-      elsif params[:role_filter] == 'service_admin'
-        @users =  @users.by_role(User::SERVICE_ADMIN).paginate(
-          page: page, per_page: PAGE_COUNT)
-      else
-        @users = @users.paginate(page: page, per_page: PAGE_COUNT)
-      end
-    else
-      @users = @users.paginate(page: page, per_page: PAGE_COUNT)
-    end
-
+    @users = User.search_by(params[:stype], params[:search]).filter_by(
+      params[:role_filter]).paginate(page: page, per_page: PAGE_COUNT)
   end
 
   ######################################################################
@@ -135,7 +114,7 @@ class UsersController < ApplicationController
       redirect_to @user, notice: "New user account created and user email sent."
     else
       @verrors = @user.errors.full_messages
-      render action: 'new'
+      render  'new'
     end
 
   end
@@ -164,23 +143,6 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
-  #####################################################################
-  # Helper method to return the correct set of user records from a
-  # search request.
-  #####################################################################
-  def search_by(search_type)
-    # Check for the type of search we are doing
-    case search_type
-    when 'email'
-      User.by_email(params[:search])
-    when 'first_name'
-      User.by_first_name(params[:search])
-    when 'last_name'
-      User.by_last_name(params[:search])
-    else # Unrecognized search type so return all
-      User.all
-    end
-  end
 
   ######################################################################
   # Never trust parameters from the scary internet, only allow the

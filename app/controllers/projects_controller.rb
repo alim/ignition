@@ -87,7 +87,7 @@ class ProjectsController < ApplicationController
       redirect_to @project, notice: 'Project was successfully created.'
     else
       @verrors = @project.errors.full_messages
-      render action: 'new'
+      render  'new'
     end
   end
 
@@ -113,7 +113,7 @@ class ProjectsController < ApplicationController
 
       redirect_to @project, notice: 'Project was successfully updated.'
     else
-      render action: 'edit'
+      render  'edit'
     end
   end
 
@@ -148,12 +148,4 @@ class ProjectsController < ApplicationController
     params.require(:project).permit(:name, :description, :group_ids, :charter_doc)
   end
 
-  ######################################################################
-  # The display_alert_message will display an alert on the project#index
-  # page.
-  ######################################################################
-  def display_alert_msg(msg)
-    flash[:alert] = msg
-    redirect_to projects_url
-  end
 end

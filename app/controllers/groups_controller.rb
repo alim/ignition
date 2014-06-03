@@ -101,7 +101,7 @@ class GroupsController < ApplicationController
       redirect_to @group, notice: 'Group was successfully created.'
     else
       @verrors = @group.errors.full_messages
-      render action: 'new'
+      render  'new'
     end
   end
 
@@ -127,7 +127,7 @@ class GroupsController < ApplicationController
       redirect_to @group, notice: 'Group was successfully updated.'
     else
       @verrors = @group.errors.full_messages
-      render action: 'edit'
+      render  'edit'
     end
   end
 
@@ -186,11 +186,4 @@ class GroupsController < ApplicationController
     params.require(:group).permit(:name, :description, :owner_id, :members)
   end
 
-  ######################################################################
-  # The groups_alert method will display an alert message and redirect
-  # the user to the groups#index view.
-  ######################################################################
-  def groups_alert(msg)
-    redirect_to groups_url, alert: msg
-  end
 end

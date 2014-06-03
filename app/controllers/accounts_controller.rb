@@ -49,7 +49,7 @@ class AccountsController < ApplicationController
       redirect_to user_url(@user), notice: 'Account was successfully created.'
     else
       handle_account_errors(@user, params)
-      render action: :new
+      render  :new
     end
   end
 
@@ -86,7 +86,7 @@ class AccountsController < ApplicationController
         redirect_to user_url(@user), notice: 'Account was successfully updated.'
       else
         handle_account_errors(@user, params)
-        render action: :edit
+        render  :edit
       end
 
     else

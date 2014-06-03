@@ -114,5 +114,37 @@ class User
   end
 
   ## PUBLIC CLASS METHODS ----------------------------------------------
+
+  #####################################################################
+  # Class method to return the correct set of user records from a
+  # search request.
+  #####################################################################
+  def self.search_by(search_type, search_term)
+    # Check for the type of search we are doing
+    case search_type
+    when 'email'
+      self.by_email(search_term)
+    when 'first_name'
+      self.by_first_name(search_term)
+    when 'last_name'
+      self.by_last_name(search_term)
+    else # Unrecognized search type so return all
+      self.all
+    end
+  end
+
+  #####################################################################
+  # Class method to filter by role
+  #####################################################################
+  def self.filter_by(filter)
+    case filter
+    when 'customer'
+      self.by_role(User::CUSTOMER)
+    when 'service_admin'
+      self.by_role(User::SERVICE_ADMIN)
+    else
+      self.all
+    end
+  end
 end
 
