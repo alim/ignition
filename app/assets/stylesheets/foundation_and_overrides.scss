@@ -1339,6 +1339,10 @@ $action-color: #008CBA;
   @include button($button-med, $success-color, true);
 }
 
+.cancel-button {
+  @include button($button-med, $topbar-bg-color, true);
+}
+
 
 .intable-delete-button {
   @include button($button-tny, $bg: $alert-color, $radius: true);
