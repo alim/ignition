@@ -29,7 +29,7 @@
   </div>
 
   <!-- Section for setting up group members -->
-  <% if @group.users.present? %>
+  <% if group.users.present? %>
     <div class="row">
       <div class="small-8 columns">
         <h4>Group Members</h4>
@@ -46,7 +46,7 @@
             <th>Remove</th>
           </thead>
           <tbody>
-            <% @group.users.each do |user| %>
+            <% group.users.each do |user| %>
               <tr>
                 <td><%= user.first_name %></td>
                 <td><%= user.last_name %></td>
