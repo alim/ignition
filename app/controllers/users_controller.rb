@@ -31,48 +31,11 @@ class UsersController < ApplicationController
   # a web interface.
   ######################################################################
   def index
-    @search_options = [
-      ['Email', 'email'],
-      ['First name', 'first_name'],
-      ['Last name', 'last_name']
-    ]
-
     # Get page number
     page = params[:page].nil? ? 1 : params[:page]
 
-    # Check to see if we want to search for a subset of users
-    if params[:search].present? && params[:stype].present?
-
-      # Check for the type of search we are doing
-      case params[:stype]
-      when 'email'
-        @users = User.by_email(params[:search])
-      when 'first_name'
-        @users = User.by_first_name(params[:search])
-      when 'last_name'
-        @users = User.by_last_name(params[:search])
-      else # Unrecognized search type so return all
-        @users = User.all
-      end
-
-    else # No search criteria, so we start off with all Users
-      @users = User.all
-    end
-
-    if params[:role_filter].present?
-      if params[:role_filter] == 'customer'
-        @users =  @users.by_role(User::CUSTOMER).paginate(page: page,
-          per_page: PAGE_COUNT)
-      elsif params[:role_filter] == 'service_admin'
-        @users =  @users.by_role(User::SERVICE_ADMIN).paginate(
-          page: page, per_page: PAGE_COUNT)
-      else
-        @users = @users.paginate(page: page, per_page: PAGE_COUNT)
-      end
-    else
-      @users = @users.paginate(page: page, per_page: PAGE_COUNT)
-    end
-
+    @users = User.search_by(params[:stype], params[:search]).filter_by(
+      params[:role_filter]).paginate(page: page, per_page: PAGE_COUNT)
   end
 
   ######################################################################
@@ -151,7 +114,7 @@ class UsersController < ApplicationController
       redirect_to @user, notice: "New user account created and user email sent."
     else
       @verrors = @user.errors.full_messages
-      render action: 'new'
+      render  'new'
     end
 
   end
@@ -179,6 +142,7 @@ class UsersController < ApplicationController
   def set_user
     @user = User.find(params[:id])
   end
+
 
   ######################################################################
   # Never trust parameters from the scary internet, only allow the

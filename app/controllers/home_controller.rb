@@ -50,7 +50,7 @@ class HomeController < ApplicationController
 		else
 			# Create a hash that holds the request options
 			@verrors = @contact.errors.full_messages
-			render action: "contact"
+			render "contact"
 		end
   end
 

@@ -9,16 +9,16 @@ class Contact
   extend ActiveModel::Naming
 
 	# ACCESSORS ---------------------------------------------------------
-	
+
   attr_accessor :name, :email, :phone, :body
 
 	# VALIDATIONS -------------------------------------------------------
-	
+
   validates :name, :email, :body, :presence => true
   validates :email, :format => { :with => %r{.+@.+\..+} }, :allow_blank => true
-  
+
   # INSTANCE METHODS --------------------------------------------------
-  
+
   def initialize(attributes = {})
     attributes.each do |name, value|
       send("#{name}=", value)
@@ -28,5 +28,5 @@ class Contact
   def persisted?
     false
   end
-  
+
 end

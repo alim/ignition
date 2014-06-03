@@ -1,7 +1,7 @@
 module UsersHelper
 
   #####################################################################
-  # The user_search_options method returns an options_for_select 
+  # The user_search_options method returns an options_for_select
   # grouping for searching users by email, first name, or last name
   #####################################################################
   def user_search_options
