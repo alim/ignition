@@ -1,12 +1,9 @@
 <%- model_class = Group -%>
-<div class="page-header">
-  <h1>User Groups</h1>
-  <p>
-  	Any user groups that you have created are listed in the table below.
-  	You can create a new group using the <strong>New</strong> button
-  	shown below the table.
-  </p>
-</div>
+<%= render 'shared/page_header',
+      flash: flash,
+      title: 'User Groups',
+      description: "Any user groups that you have created are listed in the
+        table below. You can create a new group using the <strong>New</strong>
+        button shown below the table." %>
 
-<%= render 'shared/flash', flash: flash %>
 <%= render 'form', group: @group %>

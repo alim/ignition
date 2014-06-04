@@ -31,14 +31,14 @@
   <!-- Section for setting up group members -->
   <% if group.users.present? %>
     <div class="row">
-      <div class="small-8 columns">
+      <div class="small-12 columns">
         <h4>Group Members</h4>
         <p>
           The group members are listed below. As a default starting point, the
           group owner is also a member of the group.
         </p>
 
-        <table>
+        <table class='full-width'>
           <thead>
             <th>First name</th>
             <th>Last name</th>
@@ -70,8 +70,8 @@
 
   <% if resources.present? %>
     <div class="row">
-      <div class="small-8 columns">
-        <h3><%= Group::RESOURCE_CLASS %> Access</h3>
+      <div class="small-12 columns">
+        <h4><%= Group::RESOURCE_CLASS %> Access</h4>
         <p>
           Group members will be able to access those resources that you
           indicate in the checklist below. Please note that access to these

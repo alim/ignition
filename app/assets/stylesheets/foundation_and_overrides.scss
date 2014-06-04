@@ -1101,9 +1101,9 @@ $table-head-bg: #b0b0b0;
 // $table-display: table-cell;
 // $table-margin-bottom: rem-calc(20);
 
-// CUSTOM TABLE SETTINGS -----------------------------------------------
+// CUSTOM TABLE SETTINGS ///////////////////////////////////////////////
 
-table.full_width {
+table.full-width {
   width: 100%;
 }
 
@@ -1356,7 +1356,20 @@ $action-color: #008CBA;
   font-size: $button-font-tny;
 }
 
+.intable-info-button {
+  @include button($button-tny, $bg: $info-color, $radius: true);
+  margin: 0 0 0 0;
+  font-size: $button-font-tny;
+}
+
 // --------------------------------------------------------------------
+
+
+// List definitions ///////////////////////////////////////////////////
+
+.inline-dlist {
+  @include inline-list();
+}
 
 // Admin section definitions //////////////////////////////////////////
 
