@@ -337,7 +337,7 @@ $button-lrg: rem-calc(9);
 // $button-font-family: $body-font-family;
 // $button-font-color: #fff;
 // $button-font-color-alt: #333;
-// $button-font-tny: rem-calc(11);
+$button-font-tny: rem-calc(11);
 // $button-font-sml: rem-calc(13);
 // $button-font-med: rem-calc(16);
 // $button-font-lrg: rem-calc(20);
@@ -359,6 +359,7 @@ $button-border-color: scale-color($bg, $lightness: $button-function-factor);
 
 // We use this to set default opacity for disabled buttons.
 // $button-disabled-opacity: 0.7;
+
 
 // Button Groups
 
@@ -1072,11 +1073,11 @@ $preloader-class: "preloader";
 
 // Tables
 
-// $include-html-table-classes: $include-html-classes;
+//$include-html-table-classes: $include-html-classes;
 
 // These control the background color for the table and even rows
 // $table-bg: #fff;
-// $table-even-row-bg: #f9f9f9  ;
+$table-even-row-bg: #e0e0e0;
 
 // These control the table cell border style
 // $table-border-style: solid;
@@ -1084,7 +1085,7 @@ $preloader-class: "preloader";
 // $table-border-color: #ddd;
 
 // These control the table head styles
-// $table-head-bg: #f5f5f5  ;
+$table-head-bg: #b0b0b0;
 // $table-head-font-size: rem-calc(14);
 // $table-head-font-color: #222;
 // $table-head-font-weight: bold;
@@ -1099,6 +1100,14 @@ $preloader-class: "preloader";
 // These are for controlling the display and margin of tables
 // $table-display: table-cell;
 // $table-margin-bottom: rem-calc(20);
+
+// CUSTOM TABLE SETTINGS ///////////////////////////////////////////////
+
+table.full-width {
+  width: 100%;
+}
+
+// ---------------------------------------------------------------------
 
 //
 // TABS
@@ -1309,24 +1318,57 @@ $border-color: #888;
   margin-top: rem-calc(20);
 }
 
+// Custom Button Definitions //////////////////////////////////////////
 
-// Custom Button Definitions ------------------------------------------
 .back-button {
-  @include button($bg: $secondary-color, $radius: true);
+  // @include button($bg: $secondary-color, $radius: true);
+  @include button($button-med,$secondary-color, true );
 }
 
 $action-color: #008CBA;
 
 .action-button {
-  @include button($bg: $action-color, $radius: true);
+  @include button($button-med, $action-color, true);
 }
 
 .delete-button {
-  @include button($bg: $alert-color, $radius: true);
+  @include button($button-med, $alert-color, true);
 }
 
 .success-button {
-  @include button($bg: $success-color, $radius: true);
+  @include button($button-med, $success-color, true);
+}
+
+.cancel-button {
+  @include button($button-med, $topbar-bg-color, true);
+}
+
+
+.intable-delete-button {
+  @include button($button-tny, $bg: $alert-color, $radius: true);
+  margin: 0 0 0 0;
+  font-size: $button-font-tny;
+}
+
+.intable-success-button {
+  @include button($button-tny, $bg: $success-color, $radius: true);
+  margin: 0 0 0 0;
+  font-size: $button-font-tny;
+}
+
+.intable-info-button {
+  @include button($button-tny, $bg: $info-color, $radius: true);
+  margin: 0 0 0 0;
+  font-size: $button-font-tny;
+}
+
+// --------------------------------------------------------------------
+
+
+// List definitions ///////////////////////////////////////////////////
+
+.inline-dlist {
+  @include inline-list();
 }
 
 // Admin section definitions //////////////////////////////////////////

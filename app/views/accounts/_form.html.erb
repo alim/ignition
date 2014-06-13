@@ -6,7 +6,7 @@
 		First enable it in your web browser settings.</noscript>
 </div>
 
-<%= form_for @account, url: user_accounts_url, method: :post do |f| %>
+<%= form_for account, url: user_accounts_url, method: :post do |f| %>
 
 	<!-- Setup hidden field for submitting the cc token -->
 	<%= f.hidden_field :stripe_cc_token %>
@@ -14,11 +14,11 @@
 	<div class="row">
 		<div class="small-6 columns">
 			<label>Cardholder Name</label>
-			<%= text_field_tag :cardholder_name, @account.cardholder_name %>
+			<%= text_field_tag :cardholder_name, account.cardholder_name %>
 		</div>
 		<div class="small-6 columns">
 			<label>Cardholder Email</label>
-			<%= email_field_tag :cardholder_email, @account.cardholder_email %>
+			<%= email_field_tag :cardholder_email, account.cardholder_email %>
 		</div>
 	</div> <!-- row -->
 
@@ -42,12 +42,11 @@
 		</div>
 	</div> <!-- row -->
 
-
   <div class='row'>
   	<div class='small-12 columns'>
   		<div class='form-actions'>
-			  <% @label = controller.action_name == 'edit' ? 'Update Credit Card' : 'Add Credit Card' %>
-				<%= f.submit @label, class: 'success-button' %>
+			  <% label = controller.action_name == 'edit' ? 'Update Credit Card' : 'Add Credit Card' %>
+				<%= f.submit label, class: 'success-button' %>
 			</div>
 		</div>
 	</div>

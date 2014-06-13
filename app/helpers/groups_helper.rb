@@ -59,7 +59,7 @@ module GroupsHelper
 	#
 	# @resources[0] = { id: 1, related: true, label: 'name'}
 	#
-	# The 'related' key/value is used to indicae whether the resource
+	# The 'related' key/value is used to indicate whether the resource
 	# is already related to the group. Its value can either be true or
 	# false. The 'label' key/value is text choice that will be displayed
 	# to the user.

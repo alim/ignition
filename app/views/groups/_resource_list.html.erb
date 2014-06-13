@@ -3,15 +3,15 @@ This partial is used to list the resources that are associated with a
 group. This partial will need to be customized to match the attributes
 of the related resource.
 -------------------------------------------------------------------- -->
-<table class="table table-striped">
+<table class="full-width">
   <thead>
     <tr>
-      <th>Project name</th>
-      <th>Description</th>
+      <th wdith="30%">Project name</th>
+      <th wdith="70%">Description</th>
     </tr>
   </thead>
   <tbody>
-    <% @resources.each do |resource| %>
+    <% resources.each do |resource| %>
       <tr>
         <td><%= resource.name %></td>
         <td><%= resource.description %></td>
