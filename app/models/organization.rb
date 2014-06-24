@@ -1,45 +1,50 @@
 ########################################################################
-# The Group class allows us to authorize a group of users to access
-# a primary resource, such as a Project. Group access to a primary
-# resource enables the group to access all records related to the
-# primary resource.
+# The Organization class allows us to authorize access to resources
+# related to an organization class. Users belong to an organization and
+# other service resources also belong to an organization. Access is
+# granted to resources that share the same organizational relationship.
+#
+# The Organization class is owned by a user, which is identified as
+# an Orgnization administrator. The owner has the rights to add users
+# to the organization.
 ########################################################################
-class Group
+class Organization
   include Mongoid::Document
   include Mongoid::Timestamps
 
   field :name, type: String
   field :description, type: String
-  field :owner_id, type: BSON::ObjectId
+  # field :owner_id, type: BSON::ObjectId
 
   attr_accessor :members
 
   ## RELATIONSHIPS -----------------------------------------------------
 
-  has_and_belongs_to_many :users
+  has_many :users
+  belongs_to :owner, class_name: 'User', inverse_of: :owns
 
   # Sample primary resource relation. We are using a resource that
   # represents a Project in our service. We also set a class constant
   # to the name of the class to which the groups will be given access
 
-  has_and_belongs_to_many :projects
-  RESOURCE_CLASS = 'Project'
+  has_many :projects
 
   ## VALIDATIONS -------------------------------------------------------
 
   validate :members_list
   validates_presence_of :name
   validates_presence_of :description
-  validates_presence_of :owner_id
-
-  ## SCOPE DEFINITIONS -------------------------------------------------
-
-  scope :owned_groups, ->(owner){
-    owner.present? ? where(owner_id: owner.id) : scoped
-  }
-
+  validates_presence_of :owner
+  validates_uniqueness_of :owner
 
   ## PUBLIC INSTANCE METHODS -------------------------------------------
+
+  ######################################################################
+  # Find the organization record associated with the user or return nil
+  ######################################################################
+  def self.owned_organization(owner)
+    self.where(owner_id: owner.id).first if owner.present?
+  end
 
   ######################################################################
   # The members_list method will parse the membership list of email
@@ -78,7 +83,7 @@ class Group
         end
 
         self.users << user
-        GroupMailer.member_email(user, self).deliver
+        OrganizationMailer.member_email(user, self).deliver
       end
     end
   end
@@ -97,13 +102,13 @@ class Group
       user.password = user.password_confirmation = Devise.friendly_token.first(plen)
 
       if user.save
-        GroupMailer.member_email(user, self).deliver
+        OrganizationMailer.member_email(user, self).deliver
       else
         return false
       end
     else
       # Notify current user that they are now a member of the group
-      GroupMailer.member_email(user, self).deliver
+      OrganizationMailer.member_email(user, self).deliver
     end
   end
 

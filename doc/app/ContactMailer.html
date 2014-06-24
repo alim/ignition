@@ -2,172 +2,96 @@
 
 <html>
 <head>
-<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta charset="utf-8">
 
 <title>class ContactMailer - Rails Application Documentation</title>
 
-<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+<link href="./fonts.css" rel="stylesheet">
+<link href="./rdoc.css" rel="stylesheet">
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
 </script>
 
-<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+<script src="./js/jquery.js"></script>
+<script src="./js/navigation.js"></script>
+<script src="./js/search_index.js"></script>
+<script src="./js/search.js"></script>
+<script src="./js/searcher.js"></script>
+<script src="./js/darkfish.js"></script>
 
 
-<body id="top" class="class">
-<nav id="metadata">
-  <nav id="home-section" class="section">
-  <h3 class="section-header">
-    <a href="./index.html">Home</a>
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
     <a href="./table_of_contents.html#classes">Classes</a>
     <a href="./table_of_contents.html#methods">Methods</a>
-  </h3>
-</nav>
-
-
-  <nav id="search-section" class="section project-section" class="initially-hidden">
-  <form action="#" method="get" accept-charset="utf-8">
-    <h3 class="section-header">
-      <input type="text" name="search" placeholder="Search" id="search-field"
-             title="Type to search, Up and Down to navigate, Enter to load">
-    </h3>
-  </form>
-
-  <ul id="search-results" class="initially-hidden"></ul>
-</nav>
-
-
-  <div id="file-metadata">
-    <nav id="file-list-section" class="section">
-  <h3 class="section-header">Defined In</h3>
-  <ul>
-    <li>app/mailers/contact_mailer.rb
-  </ul>
-</nav>
-
-    
   </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
 
   <div id="class-metadata">
     
-    <nav id="parent-class-section" class="section">
-  <h3 class="section-header">Parent</h3>
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
   
   <p class="link">ActionMailer::Base
   
-</nav>
+</div>
 
+    
     
     <!-- Method Quickref -->
-<nav id="method-list-section" class="section">
-  <h3 class="section-header">Methods</h3>
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
 
-  <ul class="link-list">
+  <ul class="link-list" role="directory">
     
-    <li><a href="#method-i-contact_message">#contact_message</a>
+    <li ><a href="#method-i-contact_message">#contact_message</a>
     
   </ul>
-</nav>
-
-  </div>
-
-  <div id="project-metadata">
-    <nav id="fileindex-section" class="section project-section">
-  <h3 class="section-header">Pages</h3>
-
-  <ul>
-  
-    <li class="file"><a href="./README_rdoc.html">README</a>
-  
-  </ul>
-</nav>
-
-    <nav id="classindex-section" class="section project-section">
-  <h3 class="section-header">Class and Module Index</h3>
-
-  <ul class="link-list">
-  
-    <li><a href="./Ability.html">Ability</a>
-  
-    <li><a href="./Account.html">Account</a>
-  
-    <li><a href="./AccountsController.html">AccountsController</a>
-  
-    <li><a href="./AccountsHelper.html">AccountsHelper</a>
-  
-    <li><a href="./AdminController.html">AdminController</a>
-  
-    <li><a href="./AdminHelper.html">AdminHelper</a>
-  
-    <li><a href="./ApplicationController.html">ApplicationController</a>
-  
-    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
-  
-    <li><a href="./Contact.html">Contact</a>
-  
-    <li><a href="./ContactMailer.html">ContactMailer</a>
-  
-    <li><a href="./Group.html">Group</a>
-  
-    <li><a href="./GroupMailer.html">GroupMailer</a>
-  
-    <li><a href="./GroupRelations.html">GroupRelations</a>
-  
-    <li><a href="./GroupsController.html">GroupsController</a>
-  
-    <li><a href="./GroupsHelper.html">GroupsHelper</a>
-  
-    <li><a href="./HomeController.html">HomeController</a>
-  
-    <li><a href="./HomeHelper.html">HomeHelper</a>
-  
-    <li><a href="./Oops.html">Oops</a>
-  
-    <li><a href="./Project.html">Project</a>
-  
-    <li><a href="./ProjectsController.html">ProjectsController</a>
-  
-    <li><a href="./ProjectsHelper.html">ProjectsHelper</a>
-  
-    <li><a href="./SharedClassMethods.html">SharedClassMethods</a>
-  
-    <li><a href="./SharedInstanceMethods.html">SharedInstanceMethods</a>
-  
-    <li><a href="./Subscription.html">Subscription</a>
-  
-    <li><a href="./SubscriptionsController.html">SubscriptionsController</a>
-  
-    <li><a href="./SubscriptionsHelper.html">SubscriptionsHelper</a>
-  
-    <li><a href="./User.html">User</a>
-  
-    <li><a href="./UserMailer.html">UserMailer</a>
-  
-    <li><a href="./UsersController.html">UsersController</a>
-  
-    <li><a href="./UsersHelper.html">UsersHelper</a>
-  
-  </ul>
-</nav>
+</div>
 
   </div>
 </nav>
 
-<div id="documentation">
-  <h1 class="class">class ContactMailer</h1>
+<main role="main" aria-labelledby="class-ContactMailer">
+  <h1 id="class-ContactMailer" class="class">
+    class ContactMailer
+  </h1>
 
-  <div id="description" class="description">
+  <section class="description">
     
 <p>The contact mailer is for managing the contact form  request on the web
 service.</p>
 
-  </div><!-- description -->
+  </section>
 
   
   
@@ -178,24 +102,25 @@ service.</p>
     
 
     
-    <!-- Constants -->
-    <section id="constants-list" class="section">
-      <h3 class="section-header">Constants</h3>
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
       <dl>
       
         <dt id="CONTACT_EMAILBOX">CONTACT_EMAILBOX
         
-        <dd class="description"><p>Email address defaults for all contact requests</p>
+        <dd><p>Email address defaults for all contact requests</p>
         
       
         <dt id="CONTACT_FROM">CONTACT_FROM
         
-        <dd class="description">
+        <dd>
         
       
         <dt id="CONTACT_SUBJECT">CONTACT_SUBJECT
         
-        <dd class="description">
+        <dd>
         
       
       </dl>
@@ -204,10 +129,11 @@ service.</p>
 
     
 
-    <!-- Methods -->
     
-     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
-      <h3 class="section-header">Public Instance Methods</h3>
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
 
     
       <div id="method-i-contact_message" class="method-detail ">
@@ -215,13 +141,16 @@ service.</p>
         <div class="method-heading">
           <span class="method-name">contact_message</span><span
             class="method-args">(contact)</span>
+          
           <span class="method-click-advice">click to toggle source</span>
+          
         </div>
         
 
         <div class="method-description">
           
           <p>The standard contact request message.</p>
+          
           
 
           
@@ -230,29 +159,28 @@ service.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">contact_message</span>(<span class="ruby-identifier">contact</span>)
         <span class="ruby-comment"># Setup instance variable for mailer view</span>
         <span class="ruby-ivar">@contact</span> = <span class="ruby-identifier">contact</span>
-        
+
         <span class="ruby-identifier">mail</span>(<span class="ruby-value">:subject</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{CONTACT_SUBJECT}&quot;</span>)
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- contact_message-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- contact_message-method -->
+      </div>
 
     
-    </section><!-- public-instance-method-details -->
+    </section>
   
-  </section><!-- 5Buntitled-5D -->
+  </section>
+</main>
 
-</div><!-- documentation -->
 
-
-<footer id="validator-badges">
-  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
-  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.2.
-  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

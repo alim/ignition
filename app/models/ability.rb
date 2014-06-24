@@ -13,7 +13,7 @@ class Ability
 			# that belong to part of their group.
 			if user.role == User::CUSTOMER
 
-        can :manage, Group, owner_id: user.id
+        can [:edit, :update, :notify], Organization, owner_id: user.id
 
 				can [:new, :create, :edit, :update, :destroy], Account do |account|
 				  true if account.user.id == user.id
