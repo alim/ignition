@@ -38,7 +38,7 @@ FactoryGirl.define do
     # required if the Devise Confirmable module is used
     # confirmed_at Time.now
   end
-  
+
   factory :user_with_account, class: User do
     first_name { generate(:firstname) }
     last_name { generate(:lastname) }
@@ -52,5 +52,5 @@ FactoryGirl.define do
     # confirmed_at Time.now
     account { FactoryGirl.build(:active_account) }
   end
-  
+
 end
