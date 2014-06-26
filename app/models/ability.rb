@@ -2,9 +2,12 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
+    alias_action :create, :read, :update, :destroy, :to => :crud
 
   	# Check to see if we can get the role attribute
   	if !user.nil?
+
+      # The service administrator should have access to all resources
 			if user.role == User::SERVICE_ADMIN
 				can :manage, :all
 			end
@@ -13,16 +16,15 @@ class Ability
 			# that belong to part of their group.
 			if user.role == User::CUSTOMER
 
-        can [:edit, :update, :notify], Organization, owner_id: user.id
+        can :crud, Account, user: {id: user.id}
 
-				can [:new, :create, :edit, :update, :destroy], Account do |account|
-				  true if account.user.id == user.id
-				end
+        can :crud, Organization, owner_id: user.id
 
 				can [:show, :edit, :update], User, id: user.id
 
-				can :manage, Project do |project|
-					check_ids(project, user)
+				can :crud, Project do |project|
+					project.organization_id == user.organization_id ||
+          project.user_id == user.id
 				end
 
 			end

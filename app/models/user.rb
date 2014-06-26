@@ -77,7 +77,7 @@ class User
   validates :email, uniqueness: true
 
   field :role, type: Integer, default: CUSTOMER
-  validates :role, inclusion: { in: [CUSTOMER, SERVICE_ADMIN],
+  validates :role, inclusion: { in: [CUSTOMER, SERVICE_ADMIN, ORG_ADMIN],
     message: "is invalid" }
 
 
