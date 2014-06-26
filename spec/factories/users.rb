@@ -39,6 +39,19 @@ FactoryGirl.define do
     # confirmed_at Time.now
   end
 
+  factory :orguser, class: User do
+    first_name { generate(:firstname) }
+    last_name { generate(:lastname) }
+    email { generate(:email) }
+    phone '734.424.2000'
+    role User::ORG_ADMIN
+
+    password 'somepassword'
+    password_confirmation 'somepassword'
+    # required if the Devise Confirmable module is used
+    # confirmed_at Time.now
+  end
+
   factory :user_with_account, class: User do
     first_name { generate(:firstname) }
     last_name { generate(:lastname) }
