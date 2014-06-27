@@ -1,17 +1,9 @@
-<div class="row">
-	<div class="small-12 columns">
-		<div class="page-header">
-
-			<h2>Resend Confirmation Instructions</h2>
-			<br/>
-			<p>
-				You can resend the account confirmation instructions using
-				the form below.
-			</p>
-
-		</div>
-	</div>
-</div>
+<%= render 'shared/page_header',
+  flash: flash,
+  title: 'Resend Confirmation Instructions',
+  description: "You can resend the account confirmation instructions using
+				the form below."
+%>
 
 <%= form_for(resource, as: resource_name, url: confirmation_path(
 	resource_name), html: {method: :post}) do |f| %>
