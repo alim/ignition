@@ -1,13 +1,13 @@
-<%- model_class = Group -%>
-<%= render 'shared/page_header', flash: flash, title: 'User Groups', description:
-    "User groups enable you to grant access to service resources based
-    on defined groups of users. The table below will show both the
-    groups to which you belong and groups that you own. You only have the
-    ability to edit and delete groups that you own." %>
+<%- model_class = Organization -%>
+<%= render 'shared/page_header', flash: flash, title: 'Organzation', description:
+    "Organizations enable you to grant access to service resources based
+    on defined organizations of users. The table below will show both the
+    organizations to which you belong and organizations that you own. You only have the
+    ability to edit and delete organizations that you own." %>
 
 <div class='row'>
   <div class='12-small columns'>
-    <% if @groups.present? %>
+    <% if @organizations.present? %>
     	<table class="full-width">
     		<thead>
     		  <tr>
@@ -18,18 +18,18 @@
     		  </tr>
     		</thead>
     		<tbody>
-    		  <% @groups.each do |group| %>
+    		  <% @organizations.each do |organization| %>
     		    <tr>
-    		      <td><%= link_to group.name, group_path(group) %></td>
-    		      <td><%= group.description.html_safe %></td>
-    		      <td><%= get_owner_email(group) %></td>
+    		      <td><%= link_to organization.name, organization_path(organization) %></td>
+    		      <td><%= organization.description.html_safe %></td>
+    		      <td><%= get_owner_email(organization) %></td>
 
     		      <td>
-    		      	<% if group.owner_id == current_user.id %>
+    		      	<% if organization.owner_id == current_user.id %>
     					    <%= link_to t('.edit', default: t("helpers.links.edit")),
-    					                edit_group_path(group), class: 'intable-success-button' %>
+    					                edit_organization_path(organization), class: 'intable-success-button' %>
     					    <%= link_to t('.destroy', default: t("helpers.links.destroy")),
-    					                group_path(group),
+    					                organization_path(organization),
     					                method: :delete,
     					                data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
     					                class: 'intable-delete-button' %>
@@ -43,19 +43,19 @@
     	</table>
     <% else %>
     	<p>
-    		No groups have been created yet. Click on the <strong>New</strong>
+    		No organizations have been created yet. Click on the <strong>New</strong>
     		button below to create your first one.
     	</p>
     <% end %>
   </div>
 </div>
 <div class='digg_pagination'>
-  <%= will_paginate @groups %>
+  <%= will_paginate @organizations %>
 </div>
 
 <div class='form-actions'>
 <%= link_to t('.new', :default => t("helpers.links.new")),
-            new_group_path,
+            new_organization_path,
             :class => 'success-button' %>
 </div>
 

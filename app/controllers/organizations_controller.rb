@@ -4,8 +4,6 @@
 # to a subset of system resources.
 ########################################################################
 class OrganizationsController < ApplicationController
-  include OrganizationRelations
-
   respond_to :html
 
   # BEFORE CALLBACKS ---------------------------------------------------
