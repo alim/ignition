@@ -31,7 +31,7 @@
 <div class="large-12 columns">
 <table>
   <thead>
-    <tr>
+    <tr class="column_header">
       <th>Plan</th>
       <th>Stripe</th>
       <th>Cancel at period end</th>
@@ -46,15 +46,12 @@
       <th>Ended at</th>
       <th>Trial start</th>
       <th>Trial end</th>
-      <th></th>
-      <th></th>
-      <th></th>
     </tr>
   </thead>
 </div>
   <tbody>
     <% @subscriptions.each do |subscription| %>
-      <tr>
+      <tr class="row_entry">
         <td><%= subscription.stripe_plan_id %></td>
         <td><%= subscription.cancel_at_period_end %></td>
         <td><%= subscription.quantity %></td>
@@ -66,9 +63,9 @@
         <td><%= subscription.current_period_end %></td>
         <td><%= subscription.trial_start %></td>
         <td><%= subscription.trial_end %></td>
-        <td><%= link_to 'Show', subscription %></td>
-        <td><%= link_to 'Edit', edit_subscription_path(subscription) %></td>
-        <td><%= link_to 'Destroy', subscription, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td id="column_entry"><%= link_to 'Show', subscription %></td>
+        <td id="column_entry"><%= link_to 'Edit', edit_subscription_path(subscription) %></td>
+        <td id="column_entry"><%= link_to 'Destroy', subscription, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
