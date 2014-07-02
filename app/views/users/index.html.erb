@@ -1,45 +1,48 @@
 <%- model_class = User -%>
 <div class="page-header">
-  <div class='row-fluid'>
-    <h1>User List</h1>
-    <p>
-      The table below list all currently registered service users. To see
-      more details about the user account, you can click on the account
-      email or the 'show' button. If you want 'edit' or 'destroy', the 
-      corresponding buttons are also availabe for each account record.
-    </p>
-  </div>
 
-  <div class='row-fluid'>
-    <div class='form-inline'>
-      <!-- Form for submitting a search request -->
-      <%= form_tag users_url, method: :get do %>
-        <div class='input-prepend'>
-          <%= select_tag(:stype, user_search_options, class: 'btn span4') %>
-          <%= text_field_tag :search, nil, placeholder: "Search term" %>
-        </div>
-        
-        <label class='radio'>Filter results by: &nbsp&nbsp</label>
-        
-        <%= radio_button_tag(:role_filter, :both, true, class: 'radio') %>
+  <h1>User List</h1>
+  <p>
+    The table below list all currently registered service users. To see
+    more details about the user account, you can click on the account
+    email or the 'show' button. If you want 'edit' or 'destroy', the
+    corresponding buttons are also availabe for each account record.
+  </p>
+
+    <!-- Form for submitting a search request -->
+  <%= form_tag users_url, method: :get do %>
+    <div class='row collapse'>
+      <div class='small-6 medium-2 columns'>
+        <%= select_tag(:stype, user_search_options) %>
+      </div>
+
+      <div class='small-6 medium-3 columns'>
+        <%= text_field_tag :search, nil, placeholder: "Search term" %>
+      </div>
+
+      <div class='small-12 medium-6 medium-offset-1 columns end'>
+        <label>Filter results by:</label>
+        <%= radio_button_tag(:role_filter, :both, true) %>
         <label class='radio'>Both &nbsp&nbsp</label>
-        
-        <%= radio_button_tag(:role_filter, :customer, false, class: 'radio') %>
+
+        <%= radio_button_tag(:role_filter, :customer, false) %>
         <label class='radio'>Customer &nbsp&nbsp</label>
 
-        <%= radio_button_tag(:role_filter, :service_admin, false, class: 'radio') %>
+        <%= radio_button_tag(:role_filter, :service_admin, false) %>
         <label class='radio'>Service Admin</label>
-        
-        <%= submit_tag 'Search/Filter', class: 'btn pull-right' %>
 
-      <% end %>
+        <%= submit_tag 'Search/Filter', class: 'button radius tiny secondary' %>
+      </div>
+    </div>
 
-    </div> <!-- form inline -->
-    
-  </div> <!-- row -->
-  
-</div>
-<%= render partial: 'shared/flash', locals: { flash: flash } %>  
+    <div class='row'>
+
+    </div>
+  <% end %>
+
+</div> <!-- page header -->
+
+<%= render partial: 'shared/flash', locals: { flash: flash } %>
 
 <table class="table table-striped">
   <thead>
@@ -74,7 +77,7 @@
         <% end %>
         <td><%= user.last_sign_in_at %></td>
         <td><%= user.last_sign_in_ip %></td>
-        
+
         <td>
           <%= link_to t('.show', :default => t("helpers.links.show")),
                       user_path(user), :class => 'btn btn-mini' %>
