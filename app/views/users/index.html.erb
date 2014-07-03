@@ -30,13 +30,13 @@
 
         <%= radio_button_tag(:role_filter, :service_admin, false) %>
         <label class='radio'>Service Admin</label>
-
-        <%= submit_tag 'Search/Filter', class: 'button radius tiny secondary' %>
       </div>
     </div>
 
     <div class='row'>
-
+      <div class='small-12 columns'>
+        <%= submit_tag 'Search/Filter', class: 'button radius tiny secondary' %>
+      </div>
     </div>
   <% end %>
 
@@ -52,7 +52,7 @@
       <th>Last Name</th>
       <th>Phone</th>
       <th>Role</th>
-      <th>Groups</th>
+      <th>Organization</th>
       <th>Last Sign In</th>
       <th>Last IP</th>
       <th>Actions</th>
@@ -66,11 +66,9 @@
         <td><%= user.last_name %></td>
         <td><%= number_to_phone(user.phone, delimiter: ".") %></td>
         <td><%= user.role_str %></td>
-        <% if user.groups.present? %>
+        <% if user.organization.present? %>
           <td>
-            <% user.groups.each do |group| %>
-              <%= group.name %><br/>
-            <% end %>
+            <%= user.organization.name %><br/>
           </td>
         <% else %>
           <td>None</td>
@@ -80,14 +78,14 @@
 
         <td>
           <%= link_to t('.show', :default => t("helpers.links.show")),
-                      user_path(user), :class => 'btn btn-mini' %>
+                      user_path(user), :class => 'intable-success-button' %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_user_path(user), :class => 'btn btn-mini' %>
+                      edit_user_path(user), :class => 'intable-grey-button' %>
           <%= link_to t('.delete', :default => t("helpers.links.destroy")),
                       user_path(user),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-mini btn-danger' %>
+                      :class => 'intable-delete-button' %>
         </td>
       </tr>
     <% end %>
@@ -100,5 +98,5 @@
 
 <div class="form-actions">
   <%= link_to t('.new', default: t("helpers.links.new")),
-    new_user_path, class: 'btn btn-primary' %>
+    new_user_path, class: 'success-button' %>
 </div>
