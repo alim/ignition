@@ -1,0 +1,30 @@
+<!-- Form for submitting a search request -->
+<%= form_tag users_url, method: :get do %>
+  <div class='row collapse'>
+    <div class='small-6 medium-2 columns'>
+      <%= select_tag(:stype, user_search_options) %>
+    </div>
+
+    <div class='small-6 medium-3 columns'>
+      <%= text_field_tag :search, nil, placeholder: "Search term" %>
+    </div>
+
+    <div class='small-12 medium-6 medium-offset-1 columns end'>
+      <label>Filter results by:</label>
+      <%= radio_button_tag(:role_filter, :both, true) %>
+      <label class='radio'>Both &nbsp&nbsp</label>
+
+      <%= radio_button_tag(:role_filter, :customer, false) %>
+      <label class='radio'>Customer &nbsp&nbsp</label>
+
+      <%= radio_button_tag(:role_filter, :service_admin, false) %>
+      <label class='radio'>Service Admin</label>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class='small-12 columns'>
+      <%= submit_tag 'Search/Filter', class: 'button radius tiny secondary' %>
+    </div>
+  </div>
+<% end %>
