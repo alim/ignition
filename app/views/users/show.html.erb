@@ -1,15 +1,13 @@
 <%- model_class = User -%>
-<div class="page-header">
-  <h1>User Account Information</h1>
-  <p>
-    The user account information is shown below. You can and edit or
+<%= render 'shared/page_header',
+  flash: flash,
+  title: 'User Account Information',
+  description: 'The user account information is shown below. You can and edit or
     destroy the user account using the buttons at the bottom of the
     page. You should note that the credit card information is being
     retrieved from <a href="http://www.stripe.com">Stripe.com</a> and
-    not stored by our service.
-  </p>
-</div>
-<%= render partial: 'shared/flash', locals: { flash: flash } %>
+    not stored by our service.'
+%>
 
 <fieldset>
   <legend>User Information</legend>
@@ -66,11 +64,11 @@
 
   <div class='row'>
     <div class='small-2 columns'>
-      <strong class='right'>Groups:</strong>
+      <strong class='right'>Organization:</strong>
     </div>
     <div class='small-10 columns'>
-      <% if @user.groups.present? %>
-        <%= list_groups(@user.groups) %>
+      <% if @user.organization.present? %>
+        <%= @user.organization %>
       <% else %>
         None
       <% end %>

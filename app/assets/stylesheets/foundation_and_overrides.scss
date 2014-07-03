@@ -1346,7 +1346,7 @@ $action-color: #008CBA;
 
 .intable-delete-button {
   @include button($button-tny, $bg: $alert-color, $radius: true);
-  margin: 0 0 3px 0;
+  margin: 3px 0 0 0;
   font-size: $button-font-tny;
 }
 
@@ -1359,6 +1359,12 @@ $action-color: #008CBA;
 .intable-info-button {
   @include button($button-tny, $bg: $info-color, $radius: true);
   margin: 0 0 0 0;
+  font-size: $button-font-tny;
+}
+
+.intable-edit-button {
+  @include button($button-tny, $bg: $topbar-bg-color, $radius: true);
+  margin: 3px 0 0 0;
   font-size: $button-font-tny;
 }
 

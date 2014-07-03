@@ -2,74 +2,70 @@
 
 <%= form_for @user, html: { class: 'form-horizontal' } do |f| %>
 
-  <div class="control-group">
-    <%= f.label :email, class: 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :email, class: 'text_field' %>
+  <div class="row">
+    <div class="small-6 columns">
+      <%= f.label :first_name %>
+      <%= f.text_field :first_name %>
     </div>
-  </div>
-  
-  <div class="control-group">
-    <%= f.label :first_name, class: 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :first_name, class: 'text_field' %>
-    </div>
-  </div>
-  
-  <div class="control-group">
-    <%= f.label :last_name, class: 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :last_name, class: 'text_field' %>
-    </div>
-  </div>
-  
-  <div class="control-group">
-    <%= f.label :phone, class: 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :phone, class: 'text_field' %>
-    </div>
-  </div>
-  
-  <div class="control-group">
-	  <%= f.label :password, class: 'control-label' %>
-	  <div class="controls">
-		  <%= f.text_field :password, value: @user.password %>
-	  </div>
-  </div>
 
-  <div class="control-group">
-	  <%= f.label :password_confirmation, 'Confirm password', class: 'control-label' %>
-	  <div class='controls'>
-		  <%= f.text_field :password_confirmation, value: @user.password %>
-	  </div>
-  </div>
-
-  <div class='control-group'>
-    <%= f.label :role, class: 'control-label' %>
-    <div class='controls form-inline'>
-        <%= f.radio_button :role, User::CUSTOMER, class: 'radio' %>
-        <label class='radio'>Customer &nbsp&nbsp</label>
-      
-        <%= f.radio_button :role, User::SERVICE_ADMIN, class: 'radio' %>
-        <label class='radio'>Service Admin.</label>
+    <div class="small-6 columns">
+      <%= f.label :last_name %>
+      <%= f.text_field :last_name %>
     </div>
   </div>
 
-  <% if controller.action_name == 'edit' %>
-    <div id="credit_card_area">
-      <dl class="dl-horizontal">
-        <dt></dt>
-        <dd>
+  <div class="row">
+    <div class="small-6 columns">
+      <%= f.label :email %>
+      <%= f.text_field :email %>
+    </div>
+
+    <div class="small-6 columns">
+      <%= f.label :phone %>
+      <%= f.text_field :phone %>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="small-6 columns">
+      <%= f.label :password %>
+      <%= f.text_field :password, value: @user.password %>
+    </div>
+
+    <div class="small-6 columns">
+      <%= f.label :password_confirmation, 'Confirm password' %>
+      <%= f.text_field :password_confirmation, value: @user.password %>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class="small-6 columns">
+      <%= f.label :role %>
+      <%= f.radio_button :role, User::CUSTOMER %>
+      <label>Customer &nbsp&nbsp</label>
+
+      <%= f.radio_button :role, User::ORG_ADMIN %>
+      <label>Org. Admin &nbsp&nbsp</label>
+
+      <%= f.radio_button :role, User::SERVICE_ADMIN %>
+      <label>Service Admin.</label>
+    </div>
+
+    <div class="small-6 columns">
+      <% if controller.action_name == 'edit' %>
+        <div id="credit_card_area">
           <%= render partial: 'shared/account_button_link',
             locals: {user: @user}  %>
-        </dd>
-      </dl>
+        </div>
+      <% end %>
     </div>
-  <% end %>
-  
+
+  </div>
+
   <div class="form-actions">
-    <%= f.submit "Submit", class: 'btn btn-primary' %>
+    <%= f.submit "Submit", class: 'action-button' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                users_path, class: 'btn' %>
+                users_path, class: 'cancel-button' %>
   </div>
 <% end %>
