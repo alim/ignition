@@ -24,7 +24,7 @@ class Subscription
   TRAILING = 'trialing'
   ACTIVE = 'active'
   PAST_DUE = 'past_due'
-  CANCELED = 'canceled'
+  CANCELLED = 'cancelled'
   UNPAID = 'unpaid'
   UNKNOWN = 'unknown'
   
@@ -101,16 +101,17 @@ def subscribe(account_user, plan_id, coupon_code)
 if account_user.customer_id.present?
 
   begin
-
+    #binding.pry
     Stripe.api_key = ENV['API_KEY']
 
     customer = Stripe::Customer.retrieve("#{account_user.customer_id}")
-
+    self.sub_start = DateTime.now
+    self.quantity = 1
     self.stripe_plan_id = plan_id
-
+    #binding.pry
     customer_subscription = customer.update_subscription(
-                               :plan => plan_id,
-#                              :plan => self.plan_str(),
+                              :plan => plan_id,
+  #                            :plan => self.plan_str(),
                               :coupon => coupon_code
     )
     self.cancel_at_period_end = customer_subscription.cancel_at_period_end
@@ -118,6 +119,7 @@ if account_user.customer_id.present?
     self.current_period_end = customer_subscription.current_period_end
     self.trial_start = customer_subscription.trial_start
     self.trial_end = customer_subscription.trial_end
+    self.status = ACTIVE
 
     self.save
 
@@ -157,6 +159,10 @@ def cancel_subscription(account_user)
 
     customer.cancel_subscription()
 
+    self.status = CANCELLED
+
+    self.save
+
   rescue Stripe::StripeError => stripe_error
     logger.debug("[Subscription.cancel_with_stripe] error = #{stripe_error.message}")
     errors[:customer_id] << stripe_error.message
@@ -180,7 +186,7 @@ def destroy
  if self.customer_id.present?
 
   begin
-
+ 
    cancel_subscription (self)
    Stripe.api_key = STRIPE[:api_key]
    customer = Stripe::Customer.retrieve("#{self.customer_id}")

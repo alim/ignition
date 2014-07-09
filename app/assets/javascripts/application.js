@@ -12,6 +12,8 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
-//= require twitter/bootstrap
+//= require foundation
+// require turbolinks <- Disable this plugin when using Foundation
 //= require_tree .
+
+$(function(){ $(document).foundation(); });

@@ -1,10 +1,18 @@
 <%- model_class = Account -%>
-<h3>Edit Credit Card</h3>
-<p>
-  The form below will enable you to update your credit information. 
-  This information is not stored by our service, but is stored with our 
-  PCI compliant payment processor <a href="http://www.stripe.com">
-  Stripe.com</a>.
-</p>
+<div class="row">
+  <div class="small-12 columns">
+    <div class='page-header'>
+
+      <h3>Edit Credit Card</h3>
+      <p>
+        The form below will enable you to update your credit information.
+        This information is not stored by our service, but is stored with our
+        PCI compliant payment processor <a href="http://www.stripe.com">
+        Stripe.com</a>.
+      </p>
+
+    </div>
+  </div>
+</div>
 
 <%= render partial: 'form' %>
