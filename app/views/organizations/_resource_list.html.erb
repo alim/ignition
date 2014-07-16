@@ -1,21 +1,23 @@
 <!-- -------------------------------------------------------------------
 This partial is used to list the resources that are associated with a
-group. This partial will need to be customized to match the attributes
-of the related resource.
+group.
 -------------------------------------------------------------------- -->
-<table class="full-width">
-  <thead>
-    <tr>
-      <th wdith="30%">Project name</th>
-      <th wdith="70%">Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% resources.each do |resource| %>
+<% resources.each do |class_key, resource_list| %>
+  <h3><%= class_key.to_s.camelize.pluralize %></h3>
+  <table class="full-width">
+    <thead>
       <tr>
-        <td><%= resource.name %></td>
-        <td><%= resource.description %></td>
+        <th wdith="30%">Project name</th>
+        <th wdith="70%">Description</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% resource_list.each do |resource| %>
+        <tr>
+          <td><%= resource.name %></td>
+          <td><%= resource.description %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

@@ -1,7 +1,8 @@
-<%- model_class = Group -%>
-<%= render 'shared/page_header', flash: flash, title: 'User Group', description:
-    "The user group definition is shown below. You can update the
-    group membership by selecting the <em>Edit</em> button at the
+<%- model_class = Organization -%>
+<%= render 'shared/page_header', flash: flash,
+  title: 'Organization', description:
+    "The organization record is shown below. You can update the
+    organization membership by selecting the <em>Edit</em> button at the
     bottom on the page." %>
 
 <div class="row">
@@ -9,7 +10,7 @@
     <div class="right inline"><strong>Name:</strong></div>
   </div>
   <div class="small-10 columns left">
-    <%= @group.name %>
+    <%= @organization.name %>
   </div>
 </div>
 
@@ -18,7 +19,7 @@
     <div class="right inline"><strong>Description:</strong></div>
   </div>
   <div class="small-10 columns left">
-    <%= @group.description.html_safe %>
+    <%= @organization.description.html_safe %>
   </div>
 </div>
 
@@ -27,7 +28,7 @@
     <div class="right inline"><strong>Owner:</strong></div>
   </div>
   <div class="small-10 columns left">
-    <%= @owner_email %>
+    <%= @user.email %>
   </div>
 </div>
 <br/>
@@ -36,9 +37,9 @@
 
 <div class="row">
   <div class="small-12 columns">
-    <h5>Users Associated with the Group</h5>
+    <h5>Users Associated with the Organization</h5>
 
-    <% if @users.present? %>
+    <% if @organization.users.present? %>
 
       <table class="full-width">
         <thead>
@@ -50,13 +51,14 @@
           </tr>
         </thead>
         <tbody>
-          <% @users.each do |user| %>
+          <% @organization.users.each do |user| %>
             <tr>
               <td><%= user.first_name %></td>
               <td><%= user.last_name %></td>
               <td><%= user.email %></td>
               <td>
-        				<%= form_tag notify_group_url(@group), method: :put do %>
+        				<%= form_tag notify_organization_url(id: @organization.id),
+                  method: :put do %>
         					<%= hidden_field_tag :uid, user.id %>
         					<%= submit_tag 'Send Invite', class: "intable-info-button" %>
         				<% end %>
@@ -78,12 +80,12 @@
 <div class="row">
   <div class="small-12 columns">
 
-    <h5>Related Resources</h5>
+    <h1>Related Resources</h1>
 
     <% if @resources.present? %>
       <p>
-        The resources that are accessible by this group are listed in the
-        table below:
+        The resources that are accessible by this organization are
+        listed in the table below:
       </p>
       <%= render 'resource_list', resources: @resources %>
     <% else %>
@@ -96,13 +98,13 @@
 
 <div class="form-actions">
   <%= link_to t('.edit', default: t("helpers.links.edit")),
-              edit_group_path(@group), class: 'success-button' %>
+              edit_organization_path(@organization), class: 'success-button' %>
 
   <%= link_to t('.back', default: t("helpers.links.back")),
-              groups_path, class: 'cancel-button'  %>
+              organizations_path, class: 'cancel-button'  %>
 
   <%= link_to t('.destroy', default: t("helpers.links.destroy")),
-              group_path(@group),
+              organization_path(@organization),
               method: 'delete',
               data: { :confirm => t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
               class: 'delete-button right' %>

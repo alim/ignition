@@ -1,9 +1,10 @@
-<%- model_class = Group -%>
+<%- model_class = Organization -%>
 <%= render 'shared/page_header',
       flash: flash,
-      title: 'User Groups',
-      description: "Any user groups that you have created are listed in the
-        table below. You can create a new group using the <strong>New</strong>
-        button shown below the table." %>
+      title: 'New Organization',
+      description: "You can create an organization which enables you to share your
+        records with them. A user/member can <em>only</em> belong to one organization.
+        Each new record that you or your organization members create will be available
+        to other members of the organization." %>
 
-<%= render 'form', group: @group %>
+<%= render 'form', organization: @organization %>
