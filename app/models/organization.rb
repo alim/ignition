@@ -14,9 +14,9 @@ class Organization
 
   field :name, type: String
   field :description, type: String
-  # field :owner_id, type: BSON::ObjectId
 
   attr_accessor :members
+
 
   ## RELATIONSHIPS -----------------------------------------------------
 
@@ -159,4 +159,66 @@ class Organization
     end
   end
 
+  ######################################################################
+  # The relate_classes method will relate instances of each class that
+  # belongs_to an organization.
+  ######################################################################
+  def relate_classes
+    # set managed class organization using the following format
+    # example - self.send("project_ids", oids)
+    associated_classes.each do |rclass|
+      oids = rclass.where(user_id: owner_id).pluck(:id)
+      assignment_method = rclass.to_s.downcase + "_ids="
+      self.send(assignment_method, oids) if oids.present?
+    end
+  end
+
+  #####################################################################
+  # The unrelate_classes method is responsible for disassociating
+  # all other classes from the Organization object.
+  #####################################################################
+  def unrelate_classes
+    # Should generate a call like self.projects.clear
+    associated_classes.each do |rclass|
+      self.send(rclass.to_s.downcase.pluralize + "=", nil)
+    end
+  end
+
+  #####################################################################
+  # The managed_classes method will returns a hash of classes managed
+  # by the organization. The hash keys will be the class names, and
+  # the hash values will be class instances.
+  #####################################################################
+  def managed_classes
+
+    classes = {}
+    if (related_classes = reflect_on_all_associations(:has_many)).present?
+      related_classes.each do |rclass|
+        class_name = rclass.name.to_s.camelize.singularize.constantize
+        if class_name != User && (records = class_name.where(organization_id: self.id)).present?
+          classes[class_name.to_s.downcase.to_sym] = records
+        end
+      end
+    end
+
+    classes
+  end
+
+  ## PRIVATE INSTANCE METHODS -----------------------------------------
+
+  private
+
+  #####################################################################
+  # Returns an array of Class constant names that reflect a list of
+  # classes associated to the Organization class. It does not include
+  # the User class.
+  #####################################################################
+  def associated_classes
+    classes = []
+    reflect_on_all_associations(:has_many).each do |aclass|
+      class_name = aclass.name.to_s.camelize.singularize.constantize
+      (classes << class_name) unless class_name == User
+    end
+    classes
+  end
 end

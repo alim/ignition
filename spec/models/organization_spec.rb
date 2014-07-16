@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Organization do
   include_context 'user_setup'
   include_context 'organization_setup'
+  include_context 'project_setup'
 
   # SETUP --------------------------------------------------------------
   let(:one_organization) {
@@ -249,4 +250,86 @@ describe Organization do
       ActionMailer::Base.deliveries.first.encoded.should match(/password:/)
     end
   end
+
+  # RELATE CLASSES ----------------------------------------------------
+  describe "#describe_classes" do
+    let(:organization) { Organization.first }
+    before(:each) {
+      projects_with_users
+      single_organization_with_users
+    }
+
+    it "should set the organization of managed projects" do
+      Project.all.each do |project|
+        project.organization.should be_nil
+        project.user_id.should == organization.owner_id
+      end
+      organization.relate_classes
+      organization.projects.count.should > 0
+      Project.all.each { |project| project.organization.should == organization }
+    end
+
+    it "should not relate projects not created by organization owner" do
+      user = FactoryGirl.create(:user)
+
+      Project.all.each do |project|
+        project.user = user
+        project.save
+      end
+
+      organization.relate_classes
+      organization.projects.count.should == 0
+    end
+
+  end
+
+  ## MANAGE CLASSES ---------------------------------------------------
+
+  describe "#managed_classes" do
+    let(:organization) { Organization.first }
+    before(:each) {
+      projects_with_users
+      single_organization_with_users
+    }
+
+    it "should find all instances of a related class" do
+      Project.all.each do |project|
+        project.organization = organization
+        project.save
+      end
+
+      mclasses = organization.managed_classes
+      mclasses[:project].each do |project|
+        project.organization.should == organization
+      end
+    end
+
+  end
+
+  ## UNRELATE CLASSES -------------------------------------------------
+
+  describe "#unrelate_classes" do
+    let(:organization) { Organization.first }
+    let(:setup_projects) {
+      Project.all.each do |project|
+        project.organization.should be_nil
+        project.user_id.should == organization.owner_id
+      end
+    }
+    before(:each) {
+      projects_with_users
+      single_organization_with_users
+    }
+
+    it "should un-relate project classes" do
+      setup_projects
+      organization.relate_classes
+      organization.projects.count.should > 0
+      Project.all.each { |project| project.organization.should == organization }
+      organization.unrelate_classes
+      organization.projects.count.should == 0
+      Project.count.should > 0
+    end
+  end
+
 end

@@ -1,9 +1,9 @@
-<%- model_class = Group -%>
+<%- model_class = Organization -%>
 
 <%= render 'shared/page_header',
       flash: flash,
-      title: 'Edit User Groups',
-      description: "You can edit the user group utilizing the form below." %>
+      title: 'Edit Organization',
+      description: "You can edit the organization record utilizing the form below." %>
 
-<%= render 'form', group: @group %>
+<%= render 'form', organization: @organization %>
 

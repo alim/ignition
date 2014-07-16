@@ -21,17 +21,15 @@ class OrganizationsController < ApplicationController
   # GET /organizations
   # GET /organizations.json
   #
-  # Standard listing of user organizations and membership.
+  # The index action will check to see if an organization is currently
+  # related to the current user. If one exists, then the organizational
+  # record is shown.
   ######################################################################
   def index
-    # Get page number
-    page = params[:page].nil? ? 1 : params[:page]
-
-    if current_user.role == User::SERVICE_ADMIN
-      @organizations = Organization.all.paginate(page: page, per_page: PAGE_COUNT)
+    if current_user.organization
+      redirect_to current_user.organization
     else
-      @organizations = Organization.where(owner_id: current_user.id).paginate(
-        page: page,  per_page: PAGE_COUNT)
+      redirect_to new_organization_path
     end
   end
 
@@ -44,11 +42,7 @@ class OrganizationsController < ApplicationController
   ######################################################################
   def show
     @user = User.find(@organization.owner_id)
-    @owner_email = @user.email
-
-    # Get list of associated users and resources
-    @users = @organization.users
-    @resources = @organization.send(Organization::RESOURCE_CLASS.downcase.pluralize)
+    @resources = @organization.managed_classes
   end
 
   ######################################################################
@@ -84,18 +78,15 @@ class OrganizationsController < ApplicationController
   # will be created. All members will be notified by email.
   ######################################################################
   def create
-    @organization = current_user.organizations.new(organization_params)
-    @organization.owner_id = current_user.id
+    @organization = current_user.organization = Organization.new(organization_params)
+    @organization.owner = current_user
 
     if @organization.save
       # Create and notify organization members of their inclusion into the organization
-       @organization.create_notify
+      @organization.create_notify
 
-      # Relate resources from injected methods in OrganizationRelations
-      # module. It relates the current set of resources to the organization
-      relate_resources(resource_ids: params[:organization][:resource_ids],
-        organization: @organization, class: Organization::RESOURCE_CLASS)
-
+      # Relate all class that belong to an Organization class
+      @organization.relate_classes
       redirect_to @organization, notice: 'Organization was successfully created.'
     else
       @verrors = @organization.errors.full_messages
@@ -114,10 +105,8 @@ class OrganizationsController < ApplicationController
 
     if @organization.update_attributes(organization_params)
 
-      # Relate resources from injected methods in OrganizationRelations
-      # module. It relates the current set of resources to the organization
-      relate_resources(resource_ids: params[:organization][:resource_ids],
-        organization: @organization, class: Organization::RESOURCE_CLASS)
+      # Relate all class that belong to an Organization class
+      @organization.relate_classes
 
       # Create and notify organization members of their inclusion into the organization
        @organization.create_notify
