@@ -101,7 +101,7 @@ def subscribe(account_user, plan_id, coupon_code)
 if account_user.customer_id.present?
 
   begin
-  
+    #binding.pry
     Stripe.api_key = ENV['API_KEY']
 
     customer = Stripe::Customer.retrieve("#{account_user.customer_id}")
@@ -111,7 +111,7 @@ if account_user.customer_id.present?
     #binding.pry
     customer_subscription = customer.update_subscription(
                               :plan => plan_id,
- #                             :plan => self.plan_str(),
+  #                            :plan => self.plan_str(),
                               :coupon => coupon_code
     )
     self.cancel_at_period_end = customer_subscription.cancel_at_period_end
@@ -124,8 +124,7 @@ if account_user.customer_id.present?
     self.save
 
   rescue Stripe::StripeError => stripe_error
-      logger.debug("[Subscription.update_with_stripe] error = #{stripe_error.message}")
-      errors[:customer_id] << stripe_error.message
+      logger_debugger(errors, stripe_error, customer_id, "[Subscription.cancel_with_stripe] error = #{stripe_error.message}")
       return nil
   end
  else 
@@ -164,8 +163,7 @@ def cancel_subscription(account_user)
     self.save
 
   rescue Stripe::StripeError => stripe_error
-    logger.debug("[Subscription.cancel_with_stripe] error = #{stripe_error.message}")
-    errors[:customer_id] << stripe_error.message
+    logger_debugger(errors, stripe_error, customer_id, "[Subscription.cancel_with_stripe] error = #{stripe_error.message}")
     subscription_cancelled = false
   end
  end
@@ -186,16 +184,14 @@ def destroy
  if self.customer_id.present?
 
   begin
-
+ 
    cancel_subscription (self)
    Stripe.api_key = STRIPE[:api_key]
    customer = Stripe::Customer.retrieve("#{self.customer_id}")
    customer.delete
 
   rescue Stripe::StripeError => stripe_error
-   logger.debug("[Subscription.cancel_with_stripe] error = #{stripe_error.message}")
-   errors[:customer_id] << stripe_error.message
-   
+   logger_debugger(errors, stripe_error, customer_id, "[Subscription.cancel_with_stripe] error = #{stripe_error.message}")
    removed_customer = false
   end
  else
@@ -229,5 +225,10 @@ def is_valid(params)
    end
 
    return account_valid
+end
+
+def logger_debugger(errors, stripe_error, customer_id, description)
+  logger.debug(description)
+  errors[:customer_id] << stripe_error.message
 end
 end
