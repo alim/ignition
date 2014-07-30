@@ -1,8 +1,37 @@
+<!-- Image Slider Header -------------------------------------- -->
+<div class="row">
+<div class="large-12 columns">
+    <div class="slideshow-wrapper">
+      <div class="preloader"></div>
+      <ul data-orbit>
+        <li>
+          <%= image_tag 'banner-1.jpg', alt: 'banner-1' %>
+          <div class="orbit-caption">
+            Fire up your next great idea.
+          </div>
+        </li>
+        <li class="active">
+          <%= image_tag 'banner-2.jpg', alt: 'banner-2' %>
+          <div class="orbit-caption">
+            User and subscription management from the start.
+          </div>
+        </li>
+        <li>
+          <%= image_tag 'banner-3.jpg', alt: 'banner-3' %>
+          <div class="orbit-caption">
+            A starting framework for your next web application.
+          </div>
+        </li>
+      </ul>
+    </div>
+</div>
 <h1>Listing subscriptions</h1>
 
+<div class="row">
+<div class="large-12 columns">
 <table>
   <thead>
-    <tr>
+    <tr class="column_header">
       <th>Plan</th>
       <th>Stripe</th>
       <th>Cancel at period end</th>
@@ -17,15 +46,12 @@
       <th>Ended at</th>
       <th>Trial start</th>
       <th>Trial end</th>
-      <th></th>
-      <th></th>
-      <th></th>
     </tr>
   </thead>
-
+</div>
   <tbody>
     <% @subscriptions.each do |subscription| %>
-      <tr>
+      <tr class="row_entry">
         <td><%= subscription.stripe_plan_id %></td>
         <td><%= subscription.cancel_at_period_end %></td>
         <td><%= subscription.quantity %></td>
@@ -37,9 +63,9 @@
         <td><%= subscription.current_period_end %></td>
         <td><%= subscription.trial_start %></td>
         <td><%= subscription.trial_end %></td>
-        <td><%= link_to 'Show', subscription %></td>
-        <td><%= link_to 'Edit', edit_subscription_path(subscription) %></td>
-        <td><%= link_to 'Destroy', subscription, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td id="column_entry"><%= link_to 'Show', subscription %></td>
+        <td id="column_entry"><%= link_to 'Edit', edit_subscription_path(subscription) %></td>
+        <td id="column_entry"><%= link_to 'Destroy', subscription, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
