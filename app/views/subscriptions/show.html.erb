@@ -9,50 +9,38 @@
 <%= render partial: 'shared/flash', locals: { flash: flash } %>
 
 <dl class="dl-horizontal">
-  <dt><strong>Plan Name:</strong></dt>
-  <dd><%= @subscription.plan_str %></dd>
+  <dd id="plan_entries"><strong>Plan Name: </strong><%= @subscription.plan_str %></dd>
   
-  <dt><strong>Plan Start:</strong></dt>
-  <dd><%= @subscription.sub_start.to_date.to_formatted_s(:long) %></dd>
+  <dd id="plan_entries"><strong>Plan Start: </strong><%= @subscription.sub_start.to_date.to_formatted_s(:long) %></dd>
  
   <% if @subscription.sub_end.present? %>
-    <dt><strong>Plan Start:</strong></dt>
-    <dd><%= @subscription.sub_end.to_date.to_formatted_s(:long) %></dd>
+    <dd id="plan_entries"><strong>Plan Start: </strong>%= @subscription.sub_end.to_date.to_formatted_s(:long) %></dd>
   <% end %>
   
-  <dt><strong>Plan status:</strong></dt>
-  <dd><%= @subscription.status.capitalize %></dd>  
+  <dd id="plan_entries"><strong>Plan status: </strong><%= @subscription.status.capitalize %></dd>
   
-  <br/>
-  <dt><strong>Trial Period Start:</strong></dt>
   <% if @subscription.trial_start.present? %>
-    <dd><%= @subscription.trial_start.to_date.to_formatted_s(:long) %></dd>   
+    <dd id="plan_entries"><strong>Trial Period Start: </strong><%= @subscription.trial_start.to_date.to_formatted_s(:long) %></dd>   
   <% else %>
-    <dd>No trial period found.</dd>
+    <dd id="plan_entries"><strong>Trial Period Start: </strong>No trial period found.</dd>
   <% end %>
   
-  <dt><strong>Trial Period End:</strong></dt>
   <% if @subscription.trial_end.present? %>
-    <dd><%= @subscription.trial_end.to_date.to_formatted_s(:long) %></dd> 
+    <dd id+"plan_entries"><strong>Trial Period End: </strong><%= @subscription.trial_end.to_date.to_formatted_s(:long) %></dd> 
   <% else %>
-    <dd>No trial period found</dd>
+    <dd id="plan_entries"><strong>Trial Period End: </strong>No trial period found</dd>
   <% end %>
-  
-  <br/>
   
   <% if @subscription.current_period_start.present? %>
-    <dt><strong>Billing Period Start</strong></dt>
-    <dd> <%= @subscription.current_period_start.to_date.to_formatted_s(:long) %></dd>
+    <dd id="plan_entries"> <strong>Billing Period Start: </strong><%= @subscription.current_period_start.to_date.to_formatted_s(:long) %></dd>
   <% end %>
 
   <% if @subscription.current_period_end.present? %>
-    <dt><strong>Billing Period End</strong></dt>
-    <dd> <%= @subscription.current_period_end.to_date.to_formatted_s(:long) %></dd>
+    <dd id="plan_entries"> <strong>Billing Period End: </strong><%= @subscription.current_period_end.to_date.to_formatted_s(:long) %></dd>
   <% end %>
   
   <% if @subscription.canceled_at.present? %>
-    <dt><strong>Canceled on:</strong></dt>
-    <dd><%= @subscription.canceled_at.to_date.to_formatted_s(:long) %></dd>
+    <dd id="plan_entries"><strong>Canceled on: </strong><%= @subscription.canceled_at.to_date.to_formatted_s(:long) %></dd>
   <% end %>
   
 </dl>
