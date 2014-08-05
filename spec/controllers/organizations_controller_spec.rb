@@ -803,7 +803,6 @@ describe OrganizationsController do
 
     end
 
-
     describe "Authorization examples" do
       it "Should redirect to organization_url, upon succesfull notification of owned organization" do
         put :notify, notify_params
