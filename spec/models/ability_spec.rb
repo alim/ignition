@@ -6,7 +6,6 @@ describe Ability do
   let(:customer) { FactoryGirl.create(:user) }
   let(:account_customer) { FactoryGirl.create(:user_with_account) }
   let(:another_customer) { FactoryGirl.create(:user_with_account) }
-  let(:org) { FactoryGirl.create(:orgusers) }
   let(:admin) { FactoryGirl.create(:adminuser) }
 
   after(:each) { User.destroy_all }
@@ -52,11 +51,29 @@ describe Ability do
 
     describe "Project access" do
       let(:project) { FactoryGirl.create(:project, user: account_customer) }
+      let(:org) { FactoryGirl.create(:organization, owner: account_customer ) }
 
-      it {should be_able_to(:read, seqtype)}
-      it {should_not be_able_to(:create, seqtype)}
-      it {should_not be_able_to(:update, seqtype)}
-      it {should_not be_able_to(:destroy, seqtype)}
+      before(:each) {
+        account_customer.organization = org
+        project.organization = org
+      }
+
+      it {should be_able_to(:read, project)}
+      it {should be_able_to(:create, project)}
+      it {should be_able_to(:update, project)}
+      it {should be_able_to(:destroy, project)}
+
+      context "different owner" do
+        let(:project) { FactoryGirl.create(:project, user: another_customer) }
+        let(:org) { FactoryGirl.create(:organization, owner: another_customer) }
+        before(:each) { account_customer.organization = nil }
+
+        it {should_not be_able_to(:create, project)}
+        it {should_not be_able_to(:read, project)}
+        it {should_not be_able_to(:update, project)}
+        it {should_not be_able_to(:destroy, project)}
+
+      end
     end
   end
 end

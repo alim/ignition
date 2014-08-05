@@ -60,9 +60,6 @@ class User
   # SERVICE_ADMIN - constant for specify a service administrator
   SERVICE_ADMIN = 2
 
-  # ORG_ADMIN - constant for an organizational administrator
-  ORG_ADMIN = 3
-
   ## Additional fields and validations ---------------------------------
 
   field :first_name, type: String, default: ''
@@ -77,7 +74,7 @@ class User
   validates :email, uniqueness: true
 
   field :role, type: Integer, default: CUSTOMER
-  validates :role, inclusion: { in: [CUSTOMER, SERVICE_ADMIN, ORG_ADMIN],
+  validates :role, inclusion: { in: [CUSTOMER, SERVICE_ADMIN],
     message: "is invalid" }
 
 
@@ -116,6 +113,20 @@ class User
     else
       "Unknown"
     end
+  end
+
+  #####################################################################
+  # Returns true or false if user has admin role.
+  #####################################################################
+  def admin?
+    role == SERVICE_ADMIN
+  end
+
+  #####################################################################
+  # Returns true or false if user has customer role.
+  #####################################################################
+  def customer?
+    role == CUSTOMER
   end
 
   ## PUBLIC CLASS METHODS ----------------------------------------------

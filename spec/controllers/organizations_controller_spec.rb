@@ -11,10 +11,6 @@ describe OrganizationsController do
     @customer = User.where(role: User::CUSTOMER).where(:account.exists => true).first
   }
 
-  let(:find_one_organization) {
-    @organization = Group.where(owner_id: @owner.id).first
-  }
-
   let(:login_as_organization_owner){
     sign_in @owner
     @signed_in_user = @owner
@@ -34,9 +30,8 @@ describe OrganizationsController do
   }
 
   before(:each) {
-    multi_organizations_multi_users
+    single_organization_with_users
     find_one_user
-    find_one_organization
     login_as_organization_owner
     subject.current_user.should_not be_nil
   }
@@ -50,69 +45,36 @@ describe OrganizationsController do
   # INDEX ACTION TESTS -------------------------------------------------
 
   describe "GET index" do
-    describe "Valid examples" do
-
-      it "Should return success" do
+    context "as a organization owner" do
+      it "Should redirect to user's organization" do
         get :index
-        response.should be_success
+        response.should redirect_to @organization
       end
 
-      it "Should render index template" do
+      it "Should redirect to new_organization_path if none exists" do
+        Organization.delete_all
         get :index
-        response.should render_template :index
+        response.should redirect_to new_organization_path
       end
 
-      it "Should return the complete list of organizations" do
-        get :index
-        assigns(:organizations).count.should_not eq(0)
-        assigns(:organizations).each {|organization| @organization_ids.should include(organization.id)}
-      end
-    end # Valid examples
 
-    describe "Invalid examples" do
       it "Should redirect to sign in, if not signed in" do
         sign_out @signed_in_user
         get :index
         response.should redirect_to new_user_session_url
       end
-
-      it "Should still return success, if no organizations present" do
-        Group.delete_all
-        get :index
-        response.should be_success
-        assigns(:organizations).count.should eq(0)
-      end
     end
 
-    describe "Authorization examples" do
-      it "Should return success as a customer" do
-        get :index
-        response.should be_success
-      end
-
-      it "Should only access organizations that user owns" do
-        get :index
-        assigns(:organizations).count.should_not eq(0)
-        assigns(:organizations).each do |organization|
-          organization.owner_id.should eq(@owner.id)
-        end
-      end
-
-      it "Should not access any organizations, if not organization owner" do
-        login_nonowner
-        get :index
-        assigns(:organizations).count.should eq(0)
-      end
-
+    context "as a service admin" do
       it "Should return all organizations, if service admin" do
         login_admin
+        multiple_organizations
         get :index
         response.should be_success
         assigns(:organizations).count.should_not eq(0)
-        assigns(:organizations).count.should eq(Group.count)
+        assigns(:organizations).count.should eq(Organization.count)
       end
-    end # Index authorization
-
+    end
   end
 
 
@@ -123,7 +85,7 @@ describe OrganizationsController do
       { id: @organization.id }
     }
 
-    describe "Valid examples" do
+    context "as a customer and organization owner" do
 
       it "Should return with success" do
         get :show, show_params
@@ -143,110 +105,96 @@ describe OrganizationsController do
       it "Should find matching owner email" do
         owner = User.find(@organization.owner_id)
         get :show, show_params
-        assigns(:owner_email).should eq(owner.email)
+        assigns(:user).email.should eq(owner.email)
       end
 
       it "Should find all users for the organization" do
         uids = @organization.users.all.pluck(:id).sort
+        uids.should_not be_empty
         get :show, show_params
         assigns(:organization).users.pluck(:id).sort.should eq(uids)
       end
-    end # Valid examples
 
-    describe "Invalid examples" do
-       it "Should not succeed, if not logged in" do
-        sign_out @signed_in_user
-        get :show, show_params
-        response.should_not be_success
-      end
-
-      it "Should redirect, if not logged in" do
-        sign_out @signed_in_user
-        get :show, show_params
-        response.should redirect_to new_user_session_url
-      end
-
-      it "Should redirect to #index, if record not found" do
-        get :show, {id: '99999'}
-        response.should redirect_to admin_oops_url
-      end
-
-      it "Should flash an alert message, if record not found" do
-        get :show, {id: '99999'}
-        flash[:alert].should match(/^We are unable to find the requested Group/)
-      end
-
-      it "Should flash an alert if we cannot find a organization owner" do
-        @organization.owner_id = '9999'
-        @organization.save
-
-        get :show, show_params
-        flash[:alert].should match(/You are not authorized to access the requested Group/)
-      end
-    end
-
-    describe "Authorization examples" do
       it "Return success for a organization owned by the user" do
         login_as_organization_owner
-        organization = Group.where(owner_id: @owner.id).first
+        organization = Organization.where(owner_id: @owner.id).first
         get :show, {id: organization.id}
         response.should be_success
       end
 
       it "Find the requested organization owned by the user" do
         login_as_organization_owner
-        organization = Group.where(owner_id: @owner.id).first
+        organization = Organization.where(owner_id: @owner.id).first
         get :show, {id: organization.id}
         assigns(:organization).id.should eq(organization.id)
       end
 
-      it "Group owner_id should match requested organization owner_id" do
+      it "Organization owner_id should match requested organization owner_id" do
         login_as_organization_owner
-        organization = Group.where(owner_id: @owner.id).first
+        organization = Organization.where(owner_id: @owner.id).first
         get :show, {id: organization.id}
         assigns(:organization).owner_id.should eq(@owner.id)
       end
 
+      context "Invalid examples" do
+        it "Should not succeed, if not logged in" do
+          sign_out @signed_in_user
+          get :show, show_params
+          response.should_not be_success
+        end
+
+        it "Should redirect, if not logged in" do
+          sign_out @signed_in_user
+          get :show, show_params
+          response.should redirect_to new_user_session_url
+        end
+
+        it "Should redirect to #index, if record not found" do
+          get :show, {id: '99999'}
+          response.should redirect_to admin_oops_url
+        end
+
+        it "Should flash an alert message, if record not found" do
+          get :show, {id: '99999'}
+          flash[:alert].should match(/^We are unable to find the requested Organization/)
+        end
+
+        it "Should flash an alert if we cannot find a organization owner" do
+          login_nonowner
+
+          get :show, show_params
+          flash[:alert].should match(/You are not authorized to access the requested Organization/)
+        end
+      end
+    end
+
+    context "as admin" do
       it "Return success for a organization with different owner than admin" do
         login_admin
-        organization = Group.where(owner_id: @owner.id).first
+        organization = Organization.where(owner_id: @owner.id).first
         get :show, {id: organization.id}
         response.should be_success
       end
 
       it "Find the requested organization with different owner than admin" do
         login_admin
-        organization = Group.where(owner_id: @owner.id).first
+        organization = Organization.where(owner_id: @owner.id).first
         get :show, {id: organization.id}
         assigns(:organization).id.should eq(organization.id)
       end
 
-      it "Group should have different owner than admin" do
+      it "Organization should have different owner than admin" do
         login_admin
-        organization = Group.where(owner_id: @owner.id).first
+        organization = Organization.where(owner_id: @owner.id).first
         get :show, {id: organization.id}
         assigns(:organization).owner_id.should_not eq(@signed_in_user.id)
       end
-
-      it "Redirect to admin_oops for a organization NOT owned by the user" do
-        login_nonowner
-        organization = Group.where(owner_id: @owner.id).first
-        get :show, {id: organization.id}
-        response.should redirect_to admin_oops_url
-      end
-
-      it "Flash alert message for a organization NOT owned by the user" do
-        login_nonowner
-        get :show, {id: @organization.id}
-        flash[:alert].should match(/You are not authorized to access the requested #{@organization.class}/)
-      end
     end # Show authorization examples
-
   end
 
   # NEW TESTS ----------------------------------------------------------
   describe "GET new" do
-    describe "Valid tests" do
+    context "as a customer and organization owner" do
       it "Should return success" do
         get :new
         response.should be_success
@@ -261,23 +209,17 @@ describe OrganizationsController do
         get :new
         assigns(:organization).should be_present
       end
+
+      context "Invalid tests" do
+        it "Should redirect, if not logged in" do
+          sign_out @signed_in_user
+          get :new
+          response.should redirect_to new_user_session_url
+        end
+      end # Invalid examples
     end # Valid tests
 
-    describe "Invalid tests" do
-      it "Should redirect, if not logged in" do
-        sign_out @signed_in_user
-        get :new
-        response.should redirect_to new_user_session_url
-      end
-    end # Invalid examples
-
-    describe "Authorization examples" do
-     it "Return success for a new organization owned by the current_user" do
-        get :new
-        response.should be_success
-        response.should render_template :new
-      end
-
+    context "as and admin user" do
       it "Return success for a new organization logged in as admin" do
         login_admin
         get :new
@@ -293,7 +235,7 @@ describe OrganizationsController do
   describe "GET edit" do
     let(:edit_params) { {id: @organization.id} }
 
-    describe "Valid tests" do
+    context "as a customer and organization owner" do
       it "Should return success" do
         get :edit, edit_params
         response.should be_success
@@ -308,65 +250,53 @@ describe OrganizationsController do
         get :edit, edit_params
         assigns(:organization).id.should eq(@organization.id)
       end
-    end # Valid tests
 
-    describe "Invalid tests" do
-      it "Should redirect, if not logged in" do
-        sign_out @signed_in_user
-        get :edit, edit_params
-        response.should redirect_to new_user_session_url
-      end
-
-      it "Should redirect to organizations_url for invalid organization id" do
-        get :edit, {id: '090909'}
-        response.should redirect_to admin_oops_url
-      end
-
-      it "Should flash alert message for invalid organization id" do
-        get :edit, {id: '090909'}
-        flash[:alert].should match(/We are unable to find the requested Group/)
-      end
-    end # Invalid tests
-
-    describe "Authorization examples" do
-      it "Return success for a organization owned by the user" do
-        login_as_organization_owner
-        organization = Group.where(owner_id: @owner.id).first
-        get :edit, {id: organization.id}
-        response.should be_success
-      end
-
-      it "Find the requested organization owned by the user" do
-        login_as_organization_owner
-        organization = Group.where(owner_id: @owner.id).first
-        get :edit, {id: organization.id}
-        assigns(:organization).id.should eq(organization.id)
-      end
-
-      it "Group owner_id should match requested organization owner_id" do
-        login_as_organization_owner
-        organization = Group.where(owner_id: @owner.id).first
+      it "Organization owner_id should match requested organization owner_id" do
+        organization = Organization.where(owner_id: @owner.id).first
         get :edit, {id: organization.id}
         assigns(:organization).owner_id.should eq(@owner.id)
       end
 
+      context "Invalid tests" do
+        it "Should redirect, if not logged in" do
+          sign_out @signed_in_user
+          get :edit, edit_params
+          response.should redirect_to new_user_session_url
+        end
+
+        it "Should redirect to organizations_url for invalid organization id" do
+          get :edit, {id: '090909'}
+          response.should redirect_to admin_oops_url
+        end
+
+        it "Should flash alert message for invalid organization id" do
+          get :edit, {id: '090909'}
+          flash[:alert].should match(/We are unable to find the requested Organization/)
+        end
+      end # Invalid tests
+
+    end # Valid tests
+
+
+    describe "as and admin user" do
+
       it "Return success for a organization with different owner than admin" do
         login_admin
-        organization = Group.where(owner_id: @owner.id).first
+        organization = Organization.where(owner_id: @owner.id).first
         get :edit, {id: organization.id}
         response.should be_success
       end
 
       it "Find the requested organization with different owner than admin" do
         login_admin
-        organization = Group.where(owner_id: @owner.id).first
+        organization = Organization.where(owner_id: @owner.id).first
         get :edit, {id: organization.id}
         assigns(:organization).id.should eq(organization.id)
       end
 
-      it "Group should have different owner than admin" do
+      it "Organization should have different owner than admin" do
         login_admin
-        organization = Group.where(owner_id: @owner.id).first
+        organization = Organization.where(owner_id: @owner.id).first
         get :edit, {id: organization.id}
         assigns(:organization).owner_id.should_not eq(@signed_in_user.id)
       end
@@ -387,7 +317,7 @@ describe OrganizationsController do
 
   # CREATE ACTION TESTS ------------------------------------------------
   describe "POST create" do
-    let(:name) {"Sample Group"}
+    let(:name) {"Sample Organization"}
     let(:desc) {"The sample organization for testing"}
     let(:members) {"one@example.com\ntwo@example.com\nthree@example.com\n"}
 
@@ -399,11 +329,15 @@ describe OrganizationsController do
       }}
     }
 
-    describe "Valid create examples" do
+    before(:each) {
+      Organization.destroy_all
+    }
+
+    context "as a customer and organization owner" do
       it "Should return success with valid organization fields" do
         post :create, valid_organization_params
         response.should redirect_to organization_url(assigns(:organization))
-        flash[:notice].should match(/Group was successfully created./)
+        flash[:notice].should match(/Organization was successfully created./)
       end
 
       it "Should update organization with name" do
@@ -445,41 +379,40 @@ describe OrganizationsController do
         post :create, valid_organization_params
         assigns(:organization).projects.count.should eq(project_ids.count)
       end
-    end # Valid create examples
 
-    describe "Invalid create examples" do
+      context "invalid examples" do
+        it "Should redirect to sign_in, if not logged in" do
+          sign_out @signed_in_user
+          post :create, valid_organization_params
+          response.should redirect_to new_user_session_url
+        end
 
-      it "Should redirect to sign_in, if not logged in" do
-        sign_out @signed_in_user
-        post :create, valid_organization_params
-        response.should redirect_to new_user_session_url
+        it "Should render the new template, if account could not save" do
+
+          # Setup a method stub for the Organization method save
+          # to return nil, which indicates a failure to save the account
+          Organization.any_instance.stub(:save).and_return(nil)
+
+          post :create, valid_organization_params
+          response.should render_template :new
+        end
+
+        it "Should generate error message with illegal email address" do
+          params = valid_organization_params
+          params[:organization][:members] = "abc\ndef@\n@example.com\nabc@.com\ndef@example"
+          post :create, params
+          assigns(:verrors).each {|error| error.should match(/Members invalid email address/)}
+        end
+
+        it "Should render the new template with illegal email address" do
+          params = valid_organization_params
+          params[:organization][:members] = "abc\ndef@\n@example.com\nabc@.com\ndef@example"
+          post :create, params
+          response.should render_template :new
+        end
       end
 
-      it "Should render the new template, if account could not save" do
-
-        # Setup a method stub for the Group method save
-        # to return nil, which indicates a failure to save the account
-        Group.any_instance.stub(:save).and_return(nil)
-
-        post :create, valid_organization_params
-        response.should render_template :new
-      end
-
-      it "Should generate error message with illegal email address" do
-        params = valid_organization_params
-        params[:organization][:members] = "abc\ndef@\n@example.com\nabc@.com\ndef@example"
-        post :create, params
-        assigns(:verrors).each {|error| error.should match(/Members invalid email address/)}
-      end
-
-      it "Should render the new template with illegal email address" do
-        params = valid_organization_params
-        params[:organization][:members] = "abc\ndef@\n@example.com\nabc@.com\ndef@example"
-        post :create, params
-        response.should render_template :new
-      end
-
-    end # Invalid create examples
+    end
 
     describe "Authorization examples" do
       it "Return success for a organization owned by the user" do
@@ -493,13 +426,19 @@ describe OrganizationsController do
         post :create, valid_organization_params
         assigns(:organization).owner_id.should eq(@owner.id)
       end
+
+      it "Should redirect, if not logged in" do
+        sign_out @signed_in_user
+        post :create, valid_organization_params
+        response.should redirect_to new_user_session_url
+      end
     end # Create authorization examples
   end
 
   # UPDATE ACTION TESTS ------------------------------------------------
 
   describe "PUT update" do
-    let(:new_name) {"New Group Name"}
+    let(:new_name) {"New Organization Name"}
     let(:new_desc) {"New organization description"}
     let(:new_members) {"123@example.com\n456@example.com\n789@example.com\n"}
 
@@ -514,9 +453,9 @@ describe OrganizationsController do
       }
     }
 
-    describe "Valid update examples" do
+    describe "as a customer and organization owner" do
 
-      it "Should redirect to Group#show path" do
+      it "Should redirect to Organization#show path" do
         put :update, update_params
         response.should redirect_to organization_url(@organization)
       end
@@ -573,54 +512,55 @@ describe OrganizationsController do
         assigns(:organization).projects.count.should eq(project_ids.count)
       end
 
+      context "Invalid update examples" do
+        it "Should redirect to sign_in, if not logged in" do
+          sign_out @signed_in_user
+          put :update, update_params
+          response.should redirect_to new_user_session_url
+        end
+
+        it "Should redirect to admin_oops_url if user not found" do
+          params = update_params
+          params[:id] = '99999'
+          put :update, params
+          response.should redirect_to admin_oops_url
+        end
+
+        it "Should flash error message, if organization not found" do
+          params = update_params
+          params[:id] = '99999'
+          put :update, params
+          flash[:alert].should match(/We are unable to find the requested Organization/)
+        end
+
+        it "Should render the edit template, if organization could not save" do
+
+          # Setup a method stub for the organization method save
+          # to return nil, which indicates a failure to save the account
+          Organization.any_instance.stub(:update_attributes).and_return(nil)
+
+          post :update, update_params
+          response.should render_template :edit
+        end
+
+        it "Should generate error message with illegal email address" do
+          params = update_params
+          params[:organization][:members] = "abc\ndef@\n@example.com\nabc@.com\ndef@example"
+          post :update, params
+          assigns(:verrors).each {|error| error.should match(/Members invalid email address/)}
+        end
+
+        it "Should render the new template with illegal email address" do
+          params = update_params
+          params[:organization][:members] = "abc\ndef@\n@example.com\nabc@.com\ndef@example"
+          post :update, params
+          response.should render_template :edit
+        end
+
+      end
+
     end # Valid update examples
 
-    describe "Invalid update examples" do
-      it "Should redirect to sign_in, if not logged in" do
-        sign_out @signed_in_user
-        put :update, update_params
-        response.should redirect_to new_user_session_url
-      end
-
-      it "Should redirect to admin_oops_url if user not found" do
-        params = update_params
-        params[:id] = '99999'
-        put :update, params
-        response.should redirect_to admin_oops_url
-      end
-
-      it "Should flash error message, if organization not found" do
-        params = update_params
-        params[:id] = '99999'
-        put :update, params
-        flash[:alert].should match(/We are unable to find the requested Group/)
-      end
-
-      it "Should render the edit template, if organization could not save" do
-
-        # Setup a method stub for the organization method save
-        # to return nil, which indicates a failure to save the account
-        Group.any_instance.stub(:update_attributes).and_return(nil)
-
-        post :update, update_params
-        response.should render_template :edit
-      end
-
-      it "Should generate error message with illegal email address" do
-        params = update_params
-        params[:organization][:members] = "abc\ndef@\n@example.com\nabc@.com\ndef@example"
-        post :update, params
-        assigns(:verrors).each {|error| error.should match(/Members invalid email address/)}
-      end
-
-      it "Should render the new template with illegal email address" do
-        params = update_params
-        params[:organization][:members] = "abc\ndef@\n@example.com\nabc@.com\ndef@example"
-        post :update, params
-        response.should render_template :edit
-      end
-
-    end # Invalid update examples
 
     describe "Authorization examples" do
       let(:set_organization_owner) {
@@ -642,7 +582,7 @@ describe OrganizationsController do
         assigns(:organization).id.should eq(@organization.id)
       end
 
-      it "Group owner_id should match requested organization owner_id" do
+      it "Organization owner_id should match requested organization owner_id" do
         login_as_organization_owner
         set_organization_owner
         put :update, update_params
@@ -663,7 +603,7 @@ describe OrganizationsController do
         assigns(:organization).id.should eq(@organization.id)
       end
 
-      it "Group should have different owner than admin" do
+      it "Organization should have different owner than admin" do
         login_admin
         set_organization_owner
         put :update, update_params
@@ -701,29 +641,28 @@ describe OrganizationsController do
 
       it "Should display a success message" do
         delete :destroy, destroy_params
-        flash[:notice].should match(/Group was successfully deleted./)
+        flash[:notice].should match(/Organization was successfully deleted./)
       end
 
       it "Should delete account record" do
         expect{
           delete :destroy, destroy_params
-        }.to change(Group, :count).by(-1)
+        }.to change(Organization, :count).by(-1)
       end
 
       it "Should unrelate all organization resources" do
         # Associate resources to the organization
         project = FactoryGirl.create(:project, user: @signed_in_user)
-        @organization.send(Group::RESOURCE_CLASS.downcase.pluralize) << project
+        @organization.projects << project
 
-        resources = @organization.send(Group::RESOURCE_CLASS.downcase.pluralize)
-        rcount = resources.count
+        rcount = Project.count
         rcount.should_not eq(0)
 
         expect{
           delete :destroy, destroy_params
-        }.to_not change(Object.const_get(Group::RESOURCE_CLASS), :count).by(-1)
+        }.to_not change(Project, :count).by(-1)
 
-        Object.const_get(Group::RESOURCE_CLASS).count.should eq(rcount)
+        Project.count.should eq(rcount)
       end
     end # Valid examples
 
@@ -745,7 +684,7 @@ describe OrganizationsController do
         params = destroy_params
         params[:id] = '00999'
         delete :destroy, params
-        flash[:alert].should match(/We are unable to find the requested Group/)
+        flash[:alert].should match(/We are unable to find the requested Organization/)
       end
     end # Invalid examples
 
@@ -796,7 +735,7 @@ describe OrganizationsController do
       }
     }
 
-    describe "Valid examples" do
+    describe "as owner of the organization" do
       it "Should redirect to organization_url" do
         put :notify, notify_params
         response.should redirect_to organization_url(assigns(:organization))
@@ -817,51 +756,53 @@ describe OrganizationsController do
         put :notify, notify_params
         user.email.should match (/#{ActionMailer::Base.deliveries.last.to}/)
       end
+
+      describe "Invalid examples" do
+        it "Should redirect to sign_in, if not logged in" do
+          sign_out @signed_in_user
+          put :notify, notify_params
+          response.should redirect_to new_user_session_url
+        end
+
+        it "Should redirect to admin_oops_url if bad organization id" do
+          notify_params[:id] = '99999'
+          put :notify, notify_params
+          response.should redirect_to admin_oops_url
+        end
+
+        it "Should flash an alert message if bad organization id" do
+          notify_params[:id] = '99999'
+          put :notify, notify_params
+          flash[:alert].should match(/We are unable to find the requested Organization/)
+        end
+
+        it "Should redirect to admin_oops_url if bad user id" do
+          notify_params[:uid] = '99999'
+          put :notify, notify_params
+          response.should redirect_to admin_oops_url
+        end
+
+        it "Should flash an alert message if bad user id" do
+          notify_params[:uid] = '99999'
+          put :notify, notify_params
+          flash[:alert].should match(/We are unable to find the requested User/)
+        end
+
+        it "Should redirect to organization_url if invite fails" do
+          OrganizationsController.any_instance.stub(:invite_member).and_return(nil)
+          put :notify, notify_params
+          response.should redirect_to organization_url(@organization)
+        end
+
+        it "Should flash an alert to organization_url if invite fails" do
+          Organization.any_instance.stub(:invite_member).and_return(nil)
+          put :notify, notify_params
+          flash[:alert].should match(/Organization invite failed/)
+        end
+      end # Invalid examples
+
     end
 
-    describe "Invalid examples" do
-      it "Should redirect to sign_in, if not logged in" do
-        sign_out @signed_in_user
-        put :notify, notify_params
-        response.should redirect_to new_user_session_url
-      end
-
-      it "Should redirect to admin_oops_url if bad organization id" do
-        notify_params[:id] = '99999'
-        put :notify, notify_params
-        response.should redirect_to admin_oops_url
-      end
-
-      it "Should flash an alert message if bad organization id" do
-        notify_params[:id] = '99999'
-        put :notify, notify_params
-        flash[:alert].should match(/We are unable to find the requested Group/)
-      end
-
-      it "Should redirect to admin_oops_url if bad user id" do
-        notify_params[:uid] = '99999'
-        put :notify, notify_params
-        response.should redirect_to admin_oops_url
-      end
-
-      it "Should flash an alert message if bad user id" do
-        notify_params[:uid] = '99999'
-        put :notify, notify_params
-        flash[:alert].should match(/We are unable to find the requested User/)
-      end
-
-      it "Should redirect to organization_url if invite fails" do
-        GroupsController.any_instance.stub(:invite_member).and_return(nil)
-        put :notify, notify_params
-        response.should redirect_to organization_url(@organization)
-      end
-
-      it "Should flash an alert to organization_url if invite fails" do
-        Group.any_instance.stub(:invite_member).and_return(nil)
-        put :notify, notify_params
-        flash[:alert].should match(/Group invite failed/)
-      end
-    end # Invalid examples
 
     describe "Authorization examples" do
       it "Should redirect to organization_url, upon succesfull notification of owned organization" do
