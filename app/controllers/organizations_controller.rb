@@ -26,10 +26,17 @@ class OrganizationsController < ApplicationController
   # record is shown.
   ######################################################################
   def index
-    if current_user.organization
-      redirect_to current_user.organization
+    # Get page number
+    page = params[:page].nil? ? 1 : params[:page]
+
+    if current_user.admin?
+      @organizations = Organization.all.paginate(page: page, per_page: PAGE_COUNT)
     else
-      redirect_to new_organization_path
+      if current_user.organization
+        redirect_to current_user.organization
+      else
+        redirect_to new_organization_path
+      end
     end
   end
 
@@ -109,7 +116,7 @@ class OrganizationsController < ApplicationController
       @organization.relate_classes
 
       # Create and notify organization members of their inclusion into the organization
-       @organization.create_notify
+      @organization.create_notify
 
       redirect_to @organization, notice: 'Organization was successfully updated.'
     else
@@ -128,6 +135,7 @@ class OrganizationsController < ApplicationController
   # unrelate_resources might not be needed.
   ######################################################################
   def destroy
+    @organization.unrelate_classes
     @organization.destroy
     redirect_to organizations_url, notice: "Organization was successfully deleted."
   end
@@ -142,7 +150,6 @@ class OrganizationsController < ApplicationController
   ######################################################################
   def notify
     @user = @organization.users.find(params[:uid])
-
     if @organization.invite_member(@user)
       flash[:notice] = "Organization invite resent to #{@user.email}."
     else

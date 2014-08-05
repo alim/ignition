@@ -9,9 +9,9 @@ shared_context 'organization_setup' do
 		User.all.each {|user| @organization.users << user}
 	}
 
-	# Multiple organizations, but no users
-	let(:multiple_organizations) {
-	  5.times.each { FactoryGirl.create(:organization, owner:  FactoryGirl.create(:user_with_account)) }
+	let(:multiple_organizations){
+		5.times.each { FactoryGirl.create(:organization,
+			owner: FactoryGirl.create(:user)
+		)}
 	}
-
 end

@@ -1,9 +1,6 @@
 <%- model_class = Organization -%>
-<%= render 'shared/page_header', flash: flash, title: 'Organzation', description:
-    "Organizations enable you to grant access to service resources based
-    on defined organizations of users. The table below will show both the
-    organizations to which you belong and organizations that you own. You only have the
-    ability to edit and delete organizations that you own." %>
+<%= render 'shared/page_header', flash: flash, title: 'Organzation - Admin. View', description:
+    "All organizations in the system are shown below." %>
 
 <div class='row'>
   <div class='12-small columns'>
@@ -25,7 +22,7 @@
     		      <td><%= get_owner_email(organization) %></td>
 
     		      <td>
-    		      	<% if organization.owner_id == current_user.id %>
+    		      	<% if current_user.admin? %>
     					    <%= link_to t('.edit', default: t("helpers.links.edit")),
     					                edit_organization_path(organization), class: 'intable-success-button' %>
     					    <%= link_to t('.destroy', default: t("helpers.links.destroy")),
