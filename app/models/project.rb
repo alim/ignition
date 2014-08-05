@@ -19,9 +19,6 @@ class Project
   # Add call to strip leading and trailing white spaces from all atributes
   strip_attributes  # See strip_attributes for more information
 
-  # Shared class methods for restricted searching
-  extend SharedClassMethods
-
   ## ATTRIBUTES -------------------------------------------------------
 
   field :name, type: String
