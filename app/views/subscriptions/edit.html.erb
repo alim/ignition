@@ -1,4 +1,6 @@
-<div class="page-header">
+<div class="row">
+<div class="Large-12 columns">
+  <h1></h1>
   <h1>Change Subscription Plan</h1>
   <p>
     On this page you have the option to change your subscription plan
@@ -6,13 +8,13 @@
     are shown below, as well as, the plan you currently have.
   </p>
   <dl class="dl-horizontal">
-    <dt><strong>Current Plan:</strong></dt>
-    <dd><%= @subscription.plan_str.capitalize %></dd>
+  <dd id="plan_entries"><strong>Current Plan: </strong><%= @subscription.plan_str.capitalize %></dd>
+    <!--<dd id="plan_entries"><%= @subscription.plan_str.capitalize %></dd> -->
   </dl>
-
+</div>
+</div>
 </div>
 
 <%= render partial: 'plan_options' %>
-
 
 <%= render 'form' %>

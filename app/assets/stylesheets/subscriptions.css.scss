@@ -1,3 +1,45 @@
 // Place all the styles related to the Subscriptions controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+tr.column_header th {
+	   font-style: Arial;
+	   font-size: 15px;
+	   background-color: #FFCC66;
+	   text-align: center;
+}
+
+tr.row_entry td {
+        font-style: Verdana;
+        font-size: 12px;
+        text-align: center;
+}
+td#column_entry {
+        text-decoration: underline;
+        color: red;
+}
+
+dd#plan_entries {
+	font-style: Arial;
+    font-size: 17px;
+}
+
+div#background_color {
+	background-color: white;
+}
+
+div#silver_color {
+	background-color: silver;
+}
+
+div#gold_color {
+	background-color: #E1A66A;
+}
+
+div#bronze_color {
+	background-color: #FF8D47;
+}
+
+div#beige_color {
+	background-color: #FFFFCC;
+}
