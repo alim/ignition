@@ -2,7 +2,7 @@
 # The Subcription model holds information about a subscription plan
 # that will be created on the Stripe.com service. The model includes
 # enhancements for timestamps and white space stripping.
-######################################################################## 
+########################################################################
 class Subscription
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -205,28 +205,27 @@ protected
 
   ######################################################################
   ######################################################################
-def is_valid(params)
+#def is_valid(params)
 
-  subscription_valid = true
+ # subscription_valid = true
 
-   if params[:cardholder_name].blank?
-      errors[:cardholder_name] << "Cardholder name cannot be blank." 
-      subscription_vaild = false
-   end
+ #  if params[:cardholder_name].blank?
+ #     errors[:cardholder_name] << "Cardholder name cannot be blank." 
+ #     subscription_vaild = false
+ # end
 
-   if params[:plan_id].blank?
-      errors[:plan_id] << "Plan ID cannot be blank."
-      subscription_valid = false
-   end
+ # if params[:plan_id].blank?
+ #     errors[:plan_id] << "Plan ID cannot be blank."
+ #     subscription_valid = false
+ #  end
 
-   if params[:stripe_cc_token].blank?
-      errors[:base] << "Could not get a valid response from Stripe.com"
-      subscription_valid = false
-   end
+ #  if params[:stripe_cc_token].blank?
+ #     errors[:base] << "Could not get a valid response from Stripe.com"
+ #     subscription_valid = false
+ # end
 
-   return account_valid
-end
-
+ #  return account_valid
+ # end
 def logger_debugger(errors, stripe_error, customer_id, description)
   logger.debug(description)
   errors[:customer_id] << stripe_error.message
