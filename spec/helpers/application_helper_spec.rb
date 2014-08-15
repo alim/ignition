@@ -7,8 +7,8 @@ describe ApplicationHelper do
       helper.active(admin_path).should == "class=active"
     end
 
-    it "if group path and settings selected, should return active" do
-      helper.request.path = groups_path
+    it "if organization path and settings selected, should return active" do
+      helper.request.path = organizations_path
       helper.active('/settings').should == "class=active"
     end
 

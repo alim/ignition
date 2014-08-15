@@ -91,6 +91,10 @@ class User
   has_many :projects, dependent: :destroy  # Example primary resource
 
 
+  ## DELEGATIONS ------------------------------------------------------
+
+  delegate :name, :description, to: :organization, prefix: true
+
   ## QUERY SCOPES ------------------------------------------------------
 
   scope :by_email, ->(email){ where(email: /^.*#{email}.*/i) }
