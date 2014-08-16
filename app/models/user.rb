@@ -80,7 +80,9 @@ class User
 
   ## RELATIONSHIPS -----------------------------------------------------
 
-  has_and_belongs_to_many :groups, dependent: :destroy
+  belongs_to :organization, inverse_of: :users
+  has_one :owns, class_name: 'Organization', inverse_of: :owns, dependent: :destroy
+
   has_many :subscriptions, dependent: :destroy
   embeds_one :account
 
@@ -88,6 +90,10 @@ class User
 
   has_many :projects, dependent: :destroy  # Example primary resource
 
+
+  ## DELEGATIONS ------------------------------------------------------
+
+  delegate :name, :description, to: :organization, prefix: true
 
   ## QUERY SCOPES ------------------------------------------------------
 
@@ -111,6 +117,20 @@ class User
     else
       "Unknown"
     end
+  end
+
+  #####################################################################
+  # Returns true or false if user has admin role.
+  #####################################################################
+  def admin?
+    role == SERVICE_ADMIN
+  end
+
+  #####################################################################
+  # Returns true or false if user has customer role.
+  #####################################################################
+  def customer?
+    role == CUSTOMER
   end
 
   ## PUBLIC CLASS METHODS ----------------------------------------------

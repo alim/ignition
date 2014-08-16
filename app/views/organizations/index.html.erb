@@ -1,0 +1,58 @@
+<%- model_class = Organization -%>
+<%= render 'shared/page_header', flash: flash, title: 'Organzation - Admin. View', description:
+    "All organizations in the system are shown below." %>
+
+<div class='row'>
+  <div class='12-small columns'>
+    <% if @organizations.present? %>
+    	<table class="full-width">
+    		<thead>
+    		  <tr>
+    		    <th width="20%">Name</th>
+    		    <th width="40%">Description</th>
+    		    <th width="20%">Owner</th>
+    		    <th width="20%"><%=t '.actions', :default => t("helpers.actions") %></th>
+    		  </tr>
+    		</thead>
+    		<tbody>
+    		  <% @organizations.each do |organization| %>
+    		    <tr>
+    		      <td><%= link_to organization.name, organization_path(organization) %></td>
+    		      <td><%= organization.description.html_safe %></td>
+    		      <td><%= get_owner_email(organization) %></td>
+
+    		      <td>
+    		      	<% if current_user.admin? %>
+    					    <%= link_to t('.edit', default: t("helpers.links.edit")),
+    					                edit_organization_path(organization), class: 'intable-success-button' %>
+    					    <%= link_to t('.destroy', default: t("helpers.links.destroy")),
+    					                organization_path(organization),
+    					                method: :delete,
+    					                data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
+    					                class: 'intable-delete-button' %>
+    		        <% else %>
+    		        	No actions allowed
+    		        <% end %>
+    		      </td>
+    		    </tr>
+    		  <% end %>
+    		</tbody>
+    	</table>
+    <% else %>
+    	<p>
+    		No organizations have been created yet. Click on the <strong>New</strong>
+    		button below to create your first one.
+    	</p>
+    <% end %>
+  </div>
+</div>
+<div class='digg_pagination'>
+  <%= will_paginate @organizations %>
+</div>
+
+<div class='form-actions'>
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_organization_path,
+            :class => 'success-button' %>
+</div>
+
