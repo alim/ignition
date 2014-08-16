@@ -8,17 +8,16 @@
 </p>
 
 <div class="panel">
-<div class="row">
-
- <div class="large-4 column">
- <%= form_for @subscription, html: {class: 'form-horizontal'} do |f| %>
-  <div class="control-group">
-    <label class='control-label'>Subscription Plan</label>
-    <div class="controls">
-      <%= f.select(:stripe_plan_id, subscription_plans) %>
+  <div class="row">
+   <div class="large-4 column">
+   <%= form_for @subscription, html: {class: 'form-horizontal'} do |f| %>
+    <div class="control-group">
+      <label class='control-label'>Subscription Plan</label>
+      <div class="controls">
+        <%= f.select(:stripe_plan_id, subscription_plans) %>
+      </div>
     </div>
   </div>
- </div>
 </div>
 
 <div class="row">
