@@ -129,9 +129,30 @@ describe Project do
           a_project.relate_to_organization
           a_project.organization.should == org
         end
-
       end
     end
-
 	end
+
+  describe "#create_with_user" do
+    let(:new_user){ FactoryGirl.create(:user) }
+
+    let(:project_params) do
+      {
+        name: 'some name',
+        description: 'some description',
+      }
+    end
+
+    it "should create a new project" do
+      expect {
+        Project.create_with_user(project_params, new_user).save
+      }.to change(Project, :count).by(1)
+    end
+
+    it "should relate the project to the correct user" do
+      project = Project.create_with_user(project_params, new_user)
+      project.user.should == new_user
+    end
+  end
+
 end

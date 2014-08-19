@@ -16,7 +16,7 @@ class Project
   # Scope definitions for organizational based queries
   include Organizational
 
-  # Add call to strip leading and trailing white spaces from all atributes
+  # Add call to strip leading and trailing white spaces from all attributes
   strip_attributes  # See strip_attributes for more information
 
   ## ATTRIBUTES -------------------------------------------------------
@@ -36,5 +36,21 @@ class Project
   belongs_to :organization
   has_mongoid_attached_file :charter_doc
   do_not_validate_attachment_file_type :charter_doc
+
+  ## DELEGATIONS ------------------------------------------------------
+
+  delegate :first_name, :last_name, to: :user, prefix: true
+  delegate :name, to: :organization, prefix: true
+
+  ## PUBLIC METHODS ---------------------------------------------------
+
+  #####################################################################
+  # Create a new project and relate the user record to it.
+  #####################################################################
+  def self.create_with_user(project_params, user)
+     project = Project.new(project_params)
+     project.user = user
+     project
+  end
 
 end

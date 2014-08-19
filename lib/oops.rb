@@ -3,7 +3,7 @@
 # to an error page. The module can be used as a mixin by including it
 # in the appropriate controllers. The module makes a couple of
 # routing assumptions. They include:
-# 
+#
 # * home_oops_url - is the path to the public facing error page.
 # * admin_oops_url - is the path to the private facing error page.
 #
@@ -29,22 +29,22 @@ module Oops
 			msg = args[:message]
 			target = args[:target]
 			resource = args[:resource]
-			
+
 			respond_to do |format|
 				if target == ADMIN
 					format.html { redirect_to admin_oops_url, alert: msg }
 				else
 					format.html { redirect_to home_oops_url, alert: msg }
 				end
-				
-		  	format.json { render json: resource.errors, 
+
+		  	format.json { render json: resource.errors,
 		  		status: :unprocessable_entity } if resource.present?
 		  end
     else
     	return nil
     end
   end
-  
+
   ######################################################################
   # The display_error method will display an error message to an error
   # page. It takes a hash as an argument, that includes:
@@ -57,21 +57,21 @@ module Oops
 			msg = args[:message]
 			target = args[:target]
 			resource = args[:resource]
-			
+
 			respond_to do |format|
 				flash[:error] = msg
-				
+
 				if target == ADMIN
 					format.html { redirect_to admin_oops_url }
 				else
 					format.html { redirect_to home_oops_url, alert: msg }
 				end
-				
-		  	format.json { render json: @group.errors, 
+
+		  	format.json { render json: @group.errors,
 		  		status: :unprocessable_entity } if resource.present?
 		  end
     else
     	return nil
-    end		  
+    end
   end
 end

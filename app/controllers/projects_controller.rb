@@ -79,8 +79,7 @@ class ProjectsController < ApplicationController
   # groups that the user selected.
   ######################################################################
   def create
-    @project = Project.new(project_params)
-    @project.user = current_user
+    @project = Project.create_with_user(project_params, current_user)
 
     if @project.save
       @project.relate_to_organization
