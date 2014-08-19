@@ -13,5 +13,4 @@ module SubscriptionsHelper
     end
     return plans
   end
-  
 end
