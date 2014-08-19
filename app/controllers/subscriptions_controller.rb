@@ -97,7 +97,7 @@ class SubscriptionsController < ApplicationController
         format.json { render action: 'show', status: :created, location: @subscription }
       else
         @verrors = @subscription.errors.full_messages
-        format.html { render action: 'new' }
+        format.html { render 'new' }
         format.json { render json: @subscription.errors, status: :unprocessable_entity }
       end
     end
@@ -117,7 +117,7 @@ class SubscriptionsController < ApplicationController
         format.json { head :no_content }
       else
         @verrors =  @subscription.errors.full_messages
-        format.html { render action: 'edit' }
+        format.html { render 'edit' }
         format.json { render json: @subscription.errors, status: :unprocessable_entity }
       end
     end
