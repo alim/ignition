@@ -230,4 +230,11 @@ def logger_debugger(errors, stripe_error, customer_id, description)
   logger.debug(description)
   errors[:customer_id] << stripe_error.message
 end
+
+def sub_create(current_user, stripe_pl_id, coupon)
+  current_user.subscriptions << @self.subscription
+
+  @self.subscribe(current_user.account, stripe_pl_id, coupon)
+end
+
 end
