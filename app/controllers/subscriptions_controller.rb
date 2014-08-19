@@ -81,9 +81,8 @@ class SubscriptionsController < ApplicationController
   ######################################################################
   def create
     @subscription = Subscription.new(subscription_params)
-    current_user.subscriptions << @subscription
 
-    @subscription.subscribe(current_user.account, subscription_params[:stripe_plan_id], subscription_params[:coupon_code])
+    @subscription.sub_create(current_user,subscription_params[:stripe_plan_id],subscription_params[:coupon_code])
 
     # Create a subscription with the following information:
     #
