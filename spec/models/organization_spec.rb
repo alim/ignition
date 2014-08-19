@@ -253,7 +253,6 @@ describe Organization do
 
   # RELATE CLASSES ----------------------------------------------------
   describe "#describe_classes" do
-    let(:organization) { Organization.first }
     before(:each) {
       projects_with_users
       single_organization_with_users
@@ -262,11 +261,11 @@ describe Organization do
     it "should set the organization of managed projects" do
       Project.all.each do |project|
         project.organization.should be_nil
-        project.user_id.should == organization.owner_id
+        project.user_id.should == @organization.owner_id
       end
-      organization.relate_classes
-      organization.projects.count.should > 0
-      Project.all.each { |project| project.organization.should == organization }
+      @organization.relate_classes
+      @organization.projects.count.should > 0
+      Project.all.each { |project| project.organization.should == @organization }
     end
 
     it "should not relate projects not created by organization owner" do
@@ -277,8 +276,8 @@ describe Organization do
         project.save
       end
 
-      organization.relate_classes
-      organization.projects.count.should == 0
+      @organization.relate_classes
+      @organization.projects.count.should == 0
     end
 
   end
@@ -286,7 +285,6 @@ describe Organization do
   ## MANAGE CLASSES ---------------------------------------------------
 
   describe "#managed_classes" do
-    let(:organization) { Organization.first }
     before(:each) {
       projects_with_users
       single_organization_with_users
@@ -294,13 +292,13 @@ describe Organization do
 
     it "should find all instances of a related class" do
       Project.all.each do |project|
-        project.organization = organization
+        project.organization = @organization
         project.save
       end
 
-      mclasses = organization.managed_classes
+      mclasses = @organization.managed_classes
       mclasses[:project].each do |project|
-        project.organization.should == organization
+        project.organization.should == @organization
       end
     end
 
@@ -309,11 +307,10 @@ describe Organization do
   ## UNRELATE CLASSES -------------------------------------------------
 
   describe "#unrelate_classes" do
-    let(:organization) { Organization.first }
     let(:setup_projects) {
       Project.all.each do |project|
         project.organization.should be_nil
-        project.user_id.should == organization.owner_id
+        project.user_id.should == @organization.owner_id
       end
     }
     before(:each) {
@@ -323,11 +320,11 @@ describe Organization do
 
     it "should un-relate project classes" do
       setup_projects
-      organization.relate_classes
-      organization.projects.count.should > 0
-      Project.all.each { |project| project.organization.should == organization }
-      organization.unrelate_classes
-      organization.projects.count.should == 0
+      @organization.relate_classes
+      @organization.projects.count.should > 0
+      Project.all.each { |project| project.organization.should == @organization }
+      @organization.unrelate_classes
+      @organization.projects.count.should == 0
       Project.count.should > 0
     end
   end
