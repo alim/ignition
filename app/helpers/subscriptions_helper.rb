@@ -3,7 +3,7 @@ module SubscriptionsHelper
   ######################################################################
   # The subscription_plans is a view helper to list the available
   # subscriptions that are configured into the Subscription model
-  # class. It is important that the Subsscription model class is 
+  # class. It is important that the Subsscription model class is
   # synchronized with the online subscription plans on Stripe.com
   ######################################################################
   def subscription_plans

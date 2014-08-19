@@ -12,34 +12,34 @@
   <dd id="plan_entries"><strong>Plan Name: </strong><%= @subscription.plan_str %></dd>
   
   <dd id="plan_entries"><strong>Plan Start: </strong><%= @subscription.sub_start.to_date.to_formatted_s(:long) %></dd>
- 
-  <% if @subscription.sub_end.present? %>
+  
+  <% if @subscription.sub_end? %>
     <dd id="plan_entries"><strong>Plan Start: </strong>%= @subscription.sub_end.to_date.to_formatted_s(:long) %></dd>
   <% end %>
   
   <dd id="plan_entries"><strong>Plan status: </strong><%= @subscription.status.capitalize %></dd>
   
-  <% if @subscription.trial_start.present? %>
+  <% if @subscription.trial_start? %>
     <dd id="plan_entries"><strong>Trial Period Start: </strong><%= @subscription.trial_start.to_date.to_formatted_s(:long) %></dd>   
   <% else %>
     <dd id="plan_entries"><strong>Trial Period Start: </strong>No trial period found.</dd>
   <% end %>
   
-  <% if @subscription.trial_end.present? %>
+  <% if @subscription.trial_end? %>
     <dd id+"plan_entries"><strong>Trial Period End: </strong><%= @subscription.trial_end.to_date.to_formatted_s(:long) %></dd> 
   <% else %>
     <dd id="plan_entries"><strong>Trial Period End: </strong>No trial period found</dd>
   <% end %>
   
-  <% if @subscription.current_period_start.present? %>
+  <% if @subscription.current_period_start? %>
     <dd id="plan_entries"> <strong>Billing Period Start: </strong><%= @subscription.current_period_start.to_date.to_formatted_s(:long) %></dd>
   <% end %>
 
-  <% if @subscription.current_period_end.present? %>
+  <% if @subscription.current_period_end? %>
     <dd id="plan_entries"> <strong>Billing Period End: </strong><%= @subscription.current_period_end.to_date.to_formatted_s(:long) %></dd>
   <% end %>
   
-  <% if @subscription.canceled_at.present? %>
+  <% if @subscription.canceled_at? %>
     <dd id="plan_entries"><strong>Canceled on: </strong><%= @subscription.canceled_at.to_date.to_formatted_s(:long) %></dd>
   <% end %>
   
