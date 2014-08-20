@@ -281,7 +281,6 @@ describe Organization do
     let(:setup_projects) {
       Project.all.each do |project|
         project.organization.should be_nil
-        project.user_id.should == @organization.owner_id
       end
     }
     before(:each) {
