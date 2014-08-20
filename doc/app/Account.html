@@ -2,70 +2,71 @@
 
 <html>
 <head>
-<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta charset="utf-8">
 
 <title>class Account - Rails Application Documentation</title>
 
-<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+<link href="./fonts.css" rel="stylesheet">
+<link href="./rdoc.css" rel="stylesheet">
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
 </script>
 
-<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+<script src="./js/jquery.js"></script>
+<script src="./js/navigation.js"></script>
+<script src="./js/search_index.js"></script>
+<script src="./js/search.js"></script>
+<script src="./js/searcher.js"></script>
+<script src="./js/darkfish.js"></script>
 
 
-<body id="top" class="class">
-<nav id="metadata">
-  <nav id="home-section" class="section">
-  <h3 class="section-header">
-    <a href="./index.html">Home</a>
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
     <a href="./table_of_contents.html#classes">Classes</a>
     <a href="./table_of_contents.html#methods">Methods</a>
-  </h3>
-</nav>
-
-
-  <nav id="search-section" class="section project-section" class="initially-hidden">
-  <form action="#" method="get" accept-charset="utf-8">
-    <h3 class="section-header">
-      <input type="text" name="search" placeholder="Search" id="search-field"
-             title="Type to search, Up and Down to navigate, Enter to load">
-    </h3>
-  </form>
-
-  <ul id="search-results" class="initially-hidden"></ul>
-</nav>
-
-
-  <div id="file-metadata">
-    <nav id="file-list-section" class="section">
-  <h3 class="section-header">Defined In</h3>
-  <ul>
-    <li>app/models/account.rb
-  </ul>
-</nav>
-
-    
   </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
 
   <div id="class-metadata">
     
-    <nav id="parent-class-section" class="section">
-  <h3 class="section-header">Parent</h3>
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
   
   <p class="link">Object
   
-</nav>
+</div>
 
-    <!-- Included Modules -->
-<nav id="includes-section" class="section">
-  <h3 class="section-header">Included Modules</h3>
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
 
   <ul class="link-list">
   
@@ -78,128 +79,50 @@
   
   
   </ul>
-</nav>
+</div>
 
+    
     <!-- Method Quickref -->
-<nav id="method-list-section" class="section">
-  <h3 class="section-header">Methods</h3>
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
 
-  <ul class="link-list">
+  <ul class="link-list" role="directory">
     
-    <li><a href="#method-i-destroy">#destroy</a>
+    <li class="calls-super" ><a href="#method-i-destroy">#destroy</a>
     
-    <li><a href="#method-i-get_customer">#get_customer</a>
+    <li ><a href="#method-i-get_customer">#get_customer</a>
     
-    <li><a href="#method-i-get_default_card">#get_default_card</a>
+    <li ><a href="#method-i-get_default_card">#get_default_card</a>
     
-    <li><a href="#method-i-is_valid">#is_valid</a>
+    <li ><a href="#method-i-is_valid">#is_valid</a>
     
-    <li><a href="#method-i-load_customer_info">#load_customer_info</a>
+    <li ><a href="#method-i-load_customer_info">#load_customer_info</a>
     
-    <li><a href="#method-i-save_with_stripe">#save_with_stripe</a>
+    <li ><a href="#method-i-save_with_stripe">#save_with_stripe</a>
     
-    <li><a href="#method-i-status_str">#status_str</a>
+    <li ><a href="#method-i-status_str">#status_str</a>
     
-    <li><a href="#method-i-update_with_stripe">#update_with_stripe</a>
+    <li ><a href="#method-i-update_with_stripe">#update_with_stripe</a>
     
   </ul>
-</nav>
-
-  </div>
-
-  <div id="project-metadata">
-    <nav id="fileindex-section" class="section project-section">
-  <h3 class="section-header">Pages</h3>
-
-  <ul>
-  
-    <li class="file"><a href="./README_rdoc.html">README</a>
-  
-  </ul>
-</nav>
-
-    <nav id="classindex-section" class="section project-section">
-  <h3 class="section-header">Class and Module Index</h3>
-
-  <ul class="link-list">
-  
-    <li><a href="./Ability.html">Ability</a>
-  
-    <li><a href="./Account.html">Account</a>
-  
-    <li><a href="./AccountsController.html">AccountsController</a>
-  
-    <li><a href="./AccountsHelper.html">AccountsHelper</a>
-  
-    <li><a href="./AdminController.html">AdminController</a>
-  
-    <li><a href="./AdminHelper.html">AdminHelper</a>
-  
-    <li><a href="./ApplicationController.html">ApplicationController</a>
-  
-    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
-  
-    <li><a href="./Contact.html">Contact</a>
-  
-    <li><a href="./ContactMailer.html">ContactMailer</a>
-  
-    <li><a href="./Group.html">Group</a>
-  
-    <li><a href="./GroupMailer.html">GroupMailer</a>
-  
-    <li><a href="./GroupRelations.html">GroupRelations</a>
-  
-    <li><a href="./GroupsController.html">GroupsController</a>
-  
-    <li><a href="./GroupsHelper.html">GroupsHelper</a>
-  
-    <li><a href="./HomeController.html">HomeController</a>
-  
-    <li><a href="./HomeHelper.html">HomeHelper</a>
-  
-    <li><a href="./Oops.html">Oops</a>
-  
-    <li><a href="./Project.html">Project</a>
-  
-    <li><a href="./ProjectsController.html">ProjectsController</a>
-  
-    <li><a href="./ProjectsHelper.html">ProjectsHelper</a>
-  
-    <li><a href="./SharedClassMethods.html">SharedClassMethods</a>
-  
-    <li><a href="./SharedInstanceMethods.html">SharedInstanceMethods</a>
-  
-    <li><a href="./Subscription.html">Subscription</a>
-  
-    <li><a href="./SubscriptionsController.html">SubscriptionsController</a>
-  
-    <li><a href="./SubscriptionsHelper.html">SubscriptionsHelper</a>
-  
-    <li><a href="./User.html">User</a>
-  
-    <li><a href="./UserMailer.html">UserMailer</a>
-  
-    <li><a href="./UsersController.html">UsersController</a>
-  
-    <li><a href="./UsersHelper.html">UsersHelper</a>
-  
-  </ul>
-</nav>
+</div>
 
   </div>
 </nav>
 
-<div id="documentation">
-  <h1 class="class">class Account</h1>
+<main role="main" aria-labelledby="class-Account">
+  <h1 id="class-Account" class="class">
+    class Account
+  </h1>
 
-  <div id="description" class="description">
+  <section class="description">
     
 <p>The <a href="Account.html">Account</a> model is used to store the
 Stripe.com customer_id and the current status of the account. The model is
 also responsible for interfacing with the Stripe.com service to store,
 retrieve and update the customer information stored there.</p>
 
-  </div><!-- description -->
+  </section>
 
   
   
@@ -210,19 +133,20 @@ retrieve and update the customer information stored there.</p>
     
 
     
-    <!-- Constants -->
-    <section id="constants-list" class="section">
-      <h3 class="section-header">Constants</h3>
+    <section class="constants-list">
+      <header>
+        <h3>Constants</h3>
+      </header>
       <dl>
       
         <dt id="ACCOUNT_NAME">ACCOUNT_NAME
         
-        <dd class="description"><p>STRIPE ACCOUNT DESCRIPTION</p>
+        <dd><p>STRIPE ACCOUNT DESCRIPTION</p>
         
       
         <dt id="ACTIVE">ACTIVE
         
-        <dd class="description"><p><a href="Account.html#ACTIVE">ACTIVE</a> - <a
+        <dd><p><a href="Account.html#ACTIVE">ACTIVE</a> - <a
 href="Account.html">Account</a> has been setup, the credit card has been <a
 href="Account.html#ACTIVE">ACTIVE</a> and the customer identifier has been
 retrieved from Stripe.com</p>
@@ -230,27 +154,27 @@ retrieved from Stripe.com</p>
       
         <dt id="CLOSED">CLOSED
         
-        <dd class="description"><p><a href="Account.html#CLOSED">CLOSED</a> - The account has been closed is
+        <dd><p><a href="Account.html#CLOSED">CLOSED</a> - The account has been closed is
 no longer active.</p>
         
       
         <dt id="INACTIVE">INACTIVE
         
-        <dd class="description"><p><a href="Account.html#INACTIVE">INACTIVE</a> - The account's charge card is
+        <dd><p><a href="Account.html#INACTIVE">INACTIVE</a> - The account's charge card is
 not valid any longer, so the account has been moved to an <a
 href="Account.html#INACTIVE">INACTIVE</a> state.</p>
         
       
         <dt id="NO_STRIPE">NO_STRIPE
         
-        <dd class="description"><p><a href="Account.html#NO_STRIPE">NO_STRIPE</a> - The stripe account record
+        <dd><p><a href="Account.html#NO_STRIPE">NO_STRIPE</a> - The stripe account record
 was deleted and there is no longer a stripe stored credit card associated
 with the account.</p>
         
       
         <dt id="UNKNOWN">UNKNOWN
         
-        <dd class="description"><p><a href="Account.html#UNKNOWN">UNKNOWN</a> - is the default starting status</p>
+        <dd><p><a href="Account.html#UNKNOWN">UNKNOWN</a> - is the default starting status</p>
         
       
       </dl>
@@ -258,9 +182,10 @@ with the account.</p>
     
 
     
-    <!-- Attributes -->
-    <section id="attribute-method-details" class="method-section section">
-      <h3 class="section-header">Attributes</h3>
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
 
       
       <div id="attribute-i-card_type" class="method-detail">
@@ -344,13 +269,14 @@ card data in memory, but not in the database.</p>
         </div>
       </div>
       
-    </section><!-- attribute-method-details -->
+    </section>
     
 
-    <!-- Methods -->
     
-     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
-      <h3 class="section-header">Public Instance Methods</h3>
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
 
     
       <div id="method-i-destroy" class="method-detail ">
@@ -358,7 +284,9 @@ card data in memory, but not in the database.</p>
         <div class="method-heading">
           <span class="method-name">destroy</span><span
             class="method-args">()</span>
+          
           <span class="method-click-advice">click to toggle source</span>
+          
         </div>
         
 
@@ -367,6 +295,12 @@ card data in memory, but not in the database.</p>
           <p>The destory method overides the standard destory method for ActiveModel.
 This version will delete Stripe.com customer account associated with the
 stored customer_id.</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              
+            </div>
           
 
           
@@ -391,14 +325,14 @@ stored customer_id.</p>
 
    <span class="ruby-keyword">super</span>()
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- destroy-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- destroy-method -->
+      </div>
 
     
       <div id="method-i-get_customer" class="method-detail ">
@@ -406,7 +340,9 @@ stored customer_id.</p>
         <div class="method-heading">
           <span class="method-name">get_customer</span><span
             class="method-args">()</span>
+          
           <span class="method-click-advice">click to toggle source</span>
+          
         </div>
         
 
@@ -429,6 +365,7 @@ in-memory instance variables for:</p>
 <p>sets the account status to <a href="Account.html#INACTIVE">INACTIVE</a> if
 the card is deliquent</p>
 </li></ul>
+          
           
 
           
@@ -461,14 +398,14 @@ the card is deliquent</p>
     <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
    <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- get_customer-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- get_customer-method -->
+      </div>
 
     
       <div id="method-i-save_with_stripe" class="method-detail ">
@@ -476,7 +413,9 @@ the card is deliquent</p>
         <div class="method-heading">
           <span class="method-name">save_with_stripe</span><span
             class="method-args">(params)</span>
+          
           <span class="method-click-advice">click to toggle source</span>
+          
         </div>
         
 
@@ -496,6 +435,7 @@ update methods. This params hash should include:</p>
 </li><li>
 <p><a href="Account.html#attribute-i-cardholder_email">#cardholder_email</a></p>
 </li></ul>
+          
           
 
           
@@ -532,14 +472,14 @@ update methods. This params hash should include:</p>
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">account_valid</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- save_with_stripe-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- save_with_stripe-method -->
+      </div>
 
     
       <div id="method-i-status_str" class="method-detail ">
@@ -547,7 +487,9 @@ update methods. This params hash should include:</p>
         <div class="method-heading">
           <span class="method-name">status_str</span><span
             class="method-args">()</span>
+          
           <span class="method-click-advice">click to toggle source</span>
+          
         </div>
         
 
@@ -555,6 +497,7 @@ update methods. This params hash should include:</p>
           
           <p>The <a href="Account.html#method-i-status_str">#status_str</a> method
 returns the account status in string format</p>
+          
           
 
           
@@ -574,14 +517,14 @@ returns the account status in string format</p>
     <span class="ruby-string">&quot;Unknown&quot;</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- status_str-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- status_str-method -->
+      </div>
 
     
       <div id="method-i-update_with_stripe" class="method-detail ">
@@ -589,7 +532,9 @@ returns the account status in string format</p>
         <div class="method-heading">
           <span class="method-name">update_with_stripe</span><span
             class="method-args">(params)</span>
+          
           <span class="method-click-advice">click to toggle source</span>
+          
         </div>
         
 
@@ -604,6 +549,7 @@ saved since it is only useful for one transaction.</p>
 href="Account.html#method-i-update_with_stripe">#update_with_stripe</a>
 method takes the standard params hash that is passed to the create and
 update methods.</p>
+          
           
 
           
@@ -645,20 +591,22 @@ update methods.</p>
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">account_valid</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- update_with_stripe-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- update_with_stripe-method -->
+      </div>
 
     
-    </section><!-- public-instance-method-details -->
+    </section>
   
-     <section id="protected-instance-5Buntitled-5D-method-details" class="method-section section">
-      <h3 class="section-header">Protected Instance Methods</h3>
+     <section id="protected-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Protected Instance Methods</h3>
+       </header>
 
     
       <div id="method-i-get_default_card" class="method-detail ">
@@ -666,7 +614,9 @@ update methods.</p>
         <div class="method-heading">
           <span class="method-name">get_default_card</span><span
             class="method-args">(customer)</span>
+          
           <span class="method-click-advice">click to toggle source</span>
+          
         </div>
         
 
@@ -675,6 +625,7 @@ update methods.</p>
           <p>The <a href="Account.html#method-i-get_default_card">#get_default_card</a>
 is a method that will return the default card associated with a customer
 account.</p>
+          
           
 
           
@@ -691,14 +642,14 @@ account.</p>
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">default_card</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- get_default_card-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- get_default_card-method -->
+      </div>
 
     
       <div id="method-i-is_valid" class="method-detail ">
@@ -706,7 +657,9 @@ account.</p>
         <div class="method-heading">
           <span class="method-name">is_valid</span><span
             class="method-args">(params)</span>
+          
           <span class="method-click-advice">click to toggle source</span>
+          
         </div>
         
 
@@ -719,6 +672,7 @@ href="Account.html#attribute-i-cardholder_email">#cardholder_email</a>, and
 that the <a
 href="Account.html#attribute-i-stripe_cc_token">#stripe_cc_token</a> was
 returned from the Stipe.com service.</p>
+          
           
 
           
@@ -744,14 +698,14 @@ returned from the Stipe.com service.</p>
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">account_valid</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- is_valid-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- is_valid-method -->
+      </div>
 
     
       <div id="method-i-load_customer_info" class="method-detail ">
@@ -759,7 +713,9 @@ returned from the Stipe.com service.</p>
         <div class="method-heading">
           <span class="method-name">load_customer_info</span><span
             class="method-args">(customer)</span>
+          
           <span class="method-click-advice">click to toggle source</span>
+          
         </div>
         
 
@@ -767,6 +723,7 @@ returned from the Stipe.com service.</p>
           
           <p>This helper method is used to load card and customer information into the
 instance variables for the <a href="Account.html">Account</a> model.</p>
+          
           
 
           
@@ -784,26 +741,25 @@ instance variables for the <a href="Account.html">Account</a> model.</p>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">expiration</span> =  <span class="ruby-identifier">customer_card</span>.<span class="ruby-identifier">exp_month</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span>
     <span class="ruby-string">'/'</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">customer_card</span>.<span class="ruby-identifier">exp_year</span>.<span class="ruby-identifier">to_s</span>
 <span class="ruby-keyword">end</span></pre>
-          </div><!-- load_customer_info-source -->
+          </div>
           
         </div>
 
         
 
         
-      </div><!-- load_customer_info-method -->
+      </div>
 
     
-    </section><!-- protected-instance-method-details -->
+    </section>
   
-  </section><!-- 5Buntitled-5D -->
+  </section>
+</main>
 
-</div><!-- documentation -->
 
-
-<footer id="validator-badges">
-  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
-  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.2.
-  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

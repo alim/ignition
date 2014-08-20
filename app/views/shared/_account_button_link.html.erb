@@ -1,13 +1,13 @@
 <% if !user.account.present?  %>
-  <%= link_to 'Add Credit Card', new_user_account_url(user), 
-    class: 'btn btn-success' %>
+  <%= link_to 'Add Credit Card', new_user_account_url(user),
+    class: 'success-button' %>
 <% else %>
   <% if user.account.customer_id.present? %>
-    <%= link_to 'Update Credit Card', edit_user_account_url(user, user.account), 
-      class: 'btn btn-success' %>
+    <%= link_to 'Update Credit Card', edit_user_account_url(user, user.account),
+      class: 'success-button' %>
   <% else %>
-    <%= link_to 'Add Credit Card', new_user_account_url(user), 
-      class: 'btn btn-success' %>
+    <%= link_to 'Add Credit Card', new_user_account_url(user),
+      class: 'success-button' %>
   <% end %>
 <% end %>
 

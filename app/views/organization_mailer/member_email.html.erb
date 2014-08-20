@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+  	<table border="0" width=100%>
+  		<tr>
+  			<td align="left" width="60px">
+  				<%= image_tag 'Your Logo.png' %>
+  			</td>
+  			<td align="left">
+  				<h3>Example Web Application<h3>
+  			</td>
+  		</tr>
+  	</table>
+
+    <h3>Organization Membership Notification</h3>
+    <p>
+     	You are receiving this email because you have been added to
+     	to the  <%= @organization.name %> organization. This organizational
+      membership gives you access for one or more resources on the
+     	<a href="http://www.example.com">Example Web Application</a>
+     	service. The details of your group membership are listed below:<br/>
+    </p>
+		<br/><br/>
+    <table width="100%", border="1" cellspacing="0" cellpadding=5>
+    	<tr>
+    		<td width="30%", align="left">
+    			<strong>Organization Owner:</strong>
+    		</td>
+    		<td width="70%", align="left">
+    			<%= @owner.first_name %> <%= @owner.last_name %>
+    		</td>
+    	</tr>
+
+    	<tr>
+    		<td width="30%", align="left">
+    			<strong>Organization Name:</strong>
+    		</td>
+    		<td width="70%", align="left">
+    			<%= @organization.name %>
+    		</td>
+    	</tr>
+
+    	<tr>
+    		<td width="30%", align="left">
+    			<strong>Organization Description:</strong>
+    		</td>
+    		<td width="70%", align="left">
+    			<% if @organization.description.empty? %>
+    				No description provided
+					<% else %>
+						<%= @organization.description.html_safe %>
+					<% end %>
+    		</td>
+    	</tr>
+
+    	<tr>
+    		<td width="30%", align="left">
+    			<strong>Your account:</strong>
+    		</td>
+    		<td width="70%", align="left">
+    			<%= @user.email %><br/>
+    		</td>
+    	</tr>
+
+    	<% if @password %>
+		  	<tr>
+		  		<td width="30%", align="left">
+		  			<strong>Your password:</strong>
+		  		</td>
+		  		<td width="70%", align="left">
+		  			<%= @password %><br/>
+		  			<p>
+		  				Please login and fill out your profile information, which
+		  				includes the first name, last name, and phone number.
+		  				You will also be prompted to change your password.
+		  			</p>
+		  		</td>
+		  	</tr>
+    	<% end %>
+    </table>
+
+		<h3 align="right">
+			<a href="https://www.example.com/sign_in">Login</a>
+		</h3>
+
+  </body>
+</html>

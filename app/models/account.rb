@@ -12,10 +12,10 @@ class Account
   strip_attributes  # See strip_attributes for more information
 
   # CONSTANTS ---------------------------------------------------------
- 
+
   # STRIPE ACCOUNT DESCRIPTION
   ACCOUNT_NAME = "Acme"
- 
+
   # STATUS VALUES
 
   # UNKNOWN - is the default starting status
@@ -36,9 +36,9 @@ class Account
   # NO_STRIPE - The stripe account record was deleted and there is
   # no longer a stripe stored credit card associated with the account.
   NO_STRIPE = 4
-  
+
   # ATTRIBUTES ---------------------------------------------------------
-  
+
   field :customer_id, type: String
   field :status, type: Integer, default: UNKNOWN
 
@@ -51,14 +51,14 @@ class Account
   # VALIDATIONS --------------------------------------------------------
   validates_presence_of :status
 
-  
+
   # RELATIONSHIPS ------------------------------------------------------
-  
+
   embedded_in :user
 
-  
+
   # PUBLIC INSTANCE METHODS --------------------------------------------
-  
+
   #####################################################################
   # The status_str method returns the account status in string format
   #####################################################################
@@ -76,7 +76,7 @@ class Account
       "Unknown"
     end
   end
-  
+
   #####################################################################
   # The get_customer method retrieves the customer information from
   # Stripe.com. It then stores some of the information in memory for
@@ -116,7 +116,7 @@ class Account
     else
       return nil
      end
-  end  
+  end
 
 
   #####################################################################
@@ -144,19 +144,16 @@ class Account
           :card => params[:account][:stripe_cc_token],
           :email => params[:cardholder_email]
         )
-        
+
         load_customer_info(customer)
         self.status = ACTIVE
-        
+
         # Attempt to save the record
         account_valid = self.save ? true : false
       end
 
     rescue Stripe::StripeError => stripe_error
-      logger.debug("[Account.save_with_stripe] stripe error = #{stripe_error.message}")
-      errors[:customer_id] << stripe_error.message
-      self.status = INACTIVE
-      account_valid = false
+      account_valid = stripe_error_handler(stripe_error, INACTIVE)
     end
 
     return account_valid
@@ -182,11 +179,7 @@ class Account
         if customer.respond_to?(:deleted)
           self.status = NO_STRIPE
         else
-          customer.card = params[:account][:stripe_cc_token]
-          customer.description = "#{ACCOUNT_NAME} account for #{params[cardholder_name]}"
-          customer.email = params[:cardholder_email]
-          
-          customer.save
+          update_customer_info(customer, params)
 
           load_customer_info(customer)
 
@@ -198,10 +191,7 @@ class Account
       end
 
     rescue Stripe::StripeError => stripe_error
-      logger.debug("[Account.update_with_stripe] stripe error = #{stripe_error.message}")
-      errors[:customer_id] << stripe_error.message
-      self.status = INACTIVE
-      account_valid = false
+      account_valid = stripe_error_handler(stripe_error, INACTIVE)
     end
 
     return account_valid
@@ -213,7 +203,7 @@ class Account
   # with the stored customer_id.
   #####################################################################
   def destroy
-    
+
     # Destroy the customer account on Stripe.com if the id is present.
     if self.customer_id.present?
       begin
@@ -223,7 +213,7 @@ class Account
       rescue Stripe::StripeError => stripe_error
         logger.debug("[Account.delete] stripe error = #{stripe_error.message}")
         errors[:customer_id] << stripe_error.message
-        
+
         # continue to raise the exception
         raise Stripe::StripeError, stripe_error.message
       end
@@ -231,9 +221,31 @@ class Account
 
      super()
   end
-  
+
   # PROTECTED INSTANCE METHODS ----------------------------------------
   protected
+
+  #####################################################################
+  # This helper method handles logging and setting stripe errors. It
+  #####################################################################
+  def stripe_error_handler(stripe_error, status=nil)
+    logger.debug("[Account.update_with_stripe] stripe error = #{stripe_error.message}")
+    errors[:customer_id] << stripe_error.message
+    self.status = status if status
+    return false
+  end
+
+  #####################################################################
+  # Little helper method to update customer record with stripe and
+  # contact information.
+  #####################################################################
+  def update_customer_info(customer, params)
+    customer.card = params[:account][:stripe_cc_token]
+    customer.description = "#{ACCOUNT_NAME} account for #{params[cardholder_name]}"
+    customer.email = params[:cardholder_email]
+
+    customer.save
+  end
 
   ######################################################################
   # This helper method is used to load card and customer information
@@ -242,7 +254,7 @@ class Account
   def load_customer_info(customer)
     self.customer_id = customer.id
     self.cardholder_email = customer.email
-    
+
     customer_card = get_default_card(customer)
 
     self.cardholder_name = customer_card.name
@@ -250,16 +262,16 @@ class Account
     self.last4 = customer_card.last4
     self.expiration =  customer_card.exp_month.to_s +
       '/' + customer_card.exp_year.to_s
-  end  
-  
-  
+  end
+
+
   ######################################################################
   # The get_default_card is a method that will return the default card
   # associated with a customer account.
   ######################################################################
   def get_default_card(customer)
     default_card = nil
-    
+
     customer.cards.each do |card|
       if card.id == customer.default_card
         default_card = card
@@ -268,7 +280,7 @@ class Account
 
     return default_card
   end
-  
+
   ######################################################################
   # The is_valid helper method checks to make sure the user included
   # cardholder_name, cardholder_email, and that the stripe_cc_token
@@ -293,5 +305,5 @@ class Account
     end
 
     return account_valid
-  end  
+  end
 end

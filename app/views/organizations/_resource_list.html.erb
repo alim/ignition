@@ -1,0 +1,23 @@
+<!-- -------------------------------------------------------------------
+This partial is used to list the resources that are associated with a
+group.
+-------------------------------------------------------------------- -->
+<% resources.each do |class_key, resource_list| %>
+  <h3><%= class_key.to_s.camelize.pluralize %></h3>
+  <table class="full-width">
+    <thead>
+      <tr>
+        <th wdith="30%">Project name</th>
+        <th wdith="70%">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% resource_list.each do |resource| %>
+        <tr>
+          <td><%= resource.name %></td>
+          <td><%= resource.description %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

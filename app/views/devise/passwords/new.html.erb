@@ -1,27 +1,27 @@
-<div class="row">
-	<div class="span1">
-	</div>
-	
-	<div class="span11">
-		<div class="page-header">
-			<h2>Forgot your password?</h2>
-			<p>
-				If you forgot your password, use the form below to reset it.
-			</p>
+<%= render 'shared/page_header',
+  flash: flash,
+  title: 'Forgot your password?',
+  description: "If you forgot your password, use the form below to reset it."
+%>
+
+<%= form_for(resource, as: resource_name, url: password_path(
+	resource_name), html: {method: :post}) do |f| %>
+	<%= devise_error_messages! %>
+
+	<div class='row'>
+		<div class='small-6 columns'>
+		<label>Email</label>
+			<%= f.email_field :email, autofocus: true %>
 		</div>
-
-		<%= form_for(resource, as: resource_name, url: password_path(
-			resource_name), html: {method: :post, class: 'form-horizontal'}) do |f| %>
-			<%= devise_error_messages! %>
-
-			<div class='control-label'><%= f.label :email %></div>
-			<div class='controls'><%= f.email_field :email, autofocus: true %></div>
-
-			<div class='form-actions'>
-				<%= f.submit "Send me reset password instructions", class: 'btn btn-primary' %>
-			</div>
-		<% end %>
-
-		<br/><br/>
 	</div>
-</div>
+
+  <div class="row">
+    <div class="small-12 columns">
+  		<div class='form-actions'>
+  			<%= f.submit "Send Password Reset", class: 'action-button' %>
+  		</div>
+  	</div>
+  </div>
+<% end %>
+
+<br/><br/>

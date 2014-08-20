@@ -13,9 +13,9 @@
 #  puts 'role: ' << role
 # end
 puts 'DEFAULT USERS'
-user = User.find_or_create_by first_name: ENV['ADMIN_FIRST_NAME'].dup, 
+user = User.find_or_create_by first_name: ENV['ADMIN_FIRST_NAME'].dup,
   last_name: ENV['ADMIN_LAST_NAME'].dup, phone: ENV['ADMIN_PHONE'].dup,
-	email: ENV['ADMIN_EMAIL'].dup, password: ENV['ADMIN_PASSWORD'].dup, 
+	email: ENV['ADMIN_EMAIL'].dup, password: ENV['ADMIN_PASSWORD'].dup,
 	password_confirmation: ENV['ADMIN_PASSWORD'].dup, role: User::SERVICE_ADMIN
 puts 'user: ' << user.email
 # user.add_role :admin

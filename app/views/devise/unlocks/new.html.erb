@@ -1,29 +1,27 @@
-<div class="row">
-	<div class="span1">
-	</div>
-	
-	<div class="span11">
-		<div class="page-header">
-			<h2>Resend unlock instructions</h2>
-			<p>
-				You can resend account unlock instructions using the form below.
-			</p>
+<%= render 'shared/page_header',
+  flash: flash,
+  title: 'Resend Unlock Instructions',
+  description: "You can resend account unlock instructions using the form below."
+%>
+
+<%= form_for(resource, as: resource_name, url: unlock_path(resource_name),
+	html: {method: :post}) do |f| %>
+
+	<%= devise_error_messages! %>
+
+	<div class='row'>
+		<div class='small-6 columns'>
+			<%= f.label :email %>
+			<%= f.email_field :email, autofocus: true %>
 		</div>
-		
-		<%= form_for(resource, as: resource_name, url: unlock_path(resource_name), 
-			html: {method: :post, class: 'form-horizontal'}) do |f| %>
-			
-			<%= devise_error_messages! %>
-
-			<div class='control-label'><%= f.label :email %></div>
-			<div class='controls'><%= f.email_field :email, :autofocus => true %></div>
-			<br/>
-
-			<div class='form-actions'>
-				<%= f.submit "Resend unlock instructions", class: 'btn btn-primary' %>
-			</div>
-		<% end %>
-
-		<%= render "devise/shared/links" %>
 	</div>
-</div>
+
+	<div class="row">
+	  <div class="small-12 columns">
+			<div class='form-actions'>
+				<%= f.submit "Resend Unlock Instructions", class: 'action-button' %>
+			</div>
+		</div>
+	</div>
+
+<% end %>

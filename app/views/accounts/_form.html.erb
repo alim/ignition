@@ -1,65 +1,55 @@
 
-<%= render partial: 'shared/validation_errors' %>
+<%= render 'shared/validation_errors', verrors: verrors %>
 
-<div id='stripe_error' class="span10">
+<div id='stripe_error' class="small-10">
 	<noscript>JavaScript is not enabled and is required for this form.
 		First enable it in your web browser settings.</noscript>
 </div>
 
-<%= form_for @account, url: user_accounts_url, method: :post, 
-  html: {class: "form-horizontal stripe_form"} do |f| %>
-  
-	<div class="row-fluid">
-	
-		<!-- Setup hidden field for submitting the cc token -->
-		<%= f.hidden_field :stripe_cc_token %>
+<%= form_for account, url: user_accounts_url, method: :post do |f| %>
 
-		<div class="control-group">
-			<%= label_tag :card_name, "Cardholder Name", class: 'control-label'  %>
-			<div class="controls">
-				<!-- f.text_field :cardholder_name -->
-				<%= text_field_tag :cardholder_name, @account.cardholder_name, class: 'span6' %>
-			</div>
-		</div>
+	<!-- Setup hidden field for submitting the cc token -->
+	<%= f.hidden_field :stripe_cc_token %>
 
-		<div class="control-group">
-			<%= label_tag :card_email, "Cardholder Email", class: 'control-label'  %>
-			<div class="controls">
-				<!-- f.email_field :cardholder_email -->
-				<%= email_field_tag :cardholder_email, @account.cardholder_email, class: 'span6' %>
-			</div>
+	<div class="row">
+		<div class="small-6 columns">
+			<label>Cardholder Name</label>
+			<%= text_field_tag :cardholder_name, account.cardholder_name %>
 		</div>
-
-		<div class="control-group">
-			<%= label_tag :card_number, "Credit Card Number", class: 'control-label'  %>
-			<div class="controls">
-				<%= text_field_tag :card_number, nil, name: nil, class: 'span6' %>
-			</div>
-		</div>
-
-		<div class="control-group">
-			<%= label_tag :card_month, "Card Expiration", class: 'control-label' %>
-			<div class="controls">
-				<%= select_month nil, {}, {name: nil, id: "card_month", class: 'span2'} %>
-				<%= select_year nil, {start_year: Date.today.year, 
-				  end_year: Date.today.year+10}, {name: nil, id: "card_year",
-				  class: 'span2'} %>
-			</div>
-		</div>
-
-		<div class="control-group">
-			<%= label_tag :card_code, "Security Code (CVV)", class: 'control-label' %>
-			<div class="controls">
-				<%= text_field_tag :card_code, nil, name: nil %>
-			</div>
-		</div>
-		
-   <div class="control-group">
-			<div class="controls">
-			  <% @label = controller.action_name == 'edit' ? 'Update Credit Card' : 'Add Credit Card' %>
-				<%= f.submit @label, :class => 'btn btn-primary' %>
-			</div>
+		<div class="small-6 columns">
+			<label>Cardholder Email</label>
+			<%= email_field_tag :cardholder_email, account.cardholder_email %>
 		</div>
 	</div> <!-- row -->
 
+	<div class="row">
+		<div class="small-4 columns">
+			<label>Credit Card Number</label>
+			<%= text_field_tag :card_number, nil, name: nil %>
+		</div>
+		<div class="small-2 columns">
+			<label>Security Code</label>
+			<%= text_field_tag :card_code, nil, name: nil %>
+		</div>
+		<div class="small-3 columns">
+			<label>Exp. Month</label>
+			<%= select_month nil, {}, {name: nil, id: "card_month"} %>
+		</div>
+		<div class="small-3 columns">
+			<label>Exp. Year</label>
+			<%= select_year nil, {start_year: Date.today.year,
+			  end_year: Date.today.year+10}, {name: nil, id: "card_year"} %>
+		</div>
+	</div> <!-- row -->
+
+  <div class='row'>
+  	<div class='small-12 columns'>
+  		<div class='form-actions'>
+			  <% label = controller.action_name == 'edit' ? 'Update Credit Card' : 'Add Credit Card' %>
+				<%= f.submit label, class: 'success-button' %>
+			</div>
+		</div>
+	</div>
+
 <% end %>
+

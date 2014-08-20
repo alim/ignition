@@ -24,13 +24,13 @@ module Ignition
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
-     
+
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += %W(#{config.root}/lib)
-    
+
     # Default local host for mailer - over ride in different environments
     config.action_mailer.default_url_options = { host: "localhost:3000" }
-    
+
     # Raise mailer exceptions
     config.action_mailer.raise_delivery_errors = true
   end

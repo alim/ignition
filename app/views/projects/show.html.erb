@@ -1,56 +1,67 @@
 <%- model_class = Project -%>
-<div class="page-header">
-  <h1>Project</h1>
-  <p>
-    The information on this page shows you a project record, which
+<%= render 'shared/page_header',
+  flash: flash,
+  title: 'Project',
+  description: "The information on this page shows you a project record, which
     includes the project owner and any user groups associated with the
-    project.
-  </p>
-</div>
-<%= render partial: 'shared/flash', locals: { flash: flash } %>
+    project."
+%>
 
-<dl class="dl-horizontal">
-  <dt><strong>Name:</strong></dt>
-  <dd><%= @project.name %></dd>
-  
-  <dt><strong>Description:</strong></dt>
-  <dd><%= @project.description.html_safe %></dd>
-  
-  <dt><strong>Charter document:</strong></dt>
-  <dd>
-    <% if @project.charter_doc.present? %>
-      <%= link_to @project.charter_doc_file_name , 
-        @project.charter_doc.url, class: 'btn btn-mini' %>
+<div class="row">
+ <div class="small-3 columns">
+    <div class="right inline"><strong>Name:</strong></div>
+  </div>
+  <div class="small-9 columns left">
+    <%= @project.name %>
+  </div>
+</div>
+
+<div class="row">
+ <div class="small-3 columns">
+    <div class="right inline"><strong>Description:</strong></div>
+  </div>
+  <div class="small-9 columns left">
+    <%= @project.description.html_safe %>
+  </div>
+</div>
+
+<div class="row">
+ <div class="small-3 columns">
+    <div class="right inline"><strong>Charter document:</strong></div>
+  </div>
+  <div class="small-9 columns left">
+    <% if @project.charter_doc? %>
+      <%= link_to @project.charter_doc_file_name ,
+        @project.charter_doc.url %>
     <% else %>
       None
     <% end %>
-  </dd>
-  <br/>
-  
-  <dt><strong>Group Owner:</strong></dt>
-  <dd>
-    <%= @project.user.first_name %> <%= @project.user.last_name %> - 
-    <%= @project.user.email %>
-  </dd>
-  <br/>
-  <% if @project.groups.present? %>
-    <dt><strong>Related Groups:</strong></dt>
-    <dd>
-      <% @project.groups.each do |group| %>
-        <%= group.name %><br/>
-      <% end %>
-    </dd>
-  <% end %>
-</dl>
+  </div>
+</div>
+
+
+<div class="row">
+ <div class="small-3 columns">
+    <div class="right inline"><strong>Charter document:</strong></div>
+  </div>
+  <div class="small-9 columns left">
+    <% if @project.organization_name %>
+      <%=link_to @project.organization_name, @project.organization %>
+    <% else %>
+      No organization associated with the project.
+    <% end %>
+  </div>
+</div>
+
 
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),
-              projects_path, :class => 'btn'  %>
+              projects_path, :class => 'cancel-button'  %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_project_path(@project), :class => 'btn' %>
+              edit_project_path(@project), :class => 'success-button' %>
   <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
               project_path(@project),
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger pull-right' %>
+              :class => 'delete-button right' %>
 </div>

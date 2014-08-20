@@ -1,9 +1,9 @@
 <%- model_class = User -%>
-<div class="page-header">
-  <h1>Edit User Account</h1>
-  <p>
-    If you would like to update the user account record, please use
-    the form below.
-  </p>
-</div>
-<%= render :partial => 'form' %>
+<%= render 'shared/page_header',
+  flash: flash,
+  title: 'Edit User Account',
+  description: 'If you would like to update the user account record, please use
+    the form below.'
+%>
+
+<%= render 'form', user: @user, verrors: @verrors %>

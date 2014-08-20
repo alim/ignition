@@ -1,76 +1,83 @@
 <%- model_class = Project -%>
-<div class="page-header">
-  <% if current_user.role == User::SERVICE_ADMIN %>
-    <h1>Service Wide Project Listing</h1>
-    <p>
-      This page will show you a complete listing of projects that
-      have been created across the entire system. This view is a 
-      <em>Service Administrator</em> view and should be used with 
-      caution. These projects and the records associated with each
-      project maybe shared with user groups that you designate.
-    </p>     
-  <% else %>
-    <h1>Your Project List</h1>
-    <p>
-      This page will show you a complete listing of projects that you
-      have created. These projects and the records associated with each
-      project maybe shared with user groups that you manage. If you
-      would like to create a <em>new</em> project, then use the 'New'
-      button at the bottom at the page.
-    </p>    
-  <% end %>
-  
-</div>
-<%= render partial: 'shared/flash', locals: { flash: flash } %>
-
-<% if @projects.present? %>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Project Name</th>
-        <th>Description</th>
-        <th>Project Owner</th>
-        <th>Groups</th>
-        <th><%=t '.actions', :default => t("helpers.actions") %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @projects.each do |project| %>
-        <tr>
-          <td><%= link_to project.name, project_path(project) %></td>
-          <td><%= project.description.html_safe %></td>
-          <td><%= project.user.first_name %> <%= project.user.last_name %></td>
-          <td>
-            <% project.groups.each do |group| %>
-              <%= group.name %><br/>
-            <% end %>
-          </td>
-          <td>
-            <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                        edit_project_path(project), :class => 'btn btn-mini' %>
-            <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                        project_path(project),
-                        :method => :delete,
-                        :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                        :class => 'btn btn-mini btn-danger' %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+<% if current_user.role == User::SERVICE_ADMIN %>
+  <%= render 'shared/page_header',
+    flash: flash,
+    title: 'Service Wide Project Listing',
+    description: "This page will show you a complete listing of
+      projects that have been created across the entire system.
+      This view is a <em>Service Administrator</em> view and
+      should be used with caution. These projects and the records
+      associated with each project maybe shared with user groups
+      that you designate."
+  %>
 <% else %>
-  <p>
-    No projects have been created yet. Click on the <strong>New</strong>
-    button below to create your first one.
-  </p>
+  <%= render 'shared/page_header',
+    flash: flash,
+    title: 'Your Project List',
+    description: "This page will show you a complete listing of
+      projects that you have created. These projects and the records
+      associated with each project maybe shared with user groups
+      that you manage. If you would like to create a <em>new</em>
+      project, then use the 'New' button at the bottom at the page."
+  %>
 <% end %>
 
-<div class='digg_pagination'>
-  <%= will_paginate @projects %>
+<div class='row'>
+  <div class='12-small columns'>
+
+    <% if @projects.present? %>
+      <table class=""full-width"">
+        <thead>
+          <tr>
+            <th width="20%">Project Name</th>
+            <th width="30%">Description</th>
+            <th width="20%">Project Owner</th>
+            <th width="20%">Organization</th>
+            <th width="10%"><%=t '.actions', :default => t("helpers.actions") %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @projects.each do |project| %>
+            <tr>
+              <td><%= link_to project.name, project_path(project) %></td>
+              <td><%= project.description.html_safe %></td>
+              <td><%= project.user_first_name %> <%= project.user_last_name %></td>
+              <td>
+                <% if project.organization.present? %>
+                  <%= project.organization_name %>
+                <% else %>
+                  No Organization Specified
+                <% end %>
+              </td>
+              <td>
+                <%= link_to t('.edit', default: t("helpers.links.edit")),
+                            edit_project_path(project), class: 'intable-success-button' %>
+                <%= link_to t('.destroy', default: t("helpers.links.destroy")),
+                            project_path(project),
+                            method: :delete,
+                            data: { confirm: t('.confirm', default: t("helpers.links.confirm",
+                              default: 'Are you sure?')) },
+                            class: 'intable-delete-button' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p>
+        No projects have been created yet. Click on the <strong>New</strong>
+        button below to create your first one.
+      </p>
+    <% end %>
+
+    <div class='digg_pagination'>
+      <%= will_paginate @projects %>
+    </div>
+  </div>
 </div>
 
 <div class='form-actions'>
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_project_path,
-            :class => 'btn btn-primary' %>
+            :class => 'success-button' %>
 </div>

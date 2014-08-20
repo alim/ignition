@@ -1,29 +1,29 @@
 <% if !flash.nil? %>
 	<% if flash[:notice] %>
-		<div class='alert alert-success'>
-			<a class="close" data-dismiss="alert" href="#">×</a>
-			<h4 class="alert-heading">Success!</h4>
+		<div data-alert class='alert-box radius success'>
+			<h5 class="alert-heading">Success!</h5>
 			<%= flash[:notice] %>
+			<a href="#" class="close">&times;</a>
 		</div>
 	<% end %>
 
 	<% if flash[:error] %>
-		<div class='alert alert-error'>
-			<a class="close" data-dismiss="alert" href="#">×</a>
-			<h4 class="alert-heading">Error!</h4>
+		<div data-alert class='alert-box radius alert'>
+			<h5 class="alert-heading">Error!</h5>
 			<%= flash[:error] %>
+			<a href="#" class="close">&times;</a>
 		</div>
 	<% end %>
 
 	<% if flash[:alert] %>
-		<div class="alert alert-block">
-			<a class="close" data-dismiss="alert" href="#">×</a>
-			<h4 class="alert-heading">Warning!</h4>
+		<div data-alert class="alert-box radius warning">
+			<h5 class="alert-heading">Warning!</h5>
 			<%= flash[:alert] %>
+			<a href="#" class="close">&times;</a>
 		</div>
-	<% end %> 
-	
+	<% end %>
+
 	<!-- Clear the flash values once they have been displayed -->
-	<% flash[:error] = flash[:alert] = flash[:notice] = nil %> 
+	<% flash[:error] = flash[:alert] = flash[:notice] = nil %>
 <% end %>
-      	
+

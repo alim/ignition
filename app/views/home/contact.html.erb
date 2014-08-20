@@ -4,46 +4,42 @@
 	contact you by phone, please include your phone number.
 </p>
 <%= render partial: 'shared/flash', locals: { flash: flash } %>
-<%= render partial: 'shared/validation_errors' %>
+<%= render partial: 'shared/validation_errors', verrors: @verrors  %>
 
-<div class='row-fluid'>
-	<%= form_for @contact, :url => home_create_contact_url,
-		:html => { :class => 'form-horizontal' }  do |f| %>
+<%= form_for @contact, :url => home_create_contact_url do |f| %>
 
-		<div class="control-group">
-			<%= f.label 'Name:', :class => 'control-label' %>
-			<div class="controls">
-				<%= f.text_field :name, :class => 'span4' %>
-			</div>
+	<div class='row'>
+		<div class='small-6 columns'>
+			<%= f.label 'Name:'%>
+			<%= f.text_field :name %>
 		</div>
 
-		<div class="control-group">
-			<%= f.label 'Email:', :class => 'control-label' %>
-			<div class="controls">
-				<%= f.text_field :email, :class => 'span4' %>
-			</div>
+	</div>
+
+	<div class='row'>
+		<div class='small-6 columns'>
+			<%= f.label 'Email:' %>
+			<%= f.text_field :email %>
 		</div>
 
-		<div class="control-group">
-			<%= f.label 'Phone:', :class => 'control-label' %>
-			<div class="controls">
-				<%= f.text_field :phone, :class => 'span4' %>
-			</div>
+		<div class='small-6 columns'>
+			<%= f.label 'Phone:' %>
+			<%= f.text_field :phone %>
 		</div>
+	</div>
 
-		<div class="control-group">
-			<%= f.label 'Message', :class => 'control-label' %>
-			<div class="controls">
-				<%= f.text_area :body, rows: 10, class: 'text_area span7' %>
-			</div>
+	<div class='row'>
+		<div class='small-12 columns'>
+			<%= f.label 'Message' %>
+
+			<%= f.text_area :body, rows: 10 %>
 		</div>
+	</div>
 
-		<div class="form-actions">
-			<%= f.submit 'Submit', :class => 'btn btn-primary' %>
-			<%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-				          home_support_url, :class => 'btn' %>
-		</div>
+	<div class="form-actions">
+		<%= f.submit 'Submit', :class => 'button small radius' %>
+		<%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+			          home_support_url, :class => 'button small radius cancel' %>
+	</div>
 
-	<% end %>
-</div> <!-- row -->
-
+<% end %>

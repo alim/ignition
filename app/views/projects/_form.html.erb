@@ -1,65 +1,35 @@
-<%= render partial: 'shared/validation_errors' %>
+<%= render 'shared/validation_errors', verrors: verrors  %>
 
-<%= form_for @project, html: { multipart: true, class: 'form-horizontal' } do |f| %>
-  <div class="control-group">
-    <%= f.label :name, class: 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :name, class: 'text_field span6' %>
+<%= form_for project do |f| %>
+  <div class="row">
+    <div class="small-8 columns">
+      <%= f.label :name %>
+      <%= f.text_field :name %>
     </div>
   </div>
-  <div class="control-group">
-    <%= f.label :description, class: 'control-label' %>
-    <div class="controls">
-      <%= f.text_area :description, class: 'text_area tinymce' %>
+
+  <div class="row">
+    <div class="small-8 columns">
+      <%= f.label :description %>
+      <%= f.text_area :description, rows: 6 %>
     </div>
   </div>
-  
-  <div class="control-group">
-    <label class="control-label">Charter Document</label>
-    <div class="controls">
-      <% if @project.charter_doc.present? %>
-        Current file is - <%= @project.charter_doc_file_name  %>
+
+  <div class="row">
+    <div class="small-8 columns">
+      <label>Charter Document</label>
+      <% if project.charter_doc.present? %>
+        <label>Current file is - <%= project.charter_doc_file_name %></label>
         <br/>
       <% end %>
       <%= f.file_field :charter_doc %>
     </div>
   </div>
-  
 
-	<!-- -----------------------------------------------------------------
-	  Generate a checkbox list of Groups that can be related to the 
-	  resource.  The group_list method below is defined in the 
-	  group_helper.rb file.
-	------------------------------------------------------------------ -->
-	<% @owned_groups = group_list(user: current_user, resource: @project) %>
-	<% if @owned_groups.present? %>
-		<h3>Group Access</h3>
-		<p>
-			Group members will be able to access the above project. You select
-			the groups that can have access to this project using the list of
-			groups below. Please note that access to the above project
-		  will also give them access to other items related to
-			the records.
-		</p>
-	
-		<div class="control-group">
-			<%= f.label @list_name, class: 'control-label' %>
-				<% @owned_groups.each do |group| %>
-					<div class="controls">
-						<div class="checkbox">
-							<%= check_box_tag "project[group_ids][]", group[:id], group[:related] %>
-							<%= group[:label] %>
-				  	</div>
-		    	</div>
-				<% end %>
-		</div>
-		<br/>
-	<% end %>	
-	<!-- END OF GROUP LISTING ---------------------------------------- -->
-	
+
   <div class="form-actions">
-    <%= f.submit nil, class: 'btn btn-primary' %>
+    <%= f.submit nil, class: 'success-button' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                projects_path, class: 'btn' %>
+                projects_path, class: 'cancel-button' %>
   </div>
 <% end %>

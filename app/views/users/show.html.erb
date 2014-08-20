@@ -1,121 +1,201 @@
 <%- model_class = User -%>
-<div class="page-header">
-  <h1>User Account Information</h1>
-  <p>
-    The user account information is shown below. You can and edit or
+<%= render 'shared/page_header',
+  flash: flash,
+  title: 'User Account Information',
+  description: 'The user account information is shown below. You can and edit or
     destroy the user account using the buttons at the bottom of the
     page. You should note that the credit card information is being
     retrieved from <a href="http://www.stripe.com">Stripe.com</a> and
-    not stored by our service.
-  </p>
-</div>
-<%= render partial: 'shared/flash', locals: { flash: flash } %>  
+    not stored by our service.'
+%>
 
-<dl class="dl-horizontal">
+<fieldset>
+  <legend>User Information</legend>
 
-  <dt><strong>Email:</strong></dt>
-  <dd><%= @user.email %></dd>
-  <dt><strong>First name:</strong></dt>
-  <dd><%= @user.first_name %></dd>
-  <dt><strong>Last name:</strong></dt>
-  <dd><%= @user.last_name %></dd>
-  <dt><strong>Phone:</strong></dt>  
-  <dd><%= number_to_phone(@user.phone, delimiter: ".") %></dd>
+  <div class='row'>
+    <div class='small-2 columns'>
+      <strong class='right'>First name:</strong>
+    </div>
+    <div class='small-4 columns'>
+      <%= @user.first_name %>
+    </div>
+
+    <div class='small-2 columns'>
+      <strong class='right'>Email:</strong>
+    </div>
+    <div class='small-4 columns'>
+      <%= @user.email %>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class='small-2 columns'>
+      <strong class='right'>Last name:</strong>
+    </div>
+    <div class='small-4 columns'>
+      <%= @user.last_name %>
+    </div>
+
+    <div class='small-2 columns'>
+      <strong class='right'>Phone:</strong>
+    </div>
+    <div class='small-4 columns'>
+      <%= number_to_phone(@user.phone, delimiter: ".") %>
+    </div>
+  </div>
+
   <br/>
-  
-  <dt><strong>User ID:</strong></dt>
-  <dd><%= @user.id %></dd>
-  <dt><strong>User Role:</strong></dt>
-  <dd><%= @user.role_str %></dd>
-  <dt><strong>Groups:</strong></dt>
-  <dd>
-    <% if @user.groups.present? %>
-      <%= list_groups(@user.groups) %>
-    <% else %>
-      None
-    <% end %>
-  </dd>
-  <br/>
-  
-  <dt><strong>Account Created:</strong></dt>
-  <dd><%= @user.created_at %></dd>
-  <dt><strong>Last Signed In:</strong></dt>
-  <dd>
-    <% if @user.last_sign_in_at.present? %>
-      <%= @user.last_sign_in_at %>
-    <% else %>
-      User has not signed in yet
-    <% end %>
-  </dd>
-  
-  <dt><strong>Last Signed In IP:</strong></dt>
-  <dd>
-    <% if @user.last_sign_in_ip.present? %>
-      <%= @user.last_sign_in_ip %>
-    <% else %>
-      User has not signed in yet
-    <% end %>
-  </dd>
-  
-  <dt><strong>Last Password Reset:</strong></dt>
-  <dd>
-    <% if @user.reset_password_sent_at.present? %>
-      <%= @user.reset_password_sent_at %>
-    <% else %>
-      None sent
-    <% end %>
-  </dd>
-  <br/>
-  
-  <% if ENV['SUBSCRIPTION_ENABLED'] =~ /true/i %>
-    <dt><strong>Credit Card:</strong></dt>
-    <dd>
-      <% if @user.account.present? %>
-        <% if @user.account.customer_id.present? %>
-          Last 4 digits of credit card - <%= @user.account.last4 %><br/>
-          Card type - <%= @user.account.card_type %><br/>
-          Card expiration - <%= @user.account.expiration %>
-        <% else %>
-          No credit card associated with your account yet.
-        <% end %>
+
+  <div class='row'>
+    <div class='small-2 columns'>
+      <strong class='right'>User ID:</strong>
+    </div>
+    <div class='small-4 columns'>
+      <%= @user.id %>
+    </div>
+
+    <div class='small-2 columns'>
+      <strong class='right'>User Role:</strong>
+    </div>
+    <div class='small-4 columns'>
+      <%= @user.role_str %>
+    </div>
+  </div>
+
+  <div class='row'>
+    <div class='small-2 columns'>
+      <strong class='right'>Organization:</strong>
+    </div>
+    <div class='small-10 columns'>
+      <% if @user.organization.present? %>
+        <%= @user.organization_name %>
+      <% else %>
+        None
+      <% end %>
+    </div>
+  </div>
+
+</fieldset>
+
+<fieldset>
+  <legend>Account Information</legend>
+
+  <div class='row'>
+    <div class='small-2 columns'>
+     <strong class='right'>Created:</strong>
+    </div>
+    <div class='small-4 columns'>
+      <%= @user.created_at %>
+    </div>
+
+    <div class='small-2 columns'>
+      <strong class='right'>Last Used:</strong>
+    </div>
+    <div class='small-4 columns'>
+      <% if @user.last_sign_in_at? %>
+        <%= @user.last_sign_in_at %>
+      <% else %>
+        User has not signed in yet
+      <% end %>
+    </div>
+
+  </div>
+
+  <div class='row'>
+    <div class='small-2 columns'>
+      <strong class='right'>Last Reset:</strong>
+    </div>
+    <div class='small-4 columns'>
+      <% if @user.reset_password_sent_at? %>
+        <%= @user.reset_password_sent_at %>
+      <% else %>
+        None sent
+      <% end %>
+    </div>
+
+    <div class='small-2 columns'>
+      <strong class='right'>Last IP:</strong>
+    </div>
+    <div class='small-4 columns'>
+      <% if @user.last_sign_in_ip? %>
+        <%= @user.last_sign_in_ip %>
+      <% else %>
+        User has not signed in yet
+      <% end %>
+    </div>
+  </div>
+
+</fieldset>
+
+<% if ENV['SUBSCRIPTION_ENABLED'] =~ /true/i %>
+  <fieldset>
+    <legend>Credit Card Information</legend>
+
+    <% if @user.account.present? %>
+      <% if @user.account.customer_id? %>
+
+        <div class='row'>
+          <div class='small-2 columns'>
+            <strong class='right'>Last 4 digits:</strong>
+          </div>
+          <div class='small-10 columns'>
+            <span class='left'><%= @user.account.last4 %></span>
+          </div>
+        </div>
+
+        <div class='row'>
+          <div class='small-2 columns'>
+            <strong class='right'>Card type:</strong>
+          </div>
+          <div class='small-10 columns'>
+            <span class='left'><%= @user.account.card_type %></span>
+          </div>
+        </div>
+
+        <div class='row'>
+          <div class='small-2 columns'>
+            <strong class='right'>Expiration:</strong>
+          </div>
+          <div class='small-10 columns'>
+            <span class='left'><%= @user.account.expiration %></span>
+          </div>
+        </div>
+
       <% else %>
         No credit card associated with your account yet.
       <% end %>
-    </dd>
-  <% end %>
-</dl>
+    <% else %>
+      No credit card associated with your account yet.
+    <% end %>
 
-<% if ENV['SUBSCRIPTION_ENABLED'] =~ /true/i %>
-  <div id="credit_card_area">
-    <dl class="dl-horizontal">
-      <dt></dt>
-      <dd>
-        <% if !@user.account.present?  %>
-          <%= link_to 'Add Credit Card', new_user_account_url(@user), 
-            class: 'btn btn-info' %>
-        <% else %>
-          <% if @user.account.customer_id.present? %>
-            <%= link_to 'Update Credit Card', edit_user_account_url(@user, @user.account), 
-              class: 'btn btn-info' %>
-          <% else %>
-            <%= link_to 'Add Credit Card', new_user_account_url(@user), 
-              class: 'btn btn-info' %>
-          <% end %>
-        <% end %>
-      </dd>
-    </dl>
-  </div>
+
+  </fieldset>
 <% end %>
 
 <div class="form-actions">
   <%= link_to t('.back', default: t("helpers.links.back")),
-              users_path, class: 'btn'  %>
+              users_path, class: 'back-button'  %>
+
   <%= link_to t('.edit', default: t("helpers.links.edit")),
-              edit_user_path(@user), class: 'btn' %>
-              
+              edit_user_path(@user), class: 'action-button' %>
+
+  <% if !@user.account.present?  %>
+    <%= link_to 'Add Credit Card', new_user_account_url(@user),
+      class: 'success-button' %>
+  <% else %>
+    <% if @user.account.customer_id.present? %>
+      <%= link_to 'Update Credit Card', edit_user_account_url(@user, @user.account),
+        class: 'success-button' %>
+    <% else %>
+      <%= link_to 'Add Credit Card', new_user_account_url(@user),
+        class: 'success-button' %>
+    <% end %>
+  <% end %>
+
+
   <%= link_to t('.destroy', default: t("helpers.links.destroy")),
               user_path(@user),
               method: 'delete',
               data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
-              class: 'btn btn-danger pull-right' %>
+              class: 'delete-button right' %>
 </div>
