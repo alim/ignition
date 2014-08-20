@@ -193,10 +193,9 @@ class Organization
   # This utility method will notify organization members and relate
   # associated classes to the organization
   #####################################################################
-  def relate_and_notify
-    relate_classes
-    create_notify
-  end
+  # def relate_and_notify
+
+  # end
 
   #####################################################################
   # The managed_classes method will returns a hash of classes managed
