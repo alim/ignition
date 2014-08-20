@@ -614,7 +614,7 @@ describe ProjectsController do
 
         # Setup a method stub for the group method save
         # to return nil, which indicates a failure to save the account
-        Project.any_instance.stub(:update).and_return(nil)
+        Project.any_instance.stub(:update_attributes).and_return(nil)
 
         post :update, update_params
         response.should render_template :edit

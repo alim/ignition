@@ -1,9 +1,13 @@
-<!-- The partial for generating a drop down list of projects -->
+<!-- ------------------------------------------------------------------
+  The partial for generating a drop down list of projects. It can be used
+  with a view helper project_list. This method can be used to set the
+  variables that should be passed into this partial. The example method call
+  is shown below:
+  <% @owned_projects, @list_name = project_list(current_user) %>
+------------------------------------------------------------------- -->
 
-<% @owned_projects, @list_name = project_list(current_user) %>
-
-<% if @owned_projects.present? %>
-  <label class='control-label'><%= @list_name %></label>
+<% if owned_projects.present? %>
+  <label class='control-label'><%= list_name %></label>
   <%= f.select(:project_id, options_from_collection_for_select(
-    @owned_projects, :id, :name), {}, {class: html_class}) %>
+    owned_projects, :id, :name), {}, {class: html_class}) %>
 <% end %>

@@ -92,7 +92,7 @@
       <strong class='right'>Last Used:</strong>
     </div>
     <div class='small-4 columns'>
-      <% if @user.last_sign_in_at.present? %>
+      <% if @user.last_sign_in_at? %>
         <%= @user.last_sign_in_at %>
       <% else %>
         User has not signed in yet
@@ -106,7 +106,7 @@
       <strong class='right'>Last Reset:</strong>
     </div>
     <div class='small-4 columns'>
-      <% if @user.reset_password_sent_at.present? %>
+      <% if @user.reset_password_sent_at? %>
         <%= @user.reset_password_sent_at %>
       <% else %>
         None sent
@@ -117,7 +117,7 @@
       <strong class='right'>Last IP:</strong>
     </div>
     <div class='small-4 columns'>
-      <% if @user.last_sign_in_ip.present? %>
+      <% if @user.last_sign_in_ip? %>
         <%= @user.last_sign_in_ip %>
       <% else %>
         User has not signed in yet
@@ -132,7 +132,7 @@
     <legend>Credit Card Information</legend>
 
     <% if @user.account.present? %>
-      <% if @user.account.customer_id.present? %>
+      <% if @user.account.customer_id? %>
 
         <div class='row'>
           <div class='small-2 columns'>

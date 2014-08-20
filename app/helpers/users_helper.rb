@@ -12,15 +12,4 @@ module UsersHelper
     ])
   end
 
-  #####################################################################
-  # The list_groups helper method will generate of list group labels
-  # as an html code segment.
-  #####################################################################
-	def list_groups(groups)
-    html = ""
-    groups.each do |group|
-      html = html + '<span class="label">' + group.name + '</span> &nbsp;'
-    end
-    html.html_safe
-  end
 end

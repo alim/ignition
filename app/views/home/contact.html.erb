@@ -4,7 +4,7 @@
 	contact you by phone, please include your phone number.
 </p>
 <%= render partial: 'shared/flash', locals: { flash: flash } %>
-<%= render partial: 'shared/validation_errors' %>
+<%= render partial: 'shared/validation_errors', verrors: @verrors  %>
 
 <%= form_for @contact, :url => home_create_contact_url do |f| %>
 

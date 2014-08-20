@@ -120,34 +120,6 @@ describe Organization do
 
   end # Organization relationships
 
-  # OWNED_ORGANIZATION TESTS ------------------------------------------
-  describe "owned_organization tests" do
-    before(:each) {
-      single_organization_with_users
-    }
-
-    it "should find only organizations associated with a given user" do
-      organization = Organization.owned_organization(@owner)
-      organization.owner.id.should eq(@owner.id)
-    end
-
-    it "should not find any records for non-owner" do
-      user = User.where(:id.ne => @owner.id).first
-      organization = Organization.owned_organization(user)
-      organization.should be_nil
-    end
-
-    it "should find the right organization for the owner" do
-      @owner.owns.id.should == Organization.first.id
-    end
-
-    it "should not allow creation with an existng owner" do
-      org = Organization.create(owner: @owner, name: 'test3', description: 'test3 desription')
-      org.should_not be_valid
-      org.errors.messages[:owner_id][0].should match(/is already taken/)
-    end
-  end
-
   # ORGANIZATION USER TESTS -------------------------------------------
 
   describe "lookup_users tests" do
@@ -261,7 +233,6 @@ describe Organization do
     it "should set the organization of managed projects" do
       Project.all.each do |project|
         project.organization.should be_nil
-        project.user_id.should == @organization.owner_id
       end
       @organization.relate_classes
       @organization.projects.count.should > 0

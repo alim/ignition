@@ -40,13 +40,6 @@ class Organization
   ## PUBLIC INSTANCE METHODS -------------------------------------------
 
   ######################################################################
-  # Find the organization record associated with the user or return nil
-  ######################################################################
-  def self.owned_organization(owner)
-    self.where(owner_id: owner.id).first if owner.present?
-  end
-
-  ######################################################################
   # The members_list method will parse the membership list of email
   # addresses check them for valid email format.
   ######################################################################
