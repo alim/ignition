@@ -95,13 +95,14 @@ class ProjectsController < ApplicationController
   # PATCH/PUT /projects/1.json
   #
   # The update will update the Project model object including any
-  # changes to the group access privileges that the user selected.
+  # changes to the organization associated with the current user.
   ######################################################################
   def update
-    if @project.update(project_params)
+    if @project.update_attributes(project_params)
       @project.relate_to_organization
       redirect_to @project, notice: 'Project was successfully updated.'
     else
+      @verrors = @project.errors.full_messages
       render  'edit'
     end
   end
