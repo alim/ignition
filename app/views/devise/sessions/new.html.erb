@@ -1,20 +1,10 @@
-<div class="row">
-  <div class="small-12 columns">
-    <div class="page-header">
-
-      <h2>Login</h2>
-      <br/>
-      <p>
-        You can access the service features for registered customers by
+<%= render 'shared/page_header',
+  flash: flash,
+  title: 'Login',
+  description: "You can access the service features for registered customers by
         using the login form below. If you do not have an account, you can
-        use the <em>Sign up</em> link above.
-      </p>
-
-    </div>
-  </div>
-</div>
-
-<%= render partial: 'shared/flash', locals: { flash: flash } %>
+        use the <em>Sign up</em> link above."
+%>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <div class='row'>
@@ -34,7 +24,7 @@
   <div class="row">
     <div class="small-12 columns">
       <div class="form-actions">
-        <%= f.submit "Login", class: 'button radius' %>
+        <%= f.submit "Login", class: 'action-button' %>
         <% if devise_mapping.rememberable? -%>
           <label class='checkbox'>
             <%= f.check_box :remember_me %> Remember my login

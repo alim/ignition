@@ -37,7 +37,7 @@ class ProjectsController < ApplicationController
     if current_user.role == User::SERVICE_ADMIN
       @projects = Project.all.paginate(page: page,	per_page: PAGE_COUNT)
     else
-      @projects = current_user.projects.paginate(page: page,	per_page: PAGE_COUNT)
+      @projects = Project.in_organization(current_user).paginate(page: page,	per_page: PAGE_COUNT)
     end
   end
 
@@ -79,11 +79,10 @@ class ProjectsController < ApplicationController
   # groups that the user selected.
   ######################################################################
   def create
-    @project = Project.new(project_params)
-    @project.user = current_user
+    @project = Project.create_with_user(project_params, current_user)
 
     if @project.save
-      @project.group_relate(params[:project][:group_ids])
+      @project.relate_to_organization
       redirect_to @project, notice: 'Project was successfully created.'
     else
       @verrors = @project.errors.full_messages
@@ -99,18 +98,8 @@ class ProjectsController < ApplicationController
   # changes to the group access privileges that the user selected.
   ######################################################################
   def update
-
-    # Check to see if the project group_ids hash is blank. This
-    # indicates that the user has deselected all groups, so we
-    #  need to assign an empty array so the event relationship will
-    # be cleared.
-		params[:project][:group_ids] ||= []
-
     if @project.update(project_params)
-
-      @project.group_relate(params[:project][:group_ids])
-      @project.save
-
+      @project.relate_to_organization
       redirect_to @project, notice: 'Project was successfully updated.'
     else
       render  'edit'

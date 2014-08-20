@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title><%= content_for?(:title) ? yield(:title) : "Ignition" %></title>
+
+    <%= stylesheet_link_tag    "application" %>
+
+    <%= javascript_include_tag "https://js.stripe.com/v2/" %>
+    <%= tag :meta, name: "pub_key", content: ENV['PUB_KEY'] %>
+
+    <%= javascript_include_tag "vendor/modernizr" %>
+    <%= csrf_meta_tags %>
+
+    <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
+  </head>
+
+  <body>
+    <!-- Navigation Menu ------------------------------------------ -->
+    <nav class="top-bar" data-topbar>
+      <ul class="title-area">
+        <li><%= image_tag('ignition_logo.svg', class: 'logo') %></li>
+        <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
+      </ul>
+
+      <section class="top-bar-section">
+        <!-- Right Nav Section -->
+        <ul class="right">
+          <li <%= "class=#{active(root_path)}" %>>
+            <%= link_to 'Home', root_path %>
+          </li>
+
+          <li <%= "class=#{active(home_about_path)}" %>>
+            <%= link_to 'About', home_about_path %>
+          </li>
+
+          <li <%= "class=#{active(home_support_path)}" %>>
+            <%= link_to 'Support', home_support_path %>
+          </li>
+
+          <li <%= "class=#{active(home_contact_path)}" %>>
+            <%= link_to 'Contact', home_contact_path %>
+          </li>
+
+          <li <%= "class=#{active(new_user_registration_path)}" %>>
+            <%= link_to 'Sign Up', new_user_registration_path %>
+          </li>
+
+          <li <%= "class=#{active(new_user_session_path)}" %>>
+            <%= link_to 'Login', new_user_session_path %>
+          </li>
+        </ul>
+      </section>
+    </nav>
+
+    <!-- Image Slider Header -------------------------------------- -->
+    <div class="slideshow-wrapper">
+      <div class="preloader"></div>
+      <ul data-orbit>
+        <li>
+          <%= image_tag 'banner-1.jpg', alt: 'banner-1' %>
+          <div class="orbit-caption">
+            Fire up your next great idea.
+          </div>
+        </li>
+        <li class="active">
+          <%= image_tag 'banner-2.jpg', alt: 'banner-2' %>
+          <div class="orbit-caption">
+            User and subscription management from the start.
+          </div>
+        </li>
+        <li>
+          <%= image_tag 'banner-3.jpg', alt: 'banner-3' %>
+          <div class="orbit-caption">
+            A starting framework for your next web application.
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class='row'>
+      <div class='small-10 small-offset-1 columns'>
+        <%= yield %>
+      </div>
+    </div>
+
+    <!-- Javascripts
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <%= javascript_include_tag "application" %>
+
+  </body>
+</html>

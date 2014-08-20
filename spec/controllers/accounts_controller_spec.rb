@@ -18,10 +18,6 @@ describe AccountsController do
   let(:token) { get_token(name, cardnum, Date.today.month,
     (Date.today.year + 1), cvcvalue) }
 
-  let(:login_admin) {
-    sign_out @signed_in_user
-    signin_admin
-  }
 
   let(:customer_account_params){
     {

@@ -1,4 +1,4 @@
-########################################################################
+#######################################################################
 # The Project model class represents an example primary resource for the
 # service. This model could be substituted with any primary resource
 # that makes sense for your service. A primary resource is related to
@@ -7,49 +7,50 @@
 #
 # The concept of a primary resource allows you to grant group access to
 # the primary resource and any of its related resources.
-########################################################################
+#######################################################################
 class Project
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Paperclip
 
-  # Add call to strip leading and trailing white spaces from all atributes
+  # Scope definitions for organizational based queries
+  include Organizational
+
+  # Add call to strip leading and trailing white spaces from all attributes
   strip_attributes  # See strip_attributes for more information
 
-  # Shared class methods for restricted searching
-  extend SharedClassMethods
-
-  ## ATTRIBUTES --------------------------------------------------------
+  ## ATTRIBUTES -------------------------------------------------------
 
   field :name, type: String
   field :description, type: String
 
-
-  ## VALIDATIONS -------------------------------------------------------
+  ## VALIDATIONS ------------------------------------------------------
 
   validates_presence_of :name
   validates_presence_of :description
   validates_presence_of :user_id
 
-  ## RELATIONSHIPS -----------------------------------------------------
+  ## RELATIONSHIPS ----------------------------------------------------
 
   belongs_to :user
-  has_and_belongs_to_many :groups
+  belongs_to :organization
   has_mongoid_attached_file :charter_doc
   do_not_validate_attachment_file_type :charter_doc
 
-  ## GROUP METHOD INJECTION --------------------------------------------
+  ## DELEGATIONS ------------------------------------------------------
 
-  include GroupRelations
+  delegate :first_name, :last_name, to: :user, prefix: true
+  delegate :name, to: :organization, prefix: true
 
-  ######################################################################
-  # The GroupRelations module has some utility methods that will enable
-  # the project to interact with user groups. The group_relate method
-  # uses the relate_groups utility method to relate groups to the
-  # the current instance of the Project model class.
-  ######################################################################
-  def group_relate(group_ids)
-    relate_groups(group_ids: group_ids, resource: self)
+  ## PUBLIC METHODS ---------------------------------------------------
+
+  #####################################################################
+  # Create a new project and relate the user record to it.
+  #####################################################################
+  def self.create_with_user(project_params, user)
+     project = Project.new(project_params)
+     project.user = user
+     project
   end
 
 end

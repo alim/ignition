@@ -1,13 +1,8 @@
-<div class="row">
-  <div class="small-12 columns">
-		<div class="page-header">
-			<h2>Sign Up</h2>
-			<p>
-				You can sign for an account using the form below.
-			</p>
-		</div>
-	</div>
-</div>
+<%= render 'shared/page_header',
+  flash: flash,
+  title: 'Sign Up',
+  description: "You can sign for an account using the form below."
+%>
 
 <%= form_for(resource, as: resource_name, url: registration_path(
 	resource_name)) do |f| %>
@@ -50,7 +45,7 @@
 	<div class="row">
 	  <div class="small-12 columns">
 			<div class='form-actions'>
-				<%= f.submit "Sign Up", class: 'button radius' %>
+				<%= f.submit "Sign Up", class: 'action-button' %>
 			</div>
 		</div>
 	</div>

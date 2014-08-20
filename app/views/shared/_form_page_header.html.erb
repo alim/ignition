@@ -1,0 +1,11 @@
+<div class="page-header">
+  <h1><%= title %></h1>
+  <p>
+    <%= description.html_safe %>
+  </p>
+
+  <% if form_code %>
+    <%= render form_code %>
+  <% end %>
+</div>
+<%= render 'shared/flash', flash: flash %>

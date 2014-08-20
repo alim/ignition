@@ -1,18 +1,11 @@
-<div class="row">
-  <div class="small-12 columns">
-    <div class="page-header">
-
-      <h2>Edit Profile</h2>
-      <p>
-      	Edit your profile information using the form below. You will
-      	need to provide your current password in order to use it. Your
-      	account must already be confirmed using the	confirmation email
-      	that was sent to you.
-      </p>
-
-    </div>
-  </div>
-</div>
+<%= render 'shared/page_header',
+  flash: flash,
+  title: 'Edit Profile',
+  description: "Edit your profile information using the form below. You will
+        need to provide your current password in order to use it. Your
+        account must already be confirmed using the  confirmation email
+        that was sent to you."
+%>
 
 <%= form_for(resource, as: resource_name, url: registration_path(
 resource_name), html: {method: :put, class: 'form-horizontal' }) do |f| %>
@@ -69,7 +62,7 @@ resource_name), html: {method: :put, class: 'form-horizontal' }) do |f| %>
     <div class="small-12 columns">
 
       <div class='row form-actions'>
-      		<%= f.submit "Update", class: 'button small radius success' %>
+      		<%= f.submit "Update", class: 'success-button' %>
 
           <% if controller.action_name == 'edit' %>
             &nbsp;
@@ -79,13 +72,13 @@ resource_name), html: {method: :put, class: 'form-horizontal' }) do |f| %>
           <% end %>
 
 
-      		<%= link_to "Back", :back, class: 'button small radius secondary' %>
+      		<%= link_to "Back", :back, class: 'back-button' %>
 
 
       		<%= link_to "Cancel Account", registration_path(resource_name),
       			method: :delete,
       			data: {confirm: "Are you sure?"},
-      			class: 'right button small radius alert' %>
+      			class: 'delete-button right' %>
       </div>
     </div>
   </div>
