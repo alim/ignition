@@ -30,12 +30,12 @@
   <div class="row">
     <div class="small-6 columns">
       <%= f.label :password %>
-      <%= f.text_field :password, value: @user.password %>
+      <%= f.text_field :password, value: user.password %>
     </div>
 
     <div class="small-6 columns">
       <%= f.label :password_confirmation, 'Confirm password' %>
-      <%= f.text_field :password_confirmation, value: @user.password %>
+      <%= f.text_field :password_confirmation, value: user.password %>
     </div>
   </div>
 
@@ -53,7 +53,7 @@
       <% if controller.action_name == 'edit' %>
         <div id="credit_card_area">
           <%= render partial: 'shared/account_button_link',
-            locals: {user: @user}  %>
+            locals: {user: user}  %>
         </div>
       <% end %>
     </div>

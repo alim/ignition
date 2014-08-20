@@ -22,15 +22,15 @@ Ignition::Application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = false
-  
+
   # Setup precompiling of assets. Normally set to false for development
   # but enable it for debugging production issues in development
   # config.assets.enabled = false
-  
+
   # Settings for email
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.raise_delivery_errors = true  
-  
+  config.action_mailer.raise_delivery_errors = true
+
 	config.action_mailer.smtp_settings = {
   	:address              => ENV["SMTP_HOST"],
 		:port                 => ENV["SMTP_PORT"],
@@ -39,5 +39,5 @@ Ignition::Application.configure do
 		:password             => ENV["SMTP_PASSWORD"],
     :authentication       => :plain,
 #		:enable_starttls_auto => true
-  }  
+  }
 end
