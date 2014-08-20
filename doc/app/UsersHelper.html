@@ -66,8 +66,6 @@
 
   <ul class="link-list" role="directory">
     
-    <li ><a href="#method-i-list_groups">#list_groups</a>
-    
     <li ><a href="#method-i-user_search_options">#user_search_options</a>
     
   </ul>
@@ -102,44 +100,6 @@
        <header>
          <h3>Public Instance Methods</h3>
        </header>
-
-    
-      <div id="method-i-list_groups" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">list_groups</span><span
-            class="method-args">(groups)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>The <a href="UsersHelper.html#method-i-list_groups">#list_groups</a> helper
-method will generate of list group labels as an html code segment.</p>
-          
-          
-
-          
-          <div class="method-source-code" id="list_groups-source">
-            <pre><span class="ruby-comment"># File app/helpers/users_helper.rb, line 19</span>
-      <span class="ruby-keyword">def</span> <span class="ruby-identifier">list_groups</span>(<span class="ruby-identifier">groups</span>)
-  <span class="ruby-identifier">html</span> = <span class="ruby-string">&quot;&quot;</span>
-  <span class="ruby-identifier">groups</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">group</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-string">'&lt;span class=&quot;label&quot;&gt;'</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">group</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">+</span> <span class="ruby-string">'&lt;/span&gt; &amp;nbsp;'</span>
-  <span class="ruby-keyword">end</span>
-  <span class="ruby-identifier">html</span>.<span class="ruby-identifier">html_safe</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
 
     
       <div id="method-i-user_search_options" class="method-detail ">

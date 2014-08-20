@@ -37,6 +37,18 @@ class Organization
   validates_presence_of :owner
   validates_uniqueness_of :owner
 
+  ## PUBLIC CLASS METHODS ----------------------------------------------
+
+  #####################################################################
+  # Create a new project and relate the user record to it.
+  #####################################################################
+  def self.create_with_owner(org_params, owner)
+     org = Organization.new(org_params)
+     org.owner = owner
+     owner.organization = org
+     org
+  end
+
   ## PUBLIC INSTANCE METHODS -------------------------------------------
 
   ######################################################################
@@ -175,6 +187,15 @@ class Organization
     associated_classes.each do |rclass|
       self.send(rclass.to_s.downcase.pluralize + "=", nil)
     end
+  end
+
+  #####################################################################
+  # This utility method will notify organization members and relate
+  # associated classes to the organization
+  #####################################################################
+  def relate_and_notify
+    relate_classes
+    create_notify
   end
 
   #####################################################################

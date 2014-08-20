@@ -300,4 +300,33 @@ describe Organization do
     end
   end
 
+  ## CREATE WITH OWNER ------------------------------------------------
+
+  describe "#create_with_owner" do
+    let(:owner){ FactoryGirl.create(:user) }
+
+    let(:name) {"Sample Organization"}
+    let(:desc) {"The sample organization for testing"}
+    let(:members) {"one@example.com\ntwo@example.com\nthree@example.com\n"}
+
+    let(:org_params) do
+      {
+        name: name,
+        description: desc,
+        members: members
+      }
+    end
+
+    it "should create a new Organization" do
+      expect {
+        Organization.create_with_owner(org_params, owner).save
+      }.to change(Organization, :count).by(1)
+    end
+
+    it "should relate the organization to the correct user" do
+      org = Organization.create_with_owner(org_params, owner)
+      org.owner.should == owner
+      owner.organization.should == org
+    end
+  end
 end
