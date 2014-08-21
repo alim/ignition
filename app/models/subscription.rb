@@ -12,7 +12,7 @@ class Subscription
   strip_attributes  # See strip_attributes for more information
 
   ## CONSTANTS ---------------------------------------------------------
- 
+
   # The PLAN_OPTIONS is a hash of Stripe.com plan ID's associated with
   # this service. Each hash enter includes a label and an id
   PLAN_OPTIONS = [
@@ -20,7 +20,7 @@ class Subscription
     {label: 'Silver Plan', plan_id: 'ignition_silver_plan'},
     {label: 'Gold Plan', plan_id: 'ignition_gold_plan'},
   ]
-  
+
   # SUBSCRIPTION STATUS VALUES
   TRAILING = 'trialing'
   ACTIVE = 'active'
@@ -28,7 +28,7 @@ class Subscription
   CANCELLED = 'cancelled'
   UNPAID = 'unpaid'
   UNKNOWN = 'unknown'
- 
+
   ## ATTRIBUTES --------------------------------------------------------
 
   field :stripe_plan_id, type: String
