@@ -8,8 +8,9 @@ class Subscription
   include Mongoid::Timestamps
 
   # Add call to strip leading and trailing white spaces from all atributes
-  strip_attributes  # See strip_attributes for more information
   
+  strip_attributes  # See strip_attributes for more information
+
   ## CONSTANTS ---------------------------------------------------------
   
   # The PLAN_OPTIONS is a hash of Stripe.com plan ID's associated with
@@ -201,6 +202,16 @@ def destroy
    return removed_customer
 end
 
+##########################################################################
+# The sub_create function creates a new subscription by calling the 
+# subscribe function.
+##########################################################################
+def sub_create(current_user, stripe_pl_id, coupon)
+  current_user.subscriptions << @self.subscription
+
+  @self.subscribe(current_user.account, stripe_pl_id, coupon)
+end
+
 protected
 
   ######################################################################
@@ -229,12 +240,6 @@ protected
 def logger_debugger(errors, stripe_error, customer_id, description)
   logger.debug(description)
   errors[:customer_id] << stripe_error.message
-end
-
-def sub_create(current_user, stripe_pl_id, coupon)
-  current_user.subscriptions << @self.subscription
-
-  @self.subscribe(current_user.account, stripe_pl_id, coupon)
 end
 
 end
