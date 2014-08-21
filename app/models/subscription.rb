@@ -12,7 +12,7 @@ class Subscription
   strip_attributes  # See strip_attributes for more information
 
   ## CONSTANTS ---------------------------------------------------------
-  
+ 
   # The PLAN_OPTIONS is a hash of Stripe.com plan ID's associated with
   # this service. Each hash enter includes a label and an id
   PLAN_OPTIONS = [
@@ -28,9 +28,9 @@ class Subscription
   CANCELLED = 'cancelled'
   UNPAID = 'unpaid'
   UNKNOWN = 'unknown'
-  
+ 
   ## ATTRIBUTES --------------------------------------------------------
-  
+
   field :stripe_plan_id, type: String
   field :cancel_at_period_end, type: Boolean
   field :quantity, type: Integer
@@ -42,30 +42,29 @@ class Subscription
   field :current_period_end, type: DateTime
   field :trial_start, type: DateTime
   field :trial_end, type: DateTime
-  
-  ## Non-database attribute for storing a coupon code when subscribing
+
+## Non-database attribute for storing a coupon code when subscribing
   attr_accessor :coupon_code
-  
+
 # Add non database instance variables to store the temporary
-  # Stripe credit card data in memory, but not in the database.
+# Stripe credit card data in memory, but not in the database.
   attr_accessor :stripe_cc_token, :cardholder_email, :cardholder_name
   attr_accessor :customer_id
 
   ## VALIDATIONS -------------------------------------------------------
-  
+
   validates_presence_of :stripe_plan_id
   validates_presence_of :quantity
   validates_presence_of :sub_start
   validates_presence_of :status
   validates_presence_of :user_id
+ 
+## RELATIONSHIPS -----------------------------------------------------
 
-  
-  ## RELATIONSHIPS -----------------------------------------------------
-  
   belongs_to :user
   
-  ## INSTANCE METHODS --------------------------------------------------
-  
+## INSTANCE METHODS --------------------------------------------------
+
   ######################################################################
   # The plan_str returns a string that represents the name of the
   # subscription plan.
@@ -185,7 +184,7 @@ def destroy
  if self.customer_id.present?
 
   begin
- 
+
    cancel_subscription (self)
    Stripe.api_key = STRIPE[:api_key]
    customer = Stripe::Customer.retrieve("#{self.customer_id}")
