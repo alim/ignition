@@ -127,7 +127,7 @@ if account_user.customer_id.present?
       logger_debugger(errors, stripe_error, customer_id, "[Subscription.subscribe] error = #{stripe_error.message}")
       return nil
   end
- else 
+ else
   return nil
  end
 
