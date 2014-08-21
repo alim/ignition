@@ -66,6 +66,8 @@ group :test, :development do
 	gem 'pry-rails', :group => :development
 	gem "webrat"
   gem "database_cleaner"
+  gem "vcr"
+  gem "webmock"
 end
 
 # This needs to be installed so we can run Rails console on OpenShift directly
