@@ -20,7 +20,7 @@
   <dd id="plan_entries"><strong>Plan status: </strong><%= @subscription.status.capitalize %></dd>
 
   <% if @subscription.trial_start? %>
-    <dd id="plan_entries"><strong>Trial Period Start: </strong><%= @subscription.trial_start.to_date.to_formatted_s(:long) %></dd>   
+    <dd id="plan_entries"><strong>Trial Period Start: </strong><%= @subscription.trial_start.to_date.to_formatted_s(:long) %></dd>
   <% else %>
     <dd id="plan_entries"><strong>Trial Period Start: </strong>No trial period found.</dd>
   <% end %>

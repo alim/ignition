@@ -8,7 +8,7 @@ class Subscription
   include Mongoid::Timestamps
 
   # Add call to strip leading and trailing white spaces from all atributes
-  
+
   strip_attributes  # See strip_attributes for more information
 
   ## CONSTANTS ---------------------------------------------------------
