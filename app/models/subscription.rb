@@ -80,7 +80,7 @@ class Subscription
     else
       str = "Unknown Plan"
     end
-    
+
     return str
   end
 
