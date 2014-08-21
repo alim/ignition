@@ -88,9 +88,7 @@ class OrganizationsController < ApplicationController
     @organization = Organization.create_with_owner(organization_params, current_user)
 
     if @organization.save
-      @organization.relate_classes
-      @organization.create_notify
-
+      @organization.notify_and_update_classes
       redirect_to @organization, notice: 'Organization was successfully created.'
     else
       @verrors = @organization.errors.full_messages
@@ -108,9 +106,7 @@ class OrganizationsController < ApplicationController
     @organization.remove_members(params[:organization][:user_ids])
 
     if @organization.update_attributes(organization_params)
-      @organization.relate_classes
-      @organization.create_notify
-
+      @organization.notify_and_update_classes
       redirect_to @organization, notice: 'Organization was successfully updated.'
     else
       @verrors = @organization.errors.full_messages

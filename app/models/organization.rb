@@ -169,8 +169,6 @@ class Organization
   # belongs_to an organization.
   ######################################################################
   def relate_classes
-    # set managed class organization using the following format
-    # example - self.send("project_ids", oids)
     associated_classes.each do |rclass|
       oids = rclass.where(user_id: owner_id).pluck(:id)
       assignment_method = rclass.to_s.downcase + "_ids="
@@ -187,6 +185,15 @@ class Organization
     associated_classes.each do |rclass|
       self.send(rclass.to_s.downcase.pluralize + "=", nil)
     end
+  end
+
+  #####################################################################
+  # A utility method to notify organization members and relate
+  # associated classes
+  #####################################################################
+  def notify_and_update_classes
+    create_notify
+    relate_classes
   end
 
   #####################################################################
