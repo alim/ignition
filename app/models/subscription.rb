@@ -58,11 +58,11 @@ class Subscription
   validates_presence_of :sub_start
   validates_presence_of :status
   validates_presence_of :user_id
- 
+
 ## RELATIONSHIPS -----------------------------------------------------
 
   belongs_to :user
-  
+
 ## INSTANCE METHODS --------------------------------------------------
 
   ######################################################################
