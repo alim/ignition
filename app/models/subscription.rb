@@ -86,7 +86,7 @@ class Subscription
 
 ##########################################################################
 # The subscribe method creates or updates a Stripe subscription for a
-# given user. It then store some of the information in memory for that 
+# given user. It then store some of the information in memory for that
 # user. The following parameters are passed to this method:
 #
 # 1) User Account
@@ -141,7 +141,7 @@ end
 #
 # 1) User Account
 #
-# This method will return a 'true' or 'false' indicating whether the 
+# This method will return a 'true' or 'false' indicating whether the
 # subscription was cancelled.
 ##########################################################################
 def cancel_subscription(account_user)
@@ -174,7 +174,7 @@ end
 # The destroy method cancels a Stripe subscription for a given user and
 # then deletes the customer.
 #
-# This method will return a 'true' or 'false' indicating whether the 
+# This method will return a 'true' or 'false' indicating whether the
 # subscription was cancelled and the customer was deleted.
 ##########################################################################
 def destroy
@@ -202,7 +202,7 @@ def destroy
 end
 
 ##########################################################################
-# The sub_create function creates a new subscription by calling the 
+# The sub_create function creates a new subscription by calling the
 # subscribe function.
 ##########################################################################
 def sub_create(current_user, stripe_pl_id, coupon)
@@ -220,7 +220,7 @@ protected
  # subscription_valid = true
 
  #  if params[:cardholder_name].blank?
- #     errors[:cardholder_name] << "Cardholder name cannot be blank." 
+ #     errors[:cardholder_name] << "Cardholder name cannot be blank."
  #     subscription_vaild = false
  # end
 
