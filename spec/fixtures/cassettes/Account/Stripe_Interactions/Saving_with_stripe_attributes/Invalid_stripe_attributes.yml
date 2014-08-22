@@ -31,7 +31,7 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Thu, 21 Aug 2014 03:54:49 GMT
+      - Fri, 22 Aug 2014 03:23:41 GMT
       Content-Type:
       - application/json;charset=utf-8
       Content-Length:
@@ -53,5 +53,5 @@ http_interactions:
       string: ! "{\n  \"error\": {\n    \"type\": \"invalid_request_error\",\n    \"message\":
         \"Invalid token id: 123451234512345\"\n  }\n}\n"
     http_version: 
-  recorded_at: Thu, 21 Aug 2014 03:54:49 GMT
+  recorded_at: Fri, 22 Aug 2014 03:23:41 GMT
 recorded_with: VCR 2.8.0

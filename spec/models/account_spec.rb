@@ -280,52 +280,85 @@ describe Account do
 
 
 
-		# describe "Get customer method" do
-		# 	use_vcr_cassette
+		describe "Get customer method" do
 
-		#   it "Should retrieve the correct email address" do
-		# 	  user.account.save_with_stripe(@params).should be_true
-		# 	  user.account.get_customer
-		# 	  user.account.cardholder_email.should eq(email)
-		#   end
+			context "Valid customer get operation tests" do
+				use_vcr_cassette
+				let(:name) { 'Mickey Mouse' }
 
-		#   it "Should retrieve the correct cardholder name" do
-		# 	  user.account.save_with_stripe(@params).should be_true
-		# 	  user.account.get_customer
-		# 	  user.account.cardholder_name.should eq(name)
-		#   end
+				let(:info_token) do
+		    	VCR.use_cassette('get_stripe_token_get_info_token1', record: :once) do
+		    		get_token(name, cardnum, Date.today.month, (Date.today.year + 3), cvcvalue)
+		    	end
+				end
 
-		#   it "Should retrieve the correct cardholder last 4 digits" do
-		# 	  user.account.save_with_stripe(@params).should be_true
-		# 	  user.account.get_customer
-		# 	  user.account.last4.should eq(cardnum.split(//).last(4).join)
-		#   end
+		  	let(:params) do
+			  	{
+					  cardholder_name: name,
+					  cardholder_email: email,
+					  account: {stripe_cc_token: info_token.id}
+					}
+			  end
 
-		#   it "Should retrieve the correct card expiration" do
-		# 	  user.account.save_with_stripe(@params).should be_true
-		# 	  user.account.get_customer
+			  it "Should retrieve the correct email address" do
+				  user.account.save_with_stripe(params).should be_true
+				  user.account.get_customer
+				  user.account.cardholder_email.should eq(email)
+			  end
 
-		# 	  month = Date.today.month.to_s
-		# 	  year = (Date.today.year + 1).to_s
-		# 	  user.account.expiration.should match(/#{month}\/#{year}/)
-		#   end
+			  it "Should retrieve the correct cardholder name" do
+				  user.account.save_with_stripe(params).should be_true
+				  user.account.get_customer
+				  user.account.cardholder_name.should eq(name)
+			  end
 
-  #     it "Should have a status of ACTIVE" do
-		# 	  user.account.save_with_stripe(@params).should be_true
-		# 	  user.account.get_customer
-		# 	  user.account.status.should eq(Account::ACTIVE)
-		#   end
+			  it "Should retrieve the correct cardholder last 4 digits" do
+				  user.account.save_with_stripe(params).should be_true
+				  user.account.get_customer
+				  user.account.last4.should eq(cardnum.split(//).last(4).join)
+			  end
 
-		# 	context 'Invalid get customer data tests' do
-		# 		use_vcr_cassette
+			  it "Should retrieve the correct card expiration" do
+				  user.account.save_with_stripe(params).should be_true
+				  user.account.get_customer
 
-		# 	  it "Should return an error, if customer_id is invalid" do
-		# 	    user.account.save_with_stripe(@params).should be_true
-		# 	    user.account.customer_id = '1234123412341234'
-		# 	    user.account.get_customer.should be_nil
-		# 			user.account.errors.full_messages[0].should match(/Customer No such customer:/)
-		# 	  end
-		# 	end
-		# end
+				  month = Date.today.month.to_s
+				  year = (Date.today.year + 3).to_s
+				  user.account.expiration.should match(/#{month}\/#{year}/)
+			  end
+
+	      it "Should have a status of ACTIVE" do
+				  user.account.save_with_stripe(params).should be_true
+				  user.account.get_customer
+				  user.account.status.should eq(Account::ACTIVE)
+			  end
+			end
+
+			context 'Invalid get customer data tests' do
+				use_vcr_cassette
+				let(:name) { 'Mickey Mouse' }
+
+				let(:info_token) do
+		    	VCR.use_cassette('get_stripe_token_get_info_token2', record: :once) do
+		    		get_token(name, cardnum, Date.today.month, (Date.today.year + 3), cvcvalue)
+		    	end
+				end
+
+		  	let(:params) do
+			  	{
+					  cardholder_name: name,
+					  cardholder_email: email,
+					  account: {stripe_cc_token: info_token.id}
+					}
+			  end
+
+			  it "Should return an error, if customer_id is invalid" do
+			    user.account.save_with_stripe(params).should be_true
+			    user.account.customer_id = '1234123412341234'
+			    user.account.get_customer.should be_nil
+					user.account.errors.full_messages[0].should match(/Customer No such customer:/)
+			  end
+			end
+		end
 	end # Stripe interactions
 end
