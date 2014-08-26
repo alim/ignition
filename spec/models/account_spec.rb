@@ -278,8 +278,6 @@ describe Account do
 
 		end
 
-
-
 		describe "Get customer method" do
 
 			context "Valid customer get operation tests" do

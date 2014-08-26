@@ -198,7 +198,7 @@ class Account
   end
 
   #####################################################################
-  # The destory method overides the standard destory method for ActiveModel.
+  # The destroy method overrides the standard destroy method for ActiveModel.
   # This version will delete Stripe.com customer account associated
   # with the stored customer_id.
   #####################################################################
