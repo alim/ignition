@@ -10,7 +10,6 @@
 
 <dl class="dl-horizontal">
   <dd id="plan_entries"><strong>Plan Name: </strong><%= @subscription.plan_str %></dd>
-
   <dd id="plan_entries"><strong>Plan Start: </strong><%= @subscription.sub_start.to_date.to_formatted_s(:long) %></dd>
 
   <% if @subscription.sub_end? %>
