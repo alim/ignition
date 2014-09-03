@@ -90,16 +90,12 @@ class SubscriptionsController < ApplicationController
     #   2) Subscription Type (GOLD, Silver, etc.)
     #   3) Discount Coupom (if applicable)
 
-    respond_to do |format|
       if @subscription.save
-        format.html { redirect_to @subscription, notice: 'Subscription was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @subscription }
+        redirect_to @subscription, notice: 'Subscription was successfully created.'
       else
         @verrors = @subscription.errors.full_messages
-        format.html { render 'new' }
-        format.json { render json: @subscription.errors, status: :unprocessable_entity }
+        render 'new'
       end
-    end
   end
 
   #####################################################################
@@ -110,16 +106,12 @@ class SubscriptionsController < ApplicationController
 
     @subscription.subscribe(current_user.account, subscription_params[:stripe_plan_id], coupon: subscription_params[:coupon_code])
 
-    respond_to do |format|
       if @subscription.save
-        format.html { redirect_to @subscription, notice: 'Subscription was successfully updated.' }
-        format.json { head :no_content }
+        redirect_to @subscription, notice: 'Subscription was successfully updated.'
       else
         @verrors =  @subscription.errors.full_messages
-        format.html { render 'edit' }
-        format.json { render json: @subscription.errors, status: :unprocessable_entity }
+        render 'edit'
       end
-    end
   end
 
   ##########################################################################
@@ -136,10 +128,7 @@ class SubscriptionsController < ApplicationController
     # Then destroy the subscription record
     @subscription.delete
 
-    respond_to do |format|
-      format.html { redirect_to subscriptions_url }
-      format.json { head :no_content }
-    end
+      redirect_to subscriptions_url
   end
 
   ## PRIVATE INSTANCE METHODS ------------------------------------------
