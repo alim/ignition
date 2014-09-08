@@ -58,6 +58,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  ######################################################################
+  # The set_errors_render method will set an instance variable @verrors,
+  # which is used for rendering validation errors in views. It will also
+  # render the requested view
+  ######################################################################
+  def set_errors_render(object, view)
+    @verrors = object.errors.full_messages
+    render view
+  end
+
   ## PROTECTED METHODS -------------------------------------------------
 
   protected

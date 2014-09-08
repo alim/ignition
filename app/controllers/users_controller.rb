@@ -77,8 +77,7 @@ class UsersController < ApplicationController
     if @user.update_attributes(user_params)
       redirect_to user_url(@user), notice: "User account succesfully updated."
     else
-      @verrors = @user.errors.full_messages
-      render :edit
+      set_errors_render(@user, :edit)
     end
   end
 
@@ -113,8 +112,7 @@ class UsersController < ApplicationController
       UserMailer.new_account(@user).deliver
       redirect_to @user, notice: "New user account created and user email sent."
     else
-      @verrors = @user.errors.full_messages
-      render  'new'
+      set_errors_render(@user, :new)
     end
 
   end
