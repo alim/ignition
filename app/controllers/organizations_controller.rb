@@ -91,8 +91,7 @@ class OrganizationsController < ApplicationController
       @organization.notify_and_update_classes
       redirect_to @organization, notice: 'Organization was successfully created.'
     else
-      @verrors = @organization.errors.full_messages
-      render  'new'
+      set_errors_render(@organization, :new)
     end
   end
 
@@ -109,8 +108,7 @@ class OrganizationsController < ApplicationController
       @organization.notify_and_update_classes
       redirect_to @organization, notice: 'Organization was successfully updated.'
     else
-      @verrors = @organization.errors.full_messages
-      render  'edit'
+      set_errors_render(@organization, :edit)
     end
   end
 

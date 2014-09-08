@@ -85,8 +85,7 @@ class ProjectsController < ApplicationController
       @project.relate_to_organization
       redirect_to @project, notice: 'Project was successfully created.'
     else
-      @verrors = @project.errors.full_messages
-      render  'new'
+      set_errors_render(@project, :new)
     end
   end
 
@@ -102,8 +101,7 @@ class ProjectsController < ApplicationController
       @project.relate_to_organization
       redirect_to @project, notice: 'Project was successfully updated.'
     else
-      @verrors = @project.errors.full_messages
-      render  'edit'
+      set_errors_render(@project, :edit)
     end
   end
 
