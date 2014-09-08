@@ -23,6 +23,9 @@ VCR.configure do |c|
   c.default_cassette_options = { record: :new_episodes }
   c.hook_into :webmock
 
+  # Configure VCR and Rspec
+  c.configure_rspec_metadata!
+
   # Filters for external API's
   c.filter_sensitive_data('<API_KEY>') { ENV['API_KEY'] }
 end
@@ -61,9 +64,6 @@ RSpec.configure do |config|
   # Include Stripe.com test helpers
   config.include StripeTestHelpers
 
-  # Include Stripe.com test helpers
-  config.include SubscriptionTestHelpers
-
   # Clean and truncate database before each test run, include
   # error test runs
   config.before(:suite) do
@@ -71,5 +71,8 @@ RSpec.configure do |config|
   end
 
   # Add VCR helpers
-  config.extend VCR::RSpec::Macros
+  # config.extend VCR::RSpec::Macros
+
+  # Allow metadata to be passed into a describe block
+  config.treat_symbols_as_metadata_keys_with_true_values = true
 end

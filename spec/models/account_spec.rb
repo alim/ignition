@@ -67,14 +67,12 @@ describe Account do
 
     describe "Saving with stripe attributes" do
 
-    	context "Valid attributes" do
-	    	use_vcr_cassette
+    	context "Valid attributes", :vcr do
 
 		    let(:token) do
-		    	VCR.use_cassette('get_stripe_token_valid_save_test') do
-		    		get_token(name, cardnum, Date.today.month, (Date.today.year + 1), cvcvalue)
-		    	end
-		    end
+		    	get_token(name, cardnum, Date.today.month, (Date.today.year + 1),
+		    		cvcvalue)
+		  	end
 
 		    let(:params) do
 		    	{
@@ -125,13 +123,11 @@ describe Account do
 			  end
 			end
 
-			context 'Invalid stripe attributes' do
-				use_vcr_cassette
+			context 'Invalid stripe attributes', :vcr do
 
 		    let(:token) do
-		    	VCR.use_cassette('get_stripe_token_invalid_save_test') do
-		    		get_token(name, cardnum, Date.today.month, (Date.today.year + 1), cvcvalue)
-		    	end
+	    		get_token(name, cardnum, Date.today.month, (Date.today.year + 1),
+	    			cvcvalue)
 		    end
 
 		    let(:params) do
@@ -156,18 +152,16 @@ describe Account do
 	    let(:new_email) { "janedoe@example.com" }
 	    let(:new_name) { "Jane Doe" }
 
-			context "Valid stripe account update tests" do
-				use_vcr_cassette
+			context "Valid stripe account update tests", :vcr do
+
 		    let(:first_token) do
-		    	VCR.use_cassette('get_stripe_token_update_test_token1') do
-		    		get_token(name, cardnum, Date.today.month, (Date.today.year + 1), cvcvalue)
-		    	end
+		    	get_token(name, cardnum, Date.today.month, (Date.today.year + 1),
+		    		cvcvalue)
 				end
 
 		    let(:second_token) do
-		    	VCR.use_cassette('get_stripe_token_update_test_token2') do
-		    		get_token(new_name, cardnum, Date.today.month, (Date.today.year + 2), cvcvalue)
-		    	end
+		    	get_token(new_name, cardnum, Date.today.month, (Date.today.year + 2),
+		    		cvcvalue)
 				end
 
 		  	let(:params) do
@@ -236,18 +230,16 @@ describe Account do
 			  end
 			end
 
-			context "Updating with invalid stripe attributes" do
-				use_vcr_cassette
+			context "Updating with invalid stripe attributes", :vcr do
+
 		    let(:third_token) do
-		    	VCR.use_cassette('get_stripe_token_update_test_token3') do
-		    		get_token(name, cardnum, Date.today.month, (Date.today.year + 1), cvcvalue)
-		    	end
+		    	get_token(name, cardnum, Date.today.month, (Date.today.year + 1),
+		    		cvcvalue)
 				end
 
 		    let(:forth_token) do
-		    	VCR.use_cassette('get_stripe_token_update_test_token4') do
-		    		get_token(new_name, cardnum, Date.today.month, (Date.today.year + 2), cvcvalue)
-		    	end
+		    	get_token(new_name, cardnum, Date.today.month, (Date.today.year + 2),
+		    		cvcvalue)
 				end
 
 		  	let(:params) do
@@ -280,14 +272,13 @@ describe Account do
 
 		describe "Get customer method" do
 
-			context "Valid customer get operation tests" do
-				use_vcr_cassette
+			context "Valid customer get operation tests", :vcr do
+
 				let(:name) { 'Mickey Mouse' }
 
 				let(:info_token) do
-		    	VCR.use_cassette('get_stripe_token_get_info_token1', record: :once) do
-		    		get_token(name, cardnum, Date.today.month, (Date.today.year + 3), cvcvalue)
-		    	end
+		    	get_token(name, cardnum, Date.today.month, (Date.today.year + 3),
+		    		cvcvalue)
 				end
 
 		  	let(:params) do
@@ -332,14 +323,13 @@ describe Account do
 			  end
 			end
 
-			context 'Invalid get customer data tests' do
-				use_vcr_cassette
+			context 'Invalid get customer data tests', :vcr do
+
 				let(:name) { 'Mickey Mouse' }
 
 				let(:info_token) do
-		    	VCR.use_cassette('get_stripe_token_get_info_token2', record: :once) do
-		    		get_token(name, cardnum, Date.today.month, (Date.today.year + 3), cvcvalue)
-		    	end
+	    		get_token(name, cardnum, Date.today.month, (Date.today.year + 3),
+	    			cvcvalue)
 				end
 
 		  	let(:params) do

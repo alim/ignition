@@ -91,8 +91,7 @@ describe AccountsController do
 
     end # Valid examples
 
-    describe "Invalid examples" do
-      use_vcr_cassette
+    describe "Invalid examples", :vcr do
 
       it "Should redirect, if not logged in" do
         sign_out @signed_in_user
@@ -161,8 +160,7 @@ describe AccountsController do
         end
       end # As a customer role
 
-      describe "As a service administrator" do
-        use_vcr_cassette
+      describe "As a service administrator", :vcr do
 
         before(:each) {
           login_admin
@@ -224,8 +222,7 @@ describe AccountsController do
       subject.current_user.should_not be_nil
     }
 
-    describe "Valid create examples" do
-      use_vcr_cassette
+    describe "Valid create examples", :vcr do
 
       it "Should return success with valid account fields" do
         post :create, account_params
@@ -266,8 +263,7 @@ describe AccountsController do
       end
     end # Valid create examples
 
-    describe "Invalid create examples" do
-      use_vcr_cassette
+    describe "Invalid create examples", :vcr do
 
       it "Should redirect to sign_in, if not logged in" do
         sign_out @signed_in_user
@@ -303,8 +299,7 @@ describe AccountsController do
 
     describe "Validation examples" do
 
-      describe "As a customer" do
-        use_vcr_cassette
+      describe "As a customer", :vcr do
 
         it "Should not allow a customer to create another's account" do
           login_different_user
@@ -319,8 +314,7 @@ describe AccountsController do
         end
       end # Customer examples
 
-      describe "As an administrator" do
-        use_vcr_cassette
+      describe "As an administrator", :vcr do
 
         let(:admin_params){
           {
@@ -362,8 +356,7 @@ describe AccountsController do
       subject.current_user.should_not be_nil
     }
 
-    describe "Valid edit action examples" do
-      use_vcr_cassette
+    describe "Valid edit action examples", :vcr do
 
       it "Should return success" do
         create_customer_account
@@ -394,8 +387,7 @@ describe AccountsController do
       end
     end # Valid edit action examples
 
-    describe "Invalid edit action examples" do
-      use_vcr_cassette
+    describe "Invalid edit action examples", :vcr do
 
       it "Should redirect you to sign_in, if not logged in" do
         sign_out @signed_in_user
@@ -445,8 +437,7 @@ describe AccountsController do
 
     describe "Authorization examples" do
 
-      describe "As a customer role" do
-        use_vcr_cassette
+      describe "As a customer role", :vcr do
 
         it "Return success for a users own record" do
           create_customer_account
@@ -483,8 +474,7 @@ describe AccountsController do
         end
       end # As a customer role
 
-      describe "As a service administrator" do
-        use_vcr_cassette
+      describe "As a service administrator", :vcr do
 
         before(:each) {
           login_admin
@@ -555,8 +545,7 @@ describe AccountsController do
       subject.current_user.should_not be_nil
     }
 
-    describe "Valid update examples" do
-      use_vcr_cassette
+    describe "Valid update examples", :vcr do
 
       it "Should redirect to User#show path" do
         create_customer_account
@@ -587,8 +576,7 @@ describe AccountsController do
       end
     end # Valid update examples
 
-    describe "Invalid update examples" do
-      use_vcr_cassette
+    describe "Invalid update examples", :vcr do
 
       it "Should redirect to sign_in, if not logged in" do
         sign_out @signed_in_user
@@ -620,8 +608,7 @@ describe AccountsController do
 
    describe "Authorization examples" do
 
-      describe "As a customer role" do
-        use_vcr_cassette
+      describe "As a customer role", :vcr do
 
         it "Return success for a users own record" do
           create_customer_account
@@ -661,8 +648,7 @@ describe AccountsController do
 
       end # As a customer role
 
-      describe "As a service administrator" do
-        use_vcr_cassette
+      describe "As a service administrator", :vcr do
 
         before(:each) {
           login_admin
@@ -724,8 +710,7 @@ describe AccountsController do
       subject.current_user.should_not be_nil
     }
 
-    describe "Valid examples" do
-      use_vcr_cassette
+    describe "Valid examples", :vcr do
 
       it "Should redirect to #index" do
         create_customer_account
@@ -747,8 +732,7 @@ describe AccountsController do
       end
     end # Valid examples
 
-    describe "Invalid examples" do
-      use_vcr_cassette
+    describe "Invalid examples", :vcr do
 
       it "Should redirect to sign_in, if not logged in" do
         sign_out @signed_in_user
@@ -792,8 +776,7 @@ describe AccountsController do
     end # Invalid examples
 
     describe "Authorization examples" do
-      describe "As a customer role" do
-        use_vcr_cassette
+      describe "As a customer role", :vcr do
 
         before(:each) {
           create_customer_account
@@ -817,8 +800,7 @@ describe AccountsController do
         end
       end # As a customer role
 
-      describe "As a administrator role" do
-        use_vcr_cassette
+      describe "As a administrator role", :vcr do
 
         before(:each) {
           login_admin
