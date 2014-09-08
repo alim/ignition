@@ -102,6 +102,10 @@
     
     <li ><a href="#method-i-status_str">#status_str</a>
     
+    <li ><a href="#method-i-stripe_error_handler">#stripe_error_handler</a>
+    
+    <li ><a href="#method-i-update_customer_info">#update_customer_info</a>
+    
     <li ><a href="#method-i-update_with_stripe">#update_with_stripe</a>
     
   </ul>
@@ -305,9 +309,9 @@ stored customer_id.</p>
 
           
           <div class="method-source-code" id="destroy-source">
-            <pre><span class="ruby-comment"># File app/models/account.rb, line 215</span>
+            <pre><span class="ruby-comment"># File app/models/account.rb, line 205</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
-  
+
   <span class="ruby-comment"># Destroy the customer account on Stripe.com if the id is present.</span>
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">customer_id</span>.<span class="ruby-identifier">present?</span>
     <span class="ruby-keyword">begin</span>
@@ -317,7 +321,7 @@ stored customer_id.</p>
     <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">StripeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">stripe_error</span>
       <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-node">&quot;[Account.delete] stripe error = #{stripe_error.message}&quot;</span>)
       <span class="ruby-identifier">errors</span>[<span class="ruby-value">:customer_id</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">stripe_error</span>.<span class="ruby-identifier">message</span>
-      
+
       <span class="ruby-comment"># continue to raise the exception</span>
       <span class="ruby-identifier">raise</span> <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">StripeError</span>, <span class="ruby-identifier">stripe_error</span>.<span class="ruby-identifier">message</span>
     <span class="ruby-keyword">end</span>
@@ -455,19 +459,16 @@ update methods. This params hash should include:</p>
         <span class="ruby-value">:card</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:account</span>][<span class="ruby-value">:stripe_cc_token</span>],
         <span class="ruby-value">:email</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:cardholder_email</span>]
       )
-      
+
       <span class="ruby-identifier">load_customer_info</span>(<span class="ruby-identifier">customer</span>)
       <span class="ruby-keyword">self</span>.<span class="ruby-identifier">status</span> = <span class="ruby-constant">ACTIVE</span>
-      
+
       <span class="ruby-comment"># Attempt to save the record</span>
       <span class="ruby-identifier">account_valid</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">true</span> <span class="ruby-operator">:</span> <span class="ruby-keyword">false</span>
     <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">StripeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">stripe_error</span>
-    <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-node">&quot;[Account.save_with_stripe] stripe error = #{stripe_error.message}&quot;</span>)
-    <span class="ruby-identifier">errors</span>[<span class="ruby-value">:customer_id</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">stripe_error</span>.<span class="ruby-identifier">message</span>
-    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">status</span> = <span class="ruby-constant">INACTIVE</span>
-    <span class="ruby-identifier">account_valid</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-identifier">account_valid</span> = <span class="ruby-identifier">stripe_error_handler</span>(<span class="ruby-identifier">stripe_error</span>, <span class="ruby-constant">INACTIVE</span>)
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">account_valid</span>
@@ -554,7 +555,7 @@ update methods.</p>
 
           
           <div class="method-source-code" id="update_with_stripe-source">
-            <pre><span class="ruby-comment"># File app/models/account.rb, line 173</span>
+            <pre><span class="ruby-comment"># File app/models/account.rb, line 170</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">update_with_stripe</span>(<span class="ruby-identifier">params</span>)
   <span class="ruby-identifier">account_valid</span> = <span class="ruby-keyword">true</span>
 
@@ -567,11 +568,7 @@ update methods.</p>
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:deleted</span>)
         <span class="ruby-keyword">self</span>.<span class="ruby-identifier">status</span> = <span class="ruby-constant">NO_STRIPE</span>
       <span class="ruby-keyword">else</span>
-        <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">card</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:account</span>][<span class="ruby-value">:stripe_cc_token</span>]
-        <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">description</span> = <span class="ruby-node">&quot;#{ACCOUNT_NAME} account for #{params[cardholder_name]}&quot;</span>
-        <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">email</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:cardholder_email</span>]
-        
-        <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">save</span>
+        <span class="ruby-identifier">update_customer_info</span>(<span class="ruby-identifier">customer</span>, <span class="ruby-identifier">params</span>)
 
         <span class="ruby-identifier">load_customer_info</span>(<span class="ruby-identifier">customer</span>)
 
@@ -583,10 +580,7 @@ update methods.</p>
     <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">StripeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">stripe_error</span>
-    <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-node">&quot;[Account.update_with_stripe] stripe error = #{stripe_error.message}&quot;</span>)
-    <span class="ruby-identifier">errors</span>[<span class="ruby-value">:customer_id</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">stripe_error</span>.<span class="ruby-identifier">message</span>
-    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">status</span> = <span class="ruby-constant">INACTIVE</span>
-    <span class="ruby-identifier">account_valid</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-identifier">account_valid</span> = <span class="ruby-identifier">stripe_error_handler</span>(<span class="ruby-identifier">stripe_error</span>, <span class="ruby-constant">INACTIVE</span>)
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">account_valid</span>
@@ -630,10 +624,10 @@ account.</p>
 
           
           <div class="method-source-code" id="get_default_card-source">
-            <pre><span class="ruby-comment"># File app/models/account.rb, line 260</span>
+            <pre><span class="ruby-comment"># File app/models/account.rb, line 272</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">get_default_card</span>(<span class="ruby-identifier">customer</span>)
   <span class="ruby-identifier">default_card</span> = <span class="ruby-keyword">nil</span>
-  
+
   <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">cards</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">card</span><span class="ruby-operator">|</span>
     <span class="ruby-keyword">if</span> <span class="ruby-identifier">card</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">default_card</span>
       <span class="ruby-identifier">default_card</span> = <span class="ruby-identifier">card</span>
@@ -677,7 +671,7 @@ returned from the Stipe.com service.</p>
 
           
           <div class="method-source-code" id="is_valid-source">
-            <pre><span class="ruby-comment"># File app/models/account.rb, line 277</span>
+            <pre><span class="ruby-comment"># File app/models/account.rb, line 289</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">is_valid</span>(<span class="ruby-identifier">params</span>)
   <span class="ruby-identifier">account_valid</span> = <span class="ruby-keyword">true</span>
 
@@ -728,11 +722,11 @@ instance variables for the <a href="Account.html">Account</a> model.</p>
 
           
           <div class="method-source-code" id="load_customer_info-source">
-            <pre><span class="ruby-comment"># File app/models/account.rb, line 242</span>
+            <pre><span class="ruby-comment"># File app/models/account.rb, line 254</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">load_customer_info</span>(<span class="ruby-identifier">customer</span>)
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">customer_id</span> = <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">id</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">cardholder_email</span> = <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">email</span>
-  
+
   <span class="ruby-identifier">customer_card</span> = <span class="ruby-identifier">get_default_card</span>(<span class="ruby-identifier">customer</span>)
 
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">cardholder_name</span> = <span class="ruby-identifier">customer_card</span>.<span class="ruby-identifier">name</span>
@@ -740,6 +734,80 @@ instance variables for the <a href="Account.html">Account</a> model.</p>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">last4</span> = <span class="ruby-identifier">customer_card</span>.<span class="ruby-identifier">last4</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">expiration</span> =  <span class="ruby-identifier">customer_card</span>.<span class="ruby-identifier">exp_month</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span>
     <span class="ruby-string">'/'</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">customer_card</span>.<span class="ruby-identifier">exp_year</span>.<span class="ruby-identifier">to_s</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-stripe_error_handler" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">stripe_error_handler</span><span
+            class="method-args">(stripe_error, status=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>This helper method handles logging and setting stripe errors. It</p>
+          
+          
+
+          
+          <div class="method-source-code" id="stripe_error_handler-source">
+            <pre><span class="ruby-comment"># File app/models/account.rb, line 231</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">stripe_error_handler</span>(<span class="ruby-identifier">stripe_error</span>, <span class="ruby-identifier">status</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-node">&quot;[Account.update_with_stripe] stripe error = #{stripe_error.message}&quot;</span>)
+  <span class="ruby-identifier">errors</span>[<span class="ruby-value">:customer_id</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">stripe_error</span>.<span class="ruby-identifier">message</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">status</span> = <span class="ruby-identifier">status</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">status</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-update_customer_info" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update_customer_info</span><span
+            class="method-args">(customer, params)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Little helper method to update customer record with stripe and contact
+information.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="update_customer_info-source">
+            <pre><span class="ruby-comment"># File app/models/account.rb, line 242</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_customer_info</span>(<span class="ruby-identifier">customer</span>, <span class="ruby-identifier">params</span>)
+  <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">card</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:account</span>][<span class="ruby-value">:stripe_cc_token</span>]
+  <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">description</span> = <span class="ruby-node">&quot;#{ACCOUNT_NAME} account for #{params[cardholder_name]}&quot;</span>
+  <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">email</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:cardholder_email</span>]
+
+  <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">save</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           

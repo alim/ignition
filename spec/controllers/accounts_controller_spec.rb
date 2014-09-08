@@ -4,11 +4,15 @@ describe AccountsController do
 
   include_context 'user_setup'
 
-  let(:find_one_user) {
-    @customer = User.where(role: User::CUSTOMER).where(:account.exists => false).first
-    @admin = User.where(role: User::SERVICE_ADMIN).first
-    @customer_account = @customer = User.where(role: User::CUSTOMER).where(:account.exists => true).first
-  }
+  let(:customer){ User.where(role: User::CUSTOMER).where(:account.exists => false).first }
+  let(:admin){ User.where(role: User::SERVICE_ADMIN).first }
+  let(:customer_account){ User.where(role: User::CUSTOMER).where(:account.exists => true).first }
+
+  # let(:find_one_user) {
+  #   @customer = User.where(role: User::CUSTOMER).where(:account.exists => false).first
+  #   @admin = User.where(role: User::SERVICE_ADMIN).first
+  #   @customer_account = @customer = User.where(role: User::CUSTOMER).where(:account.exists => true).first
+  # }
 
   # Credit card and stripe test data
   let(:cardnum) { "4242424242424242" }
@@ -21,7 +25,7 @@ describe AccountsController do
 
   let(:customer_account_params){
     {
-      user_id: @customer_account.id,
+      user_id: customer_account.id,
       cardholder_name: name,
       cardholder_email: email,
       account: {stripe_cc_token: token.id}
@@ -30,12 +34,12 @@ describe AccountsController do
 
   let(:create_customer_account) {
     post :create, customer_account_params # Create a valid account
-    @customer_account.reload
+    customer_account.reload
   }
 
   let(:admin_account_params){
     {
-      user_id: @admin.id,
+      user_id: admin.id,
       cardholder_name: name,
       cardholder_email: email,
       account: {stripe_cc_token: token.id}
@@ -44,7 +48,7 @@ describe AccountsController do
 
   let(:create_admin_account) {
     post :create, admin_account_params # Create a valid account
-    @admin.reload
+    admin.reload
   }
 
 
@@ -52,7 +56,6 @@ describe AccountsController do
 		create_users
 		create_service_admins
 		create_users_with_account
-		find_one_user
 		signin_customer
 		subject.current_user.should_not be_nil
 	}
@@ -88,10 +91,11 @@ describe AccountsController do
 
     end # Valid examples
 
-    describe "Invalid examples" do
-       it "Should redirect, if not logged in" do
+    describe "Invalid examples", :vcr do
+
+      it "Should redirect, if not logged in" do
         sign_out @signed_in_user
-        get :new, user_id: @customer.id
+        get :new, user_id: customer.id
         response.should redirect_to new_user_session_url
       end
 
@@ -107,20 +111,20 @@ describe AccountsController do
 
       it "Should raise a stripe error, if invalid customer id" do
         sign_out @signed_in_user
-        sign_in @customer_account
+        sign_in customer_account
         subject.current_user.should_not be_nil
 
-        get :new, user_id: @customer_account.id
+        get :new, user_id: customer_account.id
         flash[:alert].should match(/Stripe error associated with account error = No such customer/)
       end
 
       it "Should redirect to user#show, if invalid customer id" do
         sign_out @signed_in_user
-        sign_in @customer_account
+        sign_in customer_account
         subject.current_user.should_not be_nil
 
-        get :new, user_id: @customer_account.id
-        response.should redirect_to user_url(@customer_account)
+        get :new, user_id: customer_account.id
+        response.should redirect_to user_url(customer_account)
       end
     end
 
@@ -156,11 +160,12 @@ describe AccountsController do
         end
       end # As a customer role
 
-      describe "As a service administrator" do
+      describe "As a service administrator", :vcr do
+
         before(:each) {
           login_admin
-          @user = User.where(:id.ne => @signed_in_user.id).where(
-            :account.exists => true).first
+          # @user = User.where(:id.ne => @signed_in_user.id).where(
+            # :account.exists => true).first
         }
 
         it "Return success for a own user record" do
@@ -180,19 +185,19 @@ describe AccountsController do
 
         it "Return success for a different users record" do
           create_customer_account
-          get :new, user_id: @customer_account.id
+          get :new, user_id: customer_account.id
           response.should be_success
         end
 
         it "Find the requested user record assciated with account" do
           create_customer_account
-          get :new, user_id: @customer_account.id
-          assigns(:account).user.id.should eq(@customer_account.id)
+          get :new, user_id: customer_account.id
+          assigns(:account).user.id.should eq(customer_account.id)
         end
 
         it "Render the new template" do
           create_customer_account
-          get :new, user_id: @customer_account.id
+          get :new, user_id: customer_account.id
           response.should render_template :new
         end
       end # As a service administrator
@@ -213,11 +218,12 @@ describe AccountsController do
 
     let(:login_different_user) {
       sign_out @signed_in_user
-      sign_in @customer_account
+      sign_in customer_account
       subject.current_user.should_not be_nil
     }
 
-    describe "Valid create examples" do
+    describe "Valid create examples", :vcr do
+
       it "Should return success with valid account fields" do
         post :create, account_params
         response.should redirect_to user_url(@signed_in_user)
@@ -257,7 +263,8 @@ describe AccountsController do
       end
     end # Valid create examples
 
-    describe "Invalid create examples" do
+    describe "Invalid create examples", :vcr do
+
       it "Should redirect to sign_in, if not logged in" do
         sign_out @signed_in_user
         post :create, account_params
@@ -291,7 +298,9 @@ describe AccountsController do
     end # Invalid create examples
 
     describe "Validation examples" do
-      describe "As a customer" do
+
+      describe "As a customer", :vcr do
+
         it "Should not allow a customer to create another's account" do
           login_different_user
           post :create, account_params
@@ -305,10 +314,11 @@ describe AccountsController do
         end
       end # Customer examples
 
-      describe "As an administrator" do
+      describe "As an administrator", :vcr do
+
         let(:admin_params){
           {
-            user_id: @customer_account.id,
+            user_id: customer_account.id,
             cardholder_name: name,
             cardholder_email: email,
             account: {stripe_cc_token: token.id}
@@ -324,7 +334,7 @@ describe AccountsController do
         it "Should redirect to user_url when creating another customers account" do
           login_admin
           post :create, admin_params
-          response.should redirect_to user_url(@customer_account)
+          response.should redirect_to user_url(customer_account)
         end
 
       end # Admin examples
@@ -335,18 +345,18 @@ describe AccountsController do
   describe "Edit action tests" do
     let(:edit_params) {
       {
-        user_id: @customer_account.id,
-        id: @customer_account.account.id
+        user_id: customer_account.id,
+        id: customer_account.account.id
       }
     }
 
     before(:each){
       sign_out @signed_in_user
-      sign_in @customer_account
+      sign_in customer_account
       subject.current_user.should_not be_nil
     }
 
-    describe "Valid edit action examples" do
+    describe "Valid edit action examples", :vcr do
 
       it "Should return success" do
         create_customer_account
@@ -357,13 +367,13 @@ describe AccountsController do
       it "Should find the right User record" do
         create_customer_account
         get :edit, edit_params
-        assigns(:user).id.should eq(@customer_account.id)
+        assigns(:user).id.should eq(customer_account.id)
       end
 
       it "Should find the right Account record" do
         create_customer_account
         get :edit, edit_params
-        assigns(:user).account.id.should eq(@customer_account.account.id)
+        assigns(:user).account.id.should eq(customer_account.account.id)
       end
 
       it "Should find the right stripe data" do
@@ -377,7 +387,8 @@ describe AccountsController do
       end
     end # Valid edit action examples
 
-    describe "Invalid edit action examples" do
+    describe "Invalid edit action examples", :vcr do
+
       it "Should redirect you to sign_in, if not logged in" do
         sign_out @signed_in_user
         get :edit, edit_params
@@ -419,14 +430,14 @@ describe AccountsController do
 
       it "Should redirect to user#show, if invalid customer id" do
         get :edit, edit_params
-        response.should redirect_to user_url(@customer_account)
+        response.should redirect_to user_url(customer_account)
       end
 
     end # Invalid edit action examples
 
     describe "Authorization examples" do
 
-      describe "As a customer role" do
+      describe "As a customer role", :vcr do
 
         it "Return success for a users own record" do
           create_customer_account
@@ -437,7 +448,7 @@ describe AccountsController do
         it "Find the requested user record owned by the user" do
           create_customer_account
           get :edit, edit_params
-          assigns(:user).id.should eq(@customer_account.id)
+          assigns(:user).id.should eq(customer_account.id)
         end
 
         it "Render the edit template" do
@@ -448,7 +459,7 @@ describe AccountsController do
 
         it "Should redirect to admin_oops if user requests another's record" do
           create_customer_account
-          user = User.where(:id.ne => @customer_account.id).first
+          user = User.where(:id.ne => customer_account.id).first
           edit_params[:user_id] = user.id
           get :edit, edit_params
           response.should redirect_to admin_oops_url
@@ -456,14 +467,15 @@ describe AccountsController do
 
         it "Should flash alert if user requests another's record" do
           create_customer_account
-          user = User.where(:id.ne => @customer_account.id).first
+          user = User.where(:id.ne => customer_account.id).first
           edit_params[:user_id] = user.id
           get :edit, edit_params
           flash[:alert].should match(/You are not authorized to access the requested/)
         end
       end # As a customer role
 
-      describe "As a service administrator" do
+      describe "As a service administrator", :vcr do
+
         before(:each) {
           login_admin
         }
@@ -477,7 +489,7 @@ describe AccountsController do
         it "Find the requested user record owned by another user" do
           create_customer_account
           get :edit, edit_params
-          assigns(:user).id.should eq(@customer_account.id)
+          assigns(:user).id.should eq(customer_account.id)
         end
 
         it "Render the edit template" do
@@ -489,19 +501,19 @@ describe AccountsController do
         it "Return success for admin users record" do
           create_admin_account
 
-          get :edit, {user_id: @admin.id, id: @admin.account.id}
+          get :edit, {user_id: admin.id, id: admin.account.id}
           response.should be_success
         end
 
         it "Find the requested user record owned by admin user" do
           create_admin_account
-          get :edit, {user_id: @admin.id, id: @admin.account.id}
-          assigns(:user).id.should eq(@admin.id)
+          get :edit, {user_id: admin.id, id: admin.account.id}
+          assigns(:user).id.should eq(admin.id)
         end
 
         it "Render the edit template" do
           create_admin_account
-          get :edit, {user_id: @admin.id, id: @admin.account.id}
+          get :edit, {user_id: admin.id, id: admin.account.id}
           response.should render_template :edit
         end
 
@@ -518,8 +530,8 @@ describe AccountsController do
 
     let(:update_account_params){
       {
-        user_id: @customer_account.id,
-        id: @customer_account.account.id,
+        user_id: customer_account.id,
+        id: customer_account.account.id,
         cardholder_name: updated_name,
         cardholder_email: updated_email,
         account: {stripe_cc_token: get_token(updated_name, cardnum,
@@ -529,28 +541,29 @@ describe AccountsController do
 
     before(:each){
       sign_out @signed_in_user
-      sign_in @customer_account
+      sign_in customer_account
       subject.current_user.should_not be_nil
     }
 
-    describe "Valid update examples" do
+    describe "Valid update examples", :vcr do
+
       it "Should redirect to User#show path" do
         create_customer_account
         put :update, update_account_params
 
-        response.should redirect_to user_url(@customer_account)
+        response.should redirect_to user_url(customer_account)
       end
 
       it "Should find the correct user record" do
         create_customer_account
         put :update, update_account_params
-        assigns(:user).id.should eq(@customer_account.id)
+        assigns(:user).id.should eq(customer_account.id)
       end
 
       it "Should find the correct account record" do
         create_customer_account
         put :update, update_account_params
-        assigns(:user).account.id.should eq(@customer_account.account.id)
+        assigns(:user).account.id.should eq(customer_account.account.id)
       end
 
       it "Should find the right stripe data" do
@@ -563,7 +576,8 @@ describe AccountsController do
       end
     end # Valid update examples
 
-    describe "Invalid update examples" do
+    describe "Invalid update examples", :vcr do
+
       it "Should redirect to sign_in, if not logged in" do
         sign_out @signed_in_user
         put :update, update_account_params
@@ -581,7 +595,7 @@ describe AccountsController do
         params = update_account_params
         params[:id] = '99999'
         put :update, params
-        response.should redirect_to user_url(@customer_account)
+        response.should redirect_to user_url(customer_account)
       end
 
       it "Should flash error message, if user not found" do
@@ -594,7 +608,7 @@ describe AccountsController do
 
    describe "Authorization examples" do
 
-      describe "As a customer role" do
+      describe "As a customer role", :vcr do
 
         it "Return success for a users own record" do
           create_customer_account
@@ -605,7 +619,7 @@ describe AccountsController do
         it "Find the requested user record owned by the user" do
           create_customer_account
           put :update, update_account_params
-          assigns(:user).id.should eq(@customer_account.id)
+          assigns(:user).id.should eq(customer_account.id)
         end
 
         it "Flash success message after update" do
@@ -615,7 +629,7 @@ describe AccountsController do
         end
 
         it "Should redirect to admin_oops if user requests another's record" do
-          user = User.where(:id.ne => @customer_account.id).where(
+          user = User.where(:id.ne => customer_account.id).where(
             :account.exists => true).first
           update_account_params[:user_id] = user.id
           update_account_params[:id] = user.account.id
@@ -624,7 +638,7 @@ describe AccountsController do
         end
 
         it "Should flash alert if user requests another's record" do
-          user = User.where(:id.ne => @customer_account.id).where(
+          user = User.where(:id.ne => customer_account.id).where(
             :account.exists => true).first
           update_account_params[:user_id] = user.id
           update_account_params[:id] = user.account.id
@@ -634,7 +648,7 @@ describe AccountsController do
 
       end # As a customer role
 
-      describe "As a service administrator" do
+      describe "As a service administrator", :vcr do
 
         before(:each) {
           login_admin
@@ -642,18 +656,18 @@ describe AccountsController do
 
         it "Should redirect to show view for a users own record" do
           create_admin_account
-          update_account_params[:user_id] = @admin.id
-          update_account_params[:id] = @admin.account.id
+          update_account_params[:user_id] = admin.id
+          update_account_params[:id] = admin.account.id
           put :update, update_account_params
           response.should redirect_to user_url(assigns(:user))
         end
 
         it "Find the requested user record owned by the user" do
           create_admin_account
-          update_account_params[:user_id] = @admin.id
-          update_account_params[:id] = @admin.account.id
+          update_account_params[:user_id] = admin.id
+          update_account_params[:id] = admin.account.id
           put :update, update_account_params
-          assigns(:user).id.should eq(@admin.id)
+          assigns(:user).id.should eq(admin.id)
         end
 
         it "Return success for another users record" do
@@ -665,7 +679,7 @@ describe AccountsController do
         it "Find the requested user record owned by another user" do
           create_customer_account
           put :update, update_account_params
-          assigns(:user).id.should eq(@customer_account.id)
+          assigns(:user).id.should eq(customer_account.id)
         end
 
         it "Flash success message after update" do
@@ -684,19 +698,20 @@ describe AccountsController do
   describe "Destroy action tests" do
     let(:destroy_params) {
       {
-        user_id: @customer_account.id,
-        id: @customer_account.account.id
+        user_id: customer_account.id,
+        id: customer_account.account.id
       }
     }
 
 
     before(:each) {
       sign_out @signed_in_user
-      sign_in @customer_account
+      sign_in customer_account
       subject.current_user.should_not be_nil
     }
 
-    describe "Valid examples" do
+    describe "Valid examples", :vcr do
+
       it "Should redirect to #index" do
         create_customer_account
         delete :destroy, destroy_params
@@ -712,12 +727,13 @@ describe AccountsController do
       it "Should delete account record" do
         create_customer_account
         delete :destroy, destroy_params
-        @customer_account.reload
-        @customer_account.account.should_not be_present
+        customer_account.reload
+        customer_account.account.should_not be_present
       end
     end # Valid examples
 
-    describe "Invalid examples" do
+    describe "Invalid examples", :vcr do
+
       it "Should redirect to sign_in, if not logged in" do
         sign_out @signed_in_user
         delete :destroy, destroy_params
@@ -749,7 +765,7 @@ describe AccountsController do
       it "Should redirect to users#index, if no account record found" do
         destroy_params[:id] = '00999'
         delete :destroy, destroy_params
-        response.should redirect_to user_url(@customer_account)
+        response.should redirect_to user_url(customer_account)
       end
 
       it "Should flash an error message, if no account record found" do
@@ -760,15 +776,16 @@ describe AccountsController do
     end # Invalid examples
 
     describe "Authorization examples" do
-      describe "As a customer role" do
+      describe "As a customer role", :vcr do
+
         before(:each) {
           create_customer_account
-          destroy_params[:user_id] = @customer_account.id
-          destroy_params[:id] = @customer_account.account.id
+          destroy_params[:user_id] = customer_account.id
+          destroy_params[:id] = customer_account.account.id
 
-          @customer = User.where(:id.ne => @customer_account.id).where(:role => User::CUSTOMER).first
-          sign_out @customer_account
-          sign_in @customer
+          customer = User.where(:id.ne => customer_account.id).where(:role => User::CUSTOMER).first
+          sign_out customer_account
+          sign_in customer
           subject.current_user.should_not be_nil
         }
 
@@ -783,15 +800,16 @@ describe AccountsController do
         end
       end # As a customer role
 
-      describe "As a administrator role" do
+      describe "As a administrator role", :vcr do
+
         before(:each) {
           login_admin
         }
 
         let(:admin_destroy_params) {
           {
-            user_id: @admin.id,
-            id: @admin.account.id
+            user_id: admin.id,
+            id: admin.account.id
           }
         }
 
@@ -803,10 +821,10 @@ describe AccountsController do
 
         it "Should delete the account, when deleting their own account" do
           create_admin_account
-          @admin.account.should_not be_nil
+          admin.account.should_not be_nil
           delete :destroy, admin_destroy_params
-          @admin.reload
-          @admin.account.should be_nil
+          admin.reload
+          admin.account.should be_nil
         end
 
         it "Should flash success notice, when deleting their own account" do
@@ -818,8 +836,8 @@ describe AccountsController do
         it "Should be able to delete another user's account" do
           create_customer_account
           delete :destroy, destroy_params
-          @customer_account.reload
-          @customer_account.account.should be_nil
+          customer_account.reload
+          customer_account.account.should be_nil
         end
 
         it "Should be redirected to users_url, when deleting another user's account" do

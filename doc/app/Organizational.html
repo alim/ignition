@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 
-<title>module SharedInstanceMethods - Rails Application Documentation</title>
+<title>module Organizational - Rails Application Documentation</title>
 
 <link href="./fonts.css" rel="stylesheet">
 <link href="./rdoc.css" rel="stylesheet">
@@ -59,14 +59,25 @@
     
     
     
+    <div id="extends-section" class="nav-section">
+  <h3>Extended With Modules</h3>
+
+  <ul class="link-list">
     
+  
+    <li><span class="extend">ActiveSupport::Concern</span>
+  
+  
+  </ul>
+</div>
+
     <!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
   <h3>Methods</h3>
 
   <ul class="link-list" role="directory">
     
-    <li ><a href="#method-i-attribute_str">#attribute_str</a>
+    <li ><a href="#method-i-relate_to_organization">#relate_to_organization</a>
     
   </ul>
 </div>
@@ -74,20 +85,17 @@
   </div>
 </nav>
 
-<main role="main" aria-labelledby="module-SharedInstanceMethods">
-  <h1 id="module-SharedInstanceMethods" class="module">
-    module SharedInstanceMethods
+<main role="main" aria-labelledby="module-Organizational">
+  <h1 id="module-Organizational" class="module">
+    module Organizational
   </h1>
 
   <section class="description">
     
-<p>The <a href="SharedInstanceMethods.html">SharedInstanceMethods</a> module
-is used for storing methods that will be accross multiple Rails model
-classes. To use these methods, you will need to:</p>
-
-<pre>include SharedInstanceMethods</pre>
-
-<p>in your model class definition</p>
+<p>The <a href="Organizational.html">Organizational</a> concern’s purpose is
+to add features associated with working with the <a
+href="Organizational.html">Organizational</a> model to class that belong to
+an organization.</p>
 
   </section>
 
@@ -110,11 +118,11 @@ classes. To use these methods, you will need to:</p>
        </header>
 
     
-      <div id="method-i-attribute_str" class="method-detail ">
+      <div id="method-i-relate_to_organization" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">attribute_str</span><span
-            class="method-args">(ahash, value)</span>
+          <span class="method-name">relate_to_organization</span><span
+            class="method-args">()</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -123,35 +131,20 @@ classes. To use these methods, you will need to:</p>
 
         <div class="method-description">
           
-          <p>The <a
-href="SharedInstanceMethods.html#method-i-attribute_str">#attribute_str</a>
-method is a utility instance method that is used to print the human
-readable string associated with an attribute value. It takes two parameters
-as follows:</p>
-<ul><li>
-<p>ahash - is a hash that stores possible values for an attribute the key is
-assumed to be the label</p>
-</li><li>
-<p>value - is the value of the attribute that is stored in the object.</p>
-</li></ul>
+          <p>Relate the current class to it’s organization, if it is present for the
+class.</p>
           
           
 
           
-          <div class="method-source-code" id="attribute_str-source">
-            <pre><span class="ruby-comment"># File lib/shared_instance_methods.rb, line 20</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">attribute_str</span>(<span class="ruby-identifier">ahash</span>, <span class="ruby-identifier">value</span>)
-  <span class="ruby-identifier">str</span> = <span class="ruby-string">'Unknown'</span>
-
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">ahash</span>.<span class="ruby-identifier">present?</span> <span class="ruby-operator">&amp;</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">present?</span>
-    <span class="ruby-identifier">ahash</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">label</span>, <span class="ruby-identifier">hash_value</span><span class="ruby-operator">|</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">hash_value</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">value</span>
-        <span class="ruby-identifier">str</span> = <span class="ruby-identifier">label</span>
-        <span class="ruby-keyword">break</span>
-      <span class="ruby-keyword">end</span>
+          <div class="method-source-code" id="relate_to_organization-source">
+            <pre><span class="ruby-comment"># File app/models/concerns/organizational.rb, line 46</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">relate_to_organization</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:user</span>)
+    <span class="ruby-keyword">if</span> (<span class="ruby-identifier">org</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">user</span>.<span class="ruby-identifier">organization</span>)
+      <span class="ruby-identifier">org</span>.<span class="ruby-identifier">send</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">downcase</span>.<span class="ruby-identifier">pluralize</span>) <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-keyword">self</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">return</span> <span class="ruby-identifier">str</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           

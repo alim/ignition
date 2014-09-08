@@ -88,7 +88,7 @@
 
   <ul class="link-list" role="directory">
     
-    <li ><a href="#method-c-owned_organization">::owned_organization</a>
+    <li ><a href="#method-c-create_with_owner">::create_with_owner</a>
     
     <li ><a href="#method-i-create_notify">#create_notify</a>
     
@@ -96,9 +96,17 @@
     
     <li ><a href="#method-i-lookup_users">#lookup_users</a>
     
+    <li ><a href="#method-i-managed_classes">#managed_classes</a>
+    
     <li ><a href="#method-i-members_list">#members_list</a>
     
+    <li ><a href="#method-i-relate_and_notify">#relate_and_notify</a>
+    
+    <li ><a href="#method-i-relate_classes">#relate_classes</a>
+    
     <li ><a href="#method-i-remove_members">#remove_members</a>
+    
+    <li ><a href="#method-i-unrelate_classes">#unrelate_classes</a>
     
   </ul>
 </div>
@@ -150,7 +158,7 @@ rights to add users to the organization.</p>
 
         <div class="method-description">
         
-        <p>field :owner_id, type: BSON::ObjectId</p>
+        
         
         </div>
       </div>
@@ -165,11 +173,11 @@ rights to add users to the organization.</p>
        </header>
 
     
-      <div id="method-c-owned_organization" class="method-detail ">
+      <div id="method-c-create_with_owner" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">owned_organization</span><span
-            class="method-args">(owner)</span>
+          <span class="method-name">create_with_owner</span><span
+            class="method-args">(org_params, owner)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -178,15 +186,18 @@ rights to add users to the organization.</p>
 
         <div class="method-description">
           
-          <p>Find the organization record associated with the user or return nil</p>
+          <p>Create a new project and relate the user record to it.</p>
           
           
 
           
-          <div class="method-source-code" id="owned_organization-source">
+          <div class="method-source-code" id="create_with_owner-source">
             <pre><span class="ruby-comment"># File app/models/organization.rb, line 45</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">owned_organization</span>(<span class="ruby-identifier">owner</span>)
-  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">owner_id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">owner</span>.<span class="ruby-identifier">id</span>).<span class="ruby-identifier">first</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">owner</span>.<span class="ruby-identifier">present?</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">create_with_owner</span>(<span class="ruby-identifier">org_params</span>, <span class="ruby-identifier">owner</span>)
+   <span class="ruby-identifier">org</span> = <span class="ruby-constant">Organization</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">org_params</span>)
+   <span class="ruby-identifier">org</span>.<span class="ruby-identifier">owner</span> = <span class="ruby-identifier">owner</span>
+   <span class="ruby-identifier">owner</span>.<span class="ruby-identifier">organization</span> = <span class="ruby-identifier">org</span>
+   <span class="ruby-identifier">org</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -230,7 +241,7 @@ associated with the current group.</p>
 
           
           <div class="method-source-code" id="create_notify-source">
-            <pre><span class="ruby-comment"># File app/models/organization.rb, line 71</span>
+            <pre><span class="ruby-comment"># File app/models/organization.rb, line 76</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create_notify</span>
   <span class="ruby-identifier">member_list</span> = <span class="ruby-identifier">lookup_users</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">member_list</span>.<span class="ruby-identifier">present?</span>
@@ -285,7 +296,7 @@ password.</p>
 
           
           <div class="method-source-code" id="invite_member-source">
-            <pre><span class="ruby-comment"># File app/models/organization.rb, line 98</span>
+            <pre><span class="ruby-comment"># File app/models/organization.rb, line 103</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">invite_member</span>(<span class="ruby-identifier">user</span>)
   <span class="ruby-identifier">plen</span> = <span class="ruby-value">12</span>
 
@@ -338,7 +349,7 @@ assumes that group.members holds the email list.</p>
 
           
           <div class="method-source-code" id="lookup_users-source">
-            <pre><span class="ruby-comment"># File app/models/organization.rb, line 127</span>
+            <pre><span class="ruby-comment"># File app/models/organization.rb, line 132</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">lookup_users</span>
   <span class="ruby-identifier">users</span> = {}     <span class="ruby-comment"># Hash for returning results</span>
 
@@ -355,6 +366,53 @@ assumes that group.members holds the email list.</p>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">users</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-managed_classes" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">managed_classes</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The <a
+href="Organization.html#method-i-managed_classes">#managed_classes</a>
+method will returns a hash of classes managed by the organization. The hash
+keys will be the class names, and the hash values will be class instances.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="managed_classes-source">
+            <pre><span class="ruby-comment"># File app/models/organization.rb, line 206</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">managed_classes</span>
+
+  <span class="ruby-identifier">classes</span> = {}
+  <span class="ruby-keyword">if</span> (<span class="ruby-identifier">related_classes</span> = <span class="ruby-identifier">reflect_on_all_associations</span>(<span class="ruby-value">:has_many</span>)).<span class="ruby-identifier">present?</span>
+    <span class="ruby-identifier">related_classes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">rclass</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">class_name</span> = <span class="ruby-identifier">rclass</span>.<span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">camelize</span>.<span class="ruby-identifier">singularize</span>.<span class="ruby-identifier">constantize</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">class_name</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">User</span> <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">records</span> = <span class="ruby-identifier">class_name</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">organization_id</span><span class="ruby-operator">:</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>)).<span class="ruby-identifier">present?</span>
+        <span class="ruby-identifier">classes</span>[<span class="ruby-identifier">class_name</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">downcase</span>.<span class="ruby-identifier">to_sym</span>] = <span class="ruby-identifier">records</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">classes</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -387,7 +445,7 @@ valid email format.</p>
 
           
           <div class="method-source-code" id="members_list-source">
-            <pre><span class="ruby-comment"># File app/models/organization.rb, line 53</span>
+            <pre><span class="ruby-comment"># File app/models/organization.rb, line 58</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">members_list</span>
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">members</span>.<span class="ruby-identifier">present?</span>
     <span class="ruby-identifier">email_list</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">members</span>.<span class="ruby-identifier">split</span>
@@ -396,6 +454,81 @@ valid email format.</p>
         <span class="ruby-keyword">self</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:members</span>, <span class="ruby-node">&quot;invalid email address - #{email}&quot;</span>)
       <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-relate_and_notify" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">relate_and_notify</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>This utility method will notify organization members and relate associated
+classes to the organization</p>
+          
+          
+
+          
+          <div class="method-source-code" id="relate_and_notify-source">
+            <pre><span class="ruby-comment"># File app/models/organization.rb, line 196</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">relate_and_notify</span>
+  <span class="ruby-identifier">relate_classes</span>
+  <span class="ruby-identifier">create_notify</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-relate_classes" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">relate_classes</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The <a href="Organization.html#method-i-relate_classes">#relate_classes</a>
+method will relate instances of each class that belongs_to an organization.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="relate_classes-source">
+            <pre><span class="ruby-comment"># File app/models/organization.rb, line 171</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">relate_classes</span>
+  <span class="ruby-comment"># set managed class organization using the following format</span>
+  <span class="ruby-comment"># example - self.send(&quot;project_ids&quot;, oids)</span>
+  <span class="ruby-identifier">associated_classes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">rclass</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">oids</span> = <span class="ruby-identifier">rclass</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">user_id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">owner_id</span>).<span class="ruby-identifier">pluck</span>(<span class="ruby-value">:id</span>)
+    <span class="ruby-identifier">assignment_method</span> = <span class="ruby-identifier">rclass</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;_ids=&quot;</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">assignment_method</span>, <span class="ruby-identifier">oids</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">oids</span>.<span class="ruby-identifier">present?</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -429,7 +562,7 @@ ID’s of the members to disassociate from the group</p>
 
           
           <div class="method-source-code" id="remove_members-source">
-            <pre><span class="ruby-comment"># File app/models/organization.rb, line 152</span>
+            <pre><span class="ruby-comment"># File app/models/organization.rb, line 157</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">remove_members</span>(<span class="ruby-identifier">members</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">members</span>.<span class="ruby-identifier">present?</span>
     <span class="ruby-identifier">members</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">uid</span><span class="ruby-operator">|</span>
@@ -437,6 +570,45 @@ ID’s of the members to disassociate from the group</p>
       <span class="ruby-keyword">self</span>.<span class="ruby-identifier">users</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">user</span>)
     <span class="ruby-keyword">end</span>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">reload</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-unrelate_classes" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">unrelate_classes</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The <a
+href="Organization.html#method-i-unrelate_classes">#unrelate_classes</a>
+method is responsible for disassociating all other classes from the <a
+href="Organization.html">Organization</a> object.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="unrelate_classes-source">
+            <pre><span class="ruby-comment"># File app/models/organization.rb, line 185</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">unrelate_classes</span>
+  <span class="ruby-comment"># Should generate a call like self.projects.clear</span>
+  <span class="ruby-identifier">associated_classes</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">rclass</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">rclass</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">downcase</span>.<span class="ruby-identifier">pluralize</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;=&quot;</span>, <span class="ruby-keyword">nil</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>

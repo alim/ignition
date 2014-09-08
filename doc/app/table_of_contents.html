@@ -68,9 +68,6 @@
     <a href="ContactMailer.html">ContactMailer</a>
   </li>
   <li class="module">
-    <a href="GroupRelations.html">GroupRelations</a>
-  </li>
-  <li class="module">
     <a href="GroupsHelper.html">GroupsHelper</a>
   </li>
   <li class="class">
@@ -85,6 +82,12 @@
   <li class="class">
     <a href="OrganizationMailer.html">OrganizationMailer</a>
   </li>
+  <li class="module">
+    <a href="Organizational.html">Organizational</a>
+  </li>
+  <li class="module">
+    <a href="Organizational/ClassMethods.html">Organizational::ClassMethods</a>
+  </li>
   <li class="class">
     <a href="OrganizationsController.html">OrganizationsController</a>
   </li>
@@ -96,12 +99,6 @@
   </li>
   <li class="module">
     <a href="ProjectsHelper.html">ProjectsHelper</a>
-  </li>
-  <li class="module">
-    <a href="SharedClassMethods.html">SharedClassMethods</a>
-  </li>
-  <li class="module">
-    <a href="SharedInstanceMethods.html">SharedInstanceMethods</a>
   </li>
   <li class="class">
     <a href="Subscription.html">Subscription</a>
@@ -118,6 +115,9 @@
   <li class="class">
     <a href="UserMailer.html">UserMailer</a>
   </li>
+  <li class="module">
+    <a href="UserRoles.html">UserRoles</a>
+  </li>
   <li class="class">
     <a href="UsersController.html">UsersController</a>
   </li>
@@ -130,14 +130,19 @@
 <ul>
 
   <li class="method">
+    <a href="Organization.html#method-c-create_with_owner">::create_with_owner</a>
+    &mdash;
+    <span class="container">Organization</span>
+
+  <li class="method">
+    <a href="Project.html#method-c-create_with_user">::create_with_user</a>
+    &mdash;
+    <span class="container">Project</span>
+
+  <li class="method">
     <a href="User.html#method-c-filter_by">::filter_by</a>
     &mdash;
     <span class="container">User</span>
-
-  <li class="method">
-    <a href="Ability.html#method-c-new">::new</a>
-    &mdash;
-    <span class="container">Ability</span>
 
   <li class="method">
     <a href="Contact.html#method-c-new">::new</a>
@@ -145,9 +150,9 @@
     <span class="container">Contact</span>
 
   <li class="method">
-    <a href="Organization.html#method-c-owned_organization">::owned_organization</a>
+    <a href="Ability.html#method-c-new">::new</a>
     &mdash;
-    <span class="container">Organization</span>
+    <span class="container">Ability</span>
 
   <li class="method">
     <a href="User.html#method-c-search_by">::search_by</a>
@@ -170,6 +175,11 @@
     <span class="container">ApplicationHelper</span>
 
   <li class="method">
+    <a href="UserRoles.html#method-i-admin-3F">#admin?</a>
+    &mdash;
+    <span class="container">UserRoles</span>
+
+  <li class="method">
     <a href="ApplicationController.html#method-i-after_sign_in_path_for">#after_sign_in_path_for</a>
     &mdash;
     <span class="container">ApplicationController</span>
@@ -180,19 +190,9 @@
     <span class="container">ApplicationController</span>
 
   <li class="method">
-    <a href="SharedInstanceMethods.html#method-i-attribute_str">#attribute_str</a>
-    &mdash;
-    <span class="container">SharedInstanceMethods</span>
-
-  <li class="method">
     <a href="Subscription.html#method-i-cancel_subscription">#cancel_subscription</a>
     &mdash;
     <span class="container">Subscription</span>
-
-  <li class="method">
-    <a href="Ability.html#method-i-check_ids">#check_ids</a>
-    &mdash;
-    <span class="container">Ability</span>
 
   <li class="method">
     <a href="ApplicationController.html#method-i-configure_permitted_parameters">#configure_permitted_parameters</a>
@@ -225,14 +225,14 @@
     <span class="container">ProjectsController</span>
 
   <li class="method">
-    <a href="SubscriptionsController.html#method-i-create">#create</a>
-    &mdash;
-    <span class="container">SubscriptionsController</span>
-
-  <li class="method">
     <a href="AccountsController.html#method-i-create">#create</a>
     &mdash;
     <span class="container">AccountsController</span>
+
+  <li class="method">
+    <a href="SubscriptionsController.html#method-i-create">#create</a>
+    &mdash;
+    <span class="container">SubscriptionsController</span>
 
   <li class="method">
     <a href="HomeController.html#method-i-create_contact">#create_contact</a>
@@ -245,9 +245,9 @@
     <span class="container">Organization</span>
 
   <li class="method">
-    <a href="UsersController.html#method-i-destroy">#destroy</a>
+    <a href="UserRoles.html#method-i-customer-3F">#customer?</a>
     &mdash;
-    <span class="container">UsersController</span>
+    <span class="container">UserRoles</span>
 
   <li class="method">
     <a href="ProjectsController.html#method-i-destroy">#destroy</a>
@@ -255,19 +255,19 @@
     <span class="container">ProjectsController</span>
 
   <li class="method">
-    <a href="Subscription.html#method-i-destroy">#destroy</a>
-    &mdash;
-    <span class="container">Subscription</span>
-
-  <li class="method">
-    <a href="OrganizationsController.html#method-i-destroy">#destroy</a>
-    &mdash;
-    <span class="container">OrganizationsController</span>
-
-  <li class="method">
     <a href="AccountsController.html#method-i-destroy">#destroy</a>
     &mdash;
     <span class="container">AccountsController</span>
+
+  <li class="method">
+    <a href="Account.html#method-i-destroy">#destroy</a>
+    &mdash;
+    <span class="container">Account</span>
+
+  <li class="method">
+    <a href="UsersController.html#method-i-destroy">#destroy</a>
+    &mdash;
+    <span class="container">UsersController</span>
 
   <li class="method">
     <a href="SubscriptionsController.html#method-i-destroy">#destroy</a>
@@ -275,9 +275,14 @@
     <span class="container">SubscriptionsController</span>
 
   <li class="method">
-    <a href="Account.html#method-i-destroy">#destroy</a>
+    <a href="OrganizationsController.html#method-i-destroy">#destroy</a>
     &mdash;
-    <span class="container">Account</span>
+    <span class="container">OrganizationsController</span>
+
+  <li class="method">
+    <a href="Subscription.html#method-i-destroy">#destroy</a>
+    &mdash;
+    <span class="container">Subscription</span>
 
   <li class="method">
     <a href="Oops.html#method-i-display_alert">#display_alert</a>
@@ -290,14 +295,9 @@
     <span class="container">Oops</span>
 
   <li class="method">
-    <a href="AccountsController.html#method-i-edit">#edit</a>
+    <a href="UsersController.html#method-i-edit">#edit</a>
     &mdash;
-    <span class="container">AccountsController</span>
-
-  <li class="method">
-    <a href="OrganizationsController.html#method-i-edit">#edit</a>
-    &mdash;
-    <span class="container">OrganizationsController</span>
+    <span class="container">UsersController</span>
 
   <li class="method">
     <a href="ProjectsController.html#method-i-edit">#edit</a>
@@ -305,19 +305,19 @@
     <span class="container">ProjectsController</span>
 
   <li class="method">
-    <a href="UsersController.html#method-i-edit">#edit</a>
-    &mdash;
-    <span class="container">UsersController</span>
-
-  <li class="method">
     <a href="SubscriptionsController.html#method-i-edit">#edit</a>
     &mdash;
     <span class="container">SubscriptionsController</span>
 
   <li class="method">
-    <a href="SharedClassMethods.html#method-i-find_with_groups">#find_with_groups</a>
+    <a href="OrganizationsController.html#method-i-edit">#edit</a>
     &mdash;
-    <span class="container">SharedClassMethods</span>
+    <span class="container">OrganizationsController</span>
+
+  <li class="method">
+    <a href="AccountsController.html#method-i-edit">#edit</a>
+    &mdash;
+    <span class="container">AccountsController</span>
 
   <li class="method">
     <a href="Account.html#method-i-get_customer">#get_customer</a>
@@ -340,11 +340,6 @@
     <span class="container">GroupsHelper</span>
 
   <li class="method">
-    <a href="Project.html#method-i-group_relate">#group_relate</a>
-    &mdash;
-    <span class="container">Project</span>
-
-  <li class="method">
     <a href="AccountsController.html#method-i-handle_account_errors">#handle_account_errors</a>
     &mdash;
     <span class="container">AccountsController</span>
@@ -353,6 +348,11 @@
     <a href="AdminController.html#method-i-help">#help</a>
     &mdash;
     <span class="container">AdminController</span>
+
+  <li class="method">
+    <a href="Organizational/ClassMethods.html#method-i-in_organization">#in_organization</a>
+    &mdash;
+    <span class="container">Organizational::ClassMethods</span>
 
   <li class="method">
     <a href="ProjectsController.html#method-i-index">#index</a>
@@ -365,9 +365,9 @@
     <span class="container">OrganizationsController</span>
 
   <li class="method">
-    <a href="HomeController.html#method-i-index">#index</a>
+    <a href="UsersController.html#method-i-index">#index</a>
     &mdash;
-    <span class="container">HomeController</span>
+    <span class="container">UsersController</span>
 
   <li class="method">
     <a href="SubscriptionsController.html#method-i-index">#index</a>
@@ -375,14 +375,14 @@
     <span class="container">SubscriptionsController</span>
 
   <li class="method">
+    <a href="HomeController.html#method-i-index">#index</a>
+    &mdash;
+    <span class="container">HomeController</span>
+
+  <li class="method">
     <a href="AdminController.html#method-i-index">#index</a>
     &mdash;
     <span class="container">AdminController</span>
-
-  <li class="method">
-    <a href="UsersController.html#method-i-index">#index</a>
-    &mdash;
-    <span class="container">UsersController</span>
 
   <li class="method">
     <a href="Organization.html#method-i-invite_member">#invite_member</a>
@@ -395,19 +395,9 @@
     <span class="container">Account</span>
 
   <li class="method">
-    <a href="Subscription.html#method-i-is_valid">#is_valid</a>
-    &mdash;
-    <span class="container">Subscription</span>
-
-  <li class="method">
     <a href="ApplicationController.html#method-i-layout_by_resource">#layout_by_resource</a>
     &mdash;
     <span class="container">ApplicationController</span>
-
-  <li class="method">
-    <a href="UsersHelper.html#method-i-list_groups">#list_groups</a>
-    &mdash;
-    <span class="container">UsersHelper</span>
 
   <li class="method">
     <a href="Account.html#method-i-load_customer_info">#load_customer_info</a>
@@ -415,7 +405,17 @@
     <span class="container">Account</span>
 
   <li class="method">
+    <a href="Subscription.html#method-i-logger_debugger">#logger_debugger</a>
+    &mdash;
+    <span class="container">Subscription</span>
+
+  <li class="method">
     <a href="Organization.html#method-i-lookup_users">#lookup_users</a>
+    &mdash;
+    <span class="container">Organization</span>
+
+  <li class="method">
+    <a href="Organization.html#method-i-managed_classes">#managed_classes</a>
     &mdash;
     <span class="container">Organization</span>
 
@@ -435,9 +435,9 @@
     <span class="container">ApplicationController</span>
 
   <li class="method">
-    <a href="UsersController.html#method-i-new">#new</a>
+    <a href="OrganizationsController.html#method-i-new">#new</a>
     &mdash;
-    <span class="container">UsersController</span>
+    <span class="container">OrganizationsController</span>
 
   <li class="method">
     <a href="AccountsController.html#method-i-new">#new</a>
@@ -445,19 +445,19 @@
     <span class="container">AccountsController</span>
 
   <li class="method">
+    <a href="SubscriptionsController.html#method-i-new">#new</a>
+    &mdash;
+    <span class="container">SubscriptionsController</span>
+
+  <li class="method">
     <a href="ProjectsController.html#method-i-new">#new</a>
     &mdash;
     <span class="container">ProjectsController</span>
 
   <li class="method">
-    <a href="OrganizationsController.html#method-i-new">#new</a>
+    <a href="UsersController.html#method-i-new">#new</a>
     &mdash;
-    <span class="container">OrganizationsController</span>
-
-  <li class="method">
-    <a href="SubscriptionsController.html#method-i-new">#new</a>
-    &mdash;
-    <span class="container">SubscriptionsController</span>
+    <span class="container">UsersController</span>
 
   <li class="method">
     <a href="UserMailer.html#method-i-new_account">#new_account</a>
@@ -495,14 +495,19 @@
     <span class="container">ProjectsHelper</span>
 
   <li class="method">
-    <a href="GroupRelations.html#method-i-relate_groups">#relate_groups</a>
+    <a href="Organization.html#method-i-relate_and_notify">#relate_and_notify</a>
     &mdash;
-    <span class="container">GroupRelations</span>
+    <span class="container">Organization</span>
 
   <li class="method">
-    <a href="GroupRelations.html#method-i-relate_resources">#relate_resources</a>
+    <a href="Organization.html#method-i-relate_classes">#relate_classes</a>
     &mdash;
-    <span class="container">GroupRelations</span>
+    <span class="container">Organization</span>
+
+  <li class="method">
+    <a href="Organizational.html#method-i-relate_to_organization">#relate_to_organization</a>
+    &mdash;
+    <span class="container">Organizational</span>
 
   <li class="method">
     <a href="Organization.html#method-i-remove_members">#remove_members</a>
@@ -515,9 +520,9 @@
     <span class="container">GroupsHelper</span>
 
   <li class="method">
-    <a href="User.html#method-i-role_str">#role_str</a>
+    <a href="UserRoles.html#method-i-role_str">#role_str</a>
     &mdash;
-    <span class="container">User</span>
+    <span class="container">UserRoles</span>
 
   <li class="method">
     <a href="Account.html#method-i-save_with_stripe">#save_with_stripe</a>
@@ -550,19 +555,29 @@
     <span class="container">SubscriptionsController</span>
 
   <li class="method">
-    <a href="ProjectsController.html#method-i-show">#show</a>
-    &mdash;
-    <span class="container">ProjectsController</span>
-
-  <li class="method">
     <a href="UsersController.html#method-i-show">#show</a>
     &mdash;
     <span class="container">UsersController</span>
 
   <li class="method">
+    <a href="ProjectsController.html#method-i-show">#show</a>
+    &mdash;
+    <span class="container">ProjectsController</span>
+
+  <li class="method">
     <a href="Account.html#method-i-status_str">#status_str</a>
     &mdash;
     <span class="container">Account</span>
+
+  <li class="method">
+    <a href="Account.html#method-i-stripe_error_handler">#stripe_error_handler</a>
+    &mdash;
+    <span class="container">Account</span>
+
+  <li class="method">
+    <a href="Subscription.html#method-i-sub_create">#sub_create</a>
+    &mdash;
+    <span class="container">Subscription</span>
 
   <li class="method">
     <a href="Subscription.html#method-i-subscribe">#subscribe</a>
@@ -585,14 +600,14 @@
     <span class="container">ApplicationHelper</span>
 
   <li class="method">
+    <a href="Organization.html#method-i-unrelate_classes">#unrelate_classes</a>
+    &mdash;
+    <span class="container">Organization</span>
+
+  <li class="method">
     <a href="SubscriptionsController.html#method-i-update">#update</a>
     &mdash;
     <span class="container">SubscriptionsController</span>
-
-  <li class="method">
-    <a href="UsersController.html#method-i-update">#update</a>
-    &mdash;
-    <span class="container">UsersController</span>
 
   <li class="method">
     <a href="OrganizationsController.html#method-i-update">#update</a>
@@ -605,9 +620,19 @@
     <span class="container">AccountsController</span>
 
   <li class="method">
+    <a href="UsersController.html#method-i-update">#update</a>
+    &mdash;
+    <span class="container">UsersController</span>
+
+  <li class="method">
     <a href="ProjectsController.html#method-i-update">#update</a>
     &mdash;
     <span class="container">ProjectsController</span>
+
+  <li class="method">
+    <a href="Account.html#method-i-update_customer_info">#update_customer_info</a>
+    &mdash;
+    <span class="container">Account</span>
 
   <li class="method">
     <a href="Account.html#method-i-update_with_stripe">#update_with_stripe</a>

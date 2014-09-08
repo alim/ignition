@@ -78,6 +78,10 @@
     <li><span class="include">Mongoid::Timestamps</span>
   
   
+  
+    <li><a class="include" href="UserRoles.html">UserRoles</a>
+  
+  
   </ul>
 </div>
 
@@ -91,8 +95,6 @@
     <li ><a href="#method-c-filter_by">::filter_by</a>
     
     <li ><a href="#method-c-search_by">::search_by</a>
-    
-    <li ><a href="#method-i-role_str">#role_str</a>
     
   </ul>
 </div>
@@ -111,7 +113,7 @@
 information associated with a user account. This model is then used by the
 Devise GEM for user user authentication and sign in. The model has been
 upgraded to include timestamps and strip_attributes for removing leading
-and trailing whitespaces.</p>
+and trailing white spaces.</p>
 
   </section>
 
@@ -134,12 +136,6 @@ and trailing whitespaces.</p>
         
         <dd><p><a href="User.html#CUSTOMER">CUSTOMER</a> ROLE - constant for specifying a
 customer role</p>
-        
-      
-        <dt id="ORG_ADMIN">ORG_ADMIN
-        
-        <dd><p><a href="User.html#ORG_ADMIN">ORG_ADMIN</a> - constant for an
-organizational administrator</p>
         
       
         <dt id="SERVICE_ADMIN">SERVICE_ADMIN
@@ -180,7 +176,7 @@ a service administrator</p>
 
           
           <div class="method-source-code" id="filter_by-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 144</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 124</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">filter_by</span>(<span class="ruby-identifier">filter</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">filter</span>
   <span class="ruby-keyword">when</span> <span class="ruby-string">'customer'</span>
@@ -221,7 +217,7 @@ request.</p>
 
           
           <div class="method-source-code" id="search_by-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 127</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 107</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">search_by</span>(<span class="ruby-identifier">search_type</span>, <span class="ruby-identifier">search_term</span>)
   <span class="ruby-comment"># Check for the type of search we are doing</span>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">search_type</span>
@@ -233,55 +229,6 @@ request.</p>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">by_last_name</span>(<span class="ruby-identifier">search_term</span>)
   <span class="ruby-keyword">else</span> <span class="ruby-comment"># Unrecognized search type so return all</span>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">all</span>
-  <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-    </section>
-  
-     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
-       <header>
-         <h3>Public Instance Methods</h3>
-       </header>
-
-    
-      <div id="method-i-role_str" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">role_str</span><span
-            class="method-args">()</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>The <a href="User.html#method-i-role_str">#role_str</a> returns the string
-representation of the role assigned to the user.</p>
-          
-          
-
-          
-          <div class="method-source-code" id="role_str-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 110</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">role_str</span>
-  <span class="ruby-keyword">case</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">role</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-constant">CUSTOMER</span>
-    <span class="ruby-string">&quot;Customer&quot;</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-constant">SERVICE_ADMIN</span>
-    <span class="ruby-string">&quot;Service Administrator&quot;</span>
-  <span class="ruby-keyword">else</span>
-    <span class="ruby-string">&quot;Unknown&quot;</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>

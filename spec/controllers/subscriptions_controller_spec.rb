@@ -21,8 +21,8 @@ require 'spec_helper'
 describe SubscriptionsController do
   include_context 'user_setup'
   include_context 'subscription_setup'
- 
-  let(:subscription_fake_customers) { 
+
+  let(:subscription_fake_customers) {
     create_subscriptions
     @fake_subscription = Subscription.last
   }
@@ -36,7 +36,7 @@ describe SubscriptionsController do
     signin_customer
 		subject.current_user.should_not be_nil
 		subscription_fake_customers
-		
+
 		# Add the subscription to the current signed in user
 		@signed_in_user.subscriptions << @fake_subscription
   }
@@ -58,7 +58,7 @@ describe SubscriptionsController do
     let(:show_params) {
       {id: @fake_subscription }
     }
-    
+
     it "assigns the requested subscription as @subscription" do
      pending
       get :show, show_params
@@ -75,13 +75,13 @@ describe SubscriptionsController do
   end
 
   describe "GET edit" do
-   
+
     let(:edit_params){
       {
         id: @fake_subscription.id,
       }
     }
-    
+
     it "assigns the requested subscription as @subscription" do
       pending
       get :edit, edit_params
@@ -91,7 +91,7 @@ describe SubscriptionsController do
 
   describe "POST create" do
     let(:create_params) {
-      {subscription: 
+      {subscription:
         {
           stripe_plan_id: @fake_subscription.stripe_plan_id,
           cancel_at_period_end: @fake_subscription.cancel_at_period_end,
@@ -108,9 +108,9 @@ describe SubscriptionsController do
         }
       }
     }
-    
-    describe "with valid params" do
-      it "creates a new Subscription" do 
+
+    describe "with valid params", :vcr do
+      it "creates a new Subscription" do
         pending
         expect {
           post :create, create_params
@@ -152,8 +152,8 @@ describe SubscriptionsController do
 
   describe "PUT update" do
     let(:new_fake_stripe_plan_id){ "999999999" }
-  
-    
+
+
     let(:update_params){
       {
         id: @fake_subscription.id,
@@ -162,7 +162,7 @@ describe SubscriptionsController do
         }
       }
     }
-    
+
     describe "with valid params" do
       it "updates the requested subscription" do
         pending
@@ -203,7 +203,7 @@ describe SubscriptionsController do
 
   describe "DELETE destroy" do
     let(:destroy_params){ {id: @fake_subscription.id } }
-    
+
     it "destroys the requested subscription" do
       pending
       expect {
