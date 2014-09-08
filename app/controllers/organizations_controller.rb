@@ -85,15 +85,10 @@ class OrganizationsController < ApplicationController
   # will be created. All members will be notified by email.
   ######################################################################
   def create
-    @organization = current_user.organization = Organization.new(organization_params)
-    @organization.owner = current_user
+    @organization = Organization.create_with_owner(organization_params, current_user)
 
     if @organization.save
-      # Create and notify organization members of their inclusion into the organization
-      @organization.create_notify
-
-      # Relate all class that belong to an Organization class
-      @organization.relate_classes
+      @organization.notify_and_update_classes
       redirect_to @organization, notice: 'Organization was successfully created.'
     else
       @verrors = @organization.errors.full_messages
@@ -111,13 +106,7 @@ class OrganizationsController < ApplicationController
     @organization.remove_members(params[:organization][:user_ids])
 
     if @organization.update_attributes(organization_params)
-
-      # Relate all class that belong to an Organization class
-      @organization.relate_classes
-
-      # Create and notify organization members of their inclusion into the organization
-      @organization.create_notify
-
+      @organization.notify_and_update_classes
       redirect_to @organization, notice: 'Organization was successfully updated.'
     else
       @verrors = @organization.errors.full_messages

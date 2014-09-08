@@ -198,7 +198,7 @@ class Account
   end
 
   #####################################################################
-  # The destory method overides the standard destory method for ActiveModel.
+  # The destroy method overrides the standard destroy method for ActiveModel.
   # This version will delete Stripe.com customer account associated
   # with the stored customer_id.
   #####################################################################
@@ -229,7 +229,7 @@ class Account
   # This helper method handles logging and setting stripe errors. It
   #####################################################################
   def stripe_error_handler(stripe_error, status=nil)
-    logger.debug("[Account.update_with_stripe] stripe error = #{stripe_error.message}")
+    logger.debug("[Account] stripe error = #{stripe_error.message}")
     errors[:customer_id] << stripe_error.message
     self.status = status if status
     return false

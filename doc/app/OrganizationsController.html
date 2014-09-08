@@ -65,18 +65,7 @@
   
 </div>
 
-    <div id="includes-section" class="nav-section">
-  <h3>Included Modules</h3>
-
-  <ul class="link-list">
-  
-  
-    <li><span class="include">OrganizationRelations</span>
-  
-  
-  </ul>
-</div>
-
+    
     
     <!-- Method Quickref -->
 <div id="method-list-section" class="nav-section">
@@ -163,19 +152,12 @@ created. All members will be notified by email.</p>
 
           
           <div class="method-source-code" id="create-source">
-            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 88</span>
+            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 87</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>
-  <span class="ruby-ivar">@organization</span> = <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">organizations</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">organization_params</span>)
-  <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">owner_id</span> = <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span>
+  <span class="ruby-ivar">@organization</span> = <span class="ruby-constant">Organization</span>.<span class="ruby-identifier">create_with_owner</span>(<span class="ruby-identifier">organization_params</span>, <span class="ruby-identifier">current_user</span>)
 
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">save</span>
-    <span class="ruby-comment"># Create and notify organization members of their inclusion into the organization</span>
-     <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">create_notify</span>
-
-    <span class="ruby-comment"># Relate resources from injected methods in OrganizationRelations</span>
-    <span class="ruby-comment"># module. It relates the current set of resources to the organization</span>
-    <span class="ruby-identifier">relate_resources</span>(<span class="ruby-identifier">resource_ids</span><span class="ruby-operator">:</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:organization</span>][<span class="ruby-value">:resource_ids</span>],
-      <span class="ruby-identifier">organization</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@organization</span>, <span class="ruby-identifier">class</span><span class="ruby-operator">:</span> <span class="ruby-constant">Organization</span><span class="ruby-operator">::</span><span class="ruby-constant">RESOURCE_CLASS</span>)
+    <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">relate_and_notify</span>
 
     <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@organization</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">'Organization was successfully created.'</span>
   <span class="ruby-keyword">else</span>
@@ -217,8 +199,9 @@ be needed.</p>
 
           
           <div class="method-source-code" id="destroy-source">
-            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 143</span>
+            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 128</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
+  <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">unrelate_classes</span>
   <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">destroy</span>
   <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">organizations_url</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;Organization was successfully deleted.&quot;</span>
 <span class="ruby-keyword">end</span></pre>
@@ -255,7 +238,7 @@ the user for sharing with the organization.</p>
 
           
           <div class="method-source-code" id="edit-source">
-            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 76</span>
+            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 75</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">edit</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -283,7 +266,9 @@ the user for sharing with the organization.</p>
           
           <p>GET /organizations GET /organizations.json</p>
 
-<p>Standard listing of user organizations and membership.</p>
+<p>The index action will check to see if an organization is currently related
+to the current user. If one exists, then the organizational record is
+shown.</p>
           
           
 
@@ -294,11 +279,14 @@ the user for sharing with the organization.</p>
   <span class="ruby-comment"># Get page number</span>
   <span class="ruby-identifier">page</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:page</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-operator">?</span> <span class="ruby-value">1</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:page</span>]
 
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">role</span> <span class="ruby-operator">==</span> <span class="ruby-constant">User</span><span class="ruby-operator">::</span><span class="ruby-constant">SERVICE_ADMIN</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">admin?</span>
     <span class="ruby-ivar">@organizations</span> = <span class="ruby-constant">Organization</span>.<span class="ruby-identifier">all</span>.<span class="ruby-identifier">paginate</span>(<span class="ruby-identifier">page</span><span class="ruby-operator">:</span> <span class="ruby-identifier">page</span>, <span class="ruby-identifier">per_page</span><span class="ruby-operator">:</span> <span class="ruby-constant">PAGE_COUNT</span>)
   <span class="ruby-keyword">else</span>
-    <span class="ruby-ivar">@organizations</span> = <span class="ruby-constant">Organization</span>.<span class="ruby-identifier">where</span>(<span class="ruby-identifier">owner_id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span>).<span class="ruby-identifier">paginate</span>(
-      <span class="ruby-identifier">page</span><span class="ruby-operator">:</span> <span class="ruby-identifier">page</span>,  <span class="ruby-identifier">per_page</span><span class="ruby-operator">:</span> <span class="ruby-constant">PAGE_COUNT</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">organization</span>
+      <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">organization</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">new_organization_path</span>
+    <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -336,7 +324,7 @@ href="Project.html">Project</a> resources should be shown to the user.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 65</span>
+            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 64</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@organization</span> = <span class="ruby-constant">Organization</span>.<span class="ruby-identifier">new</span>
 <span class="ruby-keyword">end</span></pre>
@@ -372,10 +360,9 @@ a single organization member and re-display the show template.</p>
 
           
           <div class="method-source-code" id="notify-source">
-            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 156</span>
+            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 142</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">notify</span>
   <span class="ruby-ivar">@user</span> = <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">users</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:uid</span>])
-
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">invite_member</span>(<span class="ruby-ivar">@user</span>)
     <span class="ruby-identifier">flash</span>[<span class="ruby-value">:notice</span>] = <span class="ruby-node">&quot;Organization invite resent to #{@user.email}.&quot;</span>
   <span class="ruby-keyword">else</span>
@@ -415,14 +402,10 @@ also allows you to re-send the organization invite to a given user.</p>
 
           
           <div class="method-source-code" id="show-source">
-            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 47</span>
+            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 50</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">show</span>
   <span class="ruby-ivar">@user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">owner_id</span>)
-  <span class="ruby-ivar">@owner_email</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">email</span>
-
-  <span class="ruby-comment"># Get list of associated users and resources</span>
-  <span class="ruby-ivar">@users</span> = <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">users</span>
-  <span class="ruby-ivar">@resources</span> = <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">send</span>(<span class="ruby-constant">Organization</span><span class="ruby-operator">::</span><span class="ruby-constant">RESOURCE_CLASS</span>.<span class="ruby-identifier">downcase</span>.<span class="ruby-identifier">pluralize</span>)
+  <span class="ruby-ivar">@resources</span> = <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">managed_classes</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -456,19 +439,12 @@ remove organization members and add new organization members.</p>
 
           
           <div class="method-source-code" id="update-source">
-            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 114</span>
+            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 106</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>
   <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">remove_members</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:organization</span>][<span class="ruby-value">:user_ids</span>])
 
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">update_attributes</span>(<span class="ruby-identifier">organization_params</span>)
-
-    <span class="ruby-comment"># Relate resources from injected methods in OrganizationRelations</span>
-    <span class="ruby-comment"># module. It relates the current set of resources to the organization</span>
-    <span class="ruby-identifier">relate_resources</span>(<span class="ruby-identifier">resource_ids</span><span class="ruby-operator">:</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:organization</span>][<span class="ruby-value">:resource_ids</span>],
-      <span class="ruby-identifier">organization</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@organization</span>, <span class="ruby-identifier">class</span><span class="ruby-operator">:</span> <span class="ruby-constant">Organization</span><span class="ruby-operator">::</span><span class="ruby-constant">RESOURCE_CLASS</span>)
-
-    <span class="ruby-comment"># Create and notify organization members of their inclusion into the organization</span>
-     <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">create_notify</span>
+    <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">relate_and_notify</span>
 
     <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@organization</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">'Organization was successfully updated.'</span>
   <span class="ruby-keyword">else</span>
