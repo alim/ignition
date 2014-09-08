@@ -5,6 +5,8 @@ require 'rspec/rails'
 require 'rspec/autorun'
 require 'capybara/rspec'
 require 'capybara/rails'
+require 'vcr'
+require 'webmock/rspec'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/shared/ and its subdirectories.
@@ -13,6 +15,20 @@ Dir[Rails.root.join("spec/shared/**/*.rb")].each { |f| require f }
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
+
+
+# Configruation for VCR
+VCR.configure do |c|
+  c.cassette_library_dir = 'spec/fixtures/cassettes'
+  c.default_cassette_options = { record: :new_episodes }
+  c.hook_into :webmock
+
+  # Configure VCR and Rspec
+  c.configure_rspec_metadata!
+
+  # Filters for external API's
+  c.filter_sensitive_data('<API_KEY>') { ENV['API_KEY'] }
+end
 
 RSpec.configure do |config|
   # ## Mock Framework
@@ -48,12 +64,15 @@ RSpec.configure do |config|
   # Include Stripe.com test helpers
   config.include StripeTestHelpers
 
-  # Include Stripe.com test helpers
-  config.include SubscriptionTestHelpers
-
   # Clean and truncate database before each test run, include
   # error test runs
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
   end
+
+  # Add VCR helpers
+  # config.extend VCR::RSpec::Macros
+
+  # Allow metadata to be passed into a describe block
+  config.treat_symbols_as_metadata_keys_with_true_values = true
 end

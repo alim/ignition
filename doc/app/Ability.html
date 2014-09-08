@@ -86,8 +86,6 @@
     
     <li ><a href="#method-c-new">::new</a>
     
-    <li ><a href="#method-i-check_ids">#check_ids</a>
-    
   </ul>
 </div>
 
@@ -143,9 +141,12 @@
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File app/models/ability.rb, line 4</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">user</span>)
+  <span class="ruby-identifier">alias_action</span> <span class="ruby-value">:create</span>, <span class="ruby-value">:read</span>, <span class="ruby-value">:update</span>, <span class="ruby-value">:destroy</span>, <span class="ruby-value">:to</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:crud</span>
 
       <span class="ruby-comment"># Check to see if we can get the role attribute</span>
       <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">user</span>.<span class="ruby-identifier">nil?</span>
+
+    <span class="ruby-comment"># The service administrator should have access to all resources</span>
                       <span class="ruby-keyword">if</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">role</span> <span class="ruby-operator">==</span> <span class="ruby-constant">User</span><span class="ruby-operator">::</span><span class="ruby-constant">SERVICE_ADMIN</span>
                               <span class="ruby-identifier">can</span> <span class="ruby-value">:manage</span>, <span class="ruby-value">:all</span>
                       <span class="ruby-keyword">end</span>
@@ -154,82 +155,15 @@
                       <span class="ruby-comment"># that belong to part of their group.</span>
                       <span class="ruby-keyword">if</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">role</span> <span class="ruby-operator">==</span> <span class="ruby-constant">User</span><span class="ruby-operator">::</span><span class="ruby-constant">CUSTOMER</span>
 
-      <span class="ruby-identifier">can</span> [<span class="ruby-value">:edit</span>, <span class="ruby-value">:update</span>, <span class="ruby-value">:notify</span>], <span class="ruby-constant">Organization</span>, <span class="ruby-identifier">owner_id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>
-
-                              <span class="ruby-identifier">can</span> [<span class="ruby-value">:new</span>, <span class="ruby-value">:create</span>, <span class="ruby-value">:edit</span>, <span class="ruby-value">:update</span>, <span class="ruby-value">:destroy</span>], <span class="ruby-constant">Account</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">account</span><span class="ruby-operator">|</span>
-                                <span class="ruby-keyword">true</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">account</span>.<span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>
-                              <span class="ruby-keyword">end</span>
-
+      <span class="ruby-identifier">can</span> <span class="ruby-value">:crud</span>, <span class="ruby-constant">Account</span>, <span class="ruby-identifier">user</span><span class="ruby-operator">:</span> {<span class="ruby-identifier">id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>}
+      <span class="ruby-identifier">can</span> [<span class="ruby-value">:crud</span>, <span class="ruby-value">:notify</span>], <span class="ruby-constant">Organization</span>, <span class="ruby-identifier">owner_id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>
                               <span class="ruby-identifier">can</span> [<span class="ruby-value">:show</span>, <span class="ruby-value">:edit</span>, <span class="ruby-value">:update</span>], <span class="ruby-constant">User</span>, <span class="ruby-identifier">id</span><span class="ruby-operator">:</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>
-
-                              <span class="ruby-identifier">can</span> <span class="ruby-value">:manage</span>, <span class="ruby-constant">Project</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">project</span><span class="ruby-operator">|</span>
-                                      <span class="ruby-identifier">check_ids</span>(<span class="ruby-identifier">project</span>, <span class="ruby-identifier">user</span>)
+                              <span class="ruby-identifier">can</span> <span class="ruby-value">:crud</span>, <span class="ruby-constant">Project</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">project</span><span class="ruby-operator">|</span>
+                                      <span class="ruby-identifier">project</span>.<span class="ruby-identifier">organization_id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">organization_id</span> <span class="ruby-operator">||</span>
+        <span class="ruby-identifier">project</span>.<span class="ruby-identifier">user_id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>
                               <span class="ruby-keyword">end</span>
 
                       <span class="ruby-keyword">end</span>
-              <span class="ruby-keyword">end</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-    </section>
-  
-     <section id="protected-instance-5Buntitled-5D-method-details" class="method-section">
-       <header>
-         <h3>Protected Instance Methods</h3>
-       </header>
-
-    
-      <div id="method-i-check_ids" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">check_ids</span><span
-            class="method-args">(resource, user)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>The <a href="Ability.html#method-i-check_ids">#check_ids</a> method will
-look for group id’s associated with both the user and the resource. If they
-have group id’s in common, then the user has access to the resource. If
-they do not have any group id’s in common, then they should not be given
-access to the resource. The method returns true, if they should have
-access, otherwise it returns false. The <a
-href="Ability.html#method-i-check_ids">#check_ids</a> method takes two
-parameters:</p>
-<ul><li>
-<p>resource - the object to which access is being requested</p>
-</li><li>
-<p>user - the user object to which access would be granted</p>
-</li></ul>
-          
-          
-
-          
-          <div class="method-source-code" id="check_ids-source">
-            <pre><span class="ruby-comment"># File app/models/ability.rb, line 46</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">check_ids</span>(<span class="ruby-identifier">resource</span>, <span class="ruby-identifier">user</span>)
-              <span class="ruby-keyword">if</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>
-                      <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
-              <span class="ruby-keyword">else</span>
-                      <span class="ruby-identifier">rgids</span> = <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">groups</span>.<span class="ruby-identifier">pluck</span>(<span class="ruby-value">:id</span>)
-                      <span class="ruby-identifier">ugids</span> = <span class="ruby-identifier">user</span>.<span class="ruby-identifier">groups</span>.<span class="ruby-identifier">pluck</span>(<span class="ruby-value">:id</span>)
-
-                      <span class="ruby-comment"># Check to see if the intersection of resource-group id's and</span>
-                      <span class="ruby-comment"># user-group id's is empty. If it is empty, then resource and user</span>
-                      <span class="ruby-comment"># do not belong to common groups.</span>
-                      <span class="ruby-keyword">return</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">rgids</span> <span class="ruby-operator">&amp;</span> <span class="ruby-identifier">ugids</span>).<span class="ruby-identifier">empty?</span>
               <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>

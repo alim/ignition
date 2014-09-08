@@ -171,15 +171,15 @@ argument, that includes:</p>
                       <span class="ruby-identifier">msg</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">:message</span>]
                       <span class="ruby-identifier">target</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">:target</span>]
                       <span class="ruby-identifier">resource</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">:resource</span>]
-                      
+
                       <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
                               <span class="ruby-keyword">if</span> <span class="ruby-identifier">target</span> <span class="ruby-operator">==</span> <span class="ruby-constant">ADMIN</span>
                                       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">admin_oops_url</span>, <span class="ruby-identifier">alert</span><span class="ruby-operator">:</span> <span class="ruby-identifier">msg</span> }
                               <span class="ruby-keyword">else</span>
                                       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">home_oops_url</span>, <span class="ruby-identifier">alert</span><span class="ruby-operator">:</span> <span class="ruby-identifier">msg</span> }
                               <span class="ruby-keyword">end</span>
-                              
-                    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">json</span><span class="ruby-operator">:</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">errors</span>, 
+
+                    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">json</span><span class="ruby-operator">:</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">errors</span>,
                             <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-value">:unprocessable_entity</span> } <span class="ruby-keyword">if</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">present?</span>
                 <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">else</span>
@@ -230,22 +230,22 @@ argument, that includes:</p>
                       <span class="ruby-identifier">msg</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">:message</span>]
                       <span class="ruby-identifier">target</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">:target</span>]
                       <span class="ruby-identifier">resource</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">:resource</span>]
-                      
+
                       <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
                               <span class="ruby-identifier">flash</span>[<span class="ruby-value">:error</span>] = <span class="ruby-identifier">msg</span>
-                              
+
                               <span class="ruby-keyword">if</span> <span class="ruby-identifier">target</span> <span class="ruby-operator">==</span> <span class="ruby-constant">ADMIN</span>
                                       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">admin_oops_url</span> }
                               <span class="ruby-keyword">else</span>
                                       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">home_oops_url</span>, <span class="ruby-identifier">alert</span><span class="ruby-operator">:</span> <span class="ruby-identifier">msg</span> }
                               <span class="ruby-keyword">end</span>
-                              
-                    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">json</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">errors</span>, 
+
+                    <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">json</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@group</span>.<span class="ruby-identifier">errors</span>,
                             <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-value">:unprocessable_entity</span> } <span class="ruby-keyword">if</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">present?</span>
                 <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">else</span>
       <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
-  <span class="ruby-keyword">end</span>           
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           

@@ -92,9 +92,11 @@
     
     <li ><a href="#method-i-destroy">#destroy</a>
     
-    <li ><a href="#method-i-is_valid">#is_valid</a>
+    <li ><a href="#method-i-logger_debugger">#logger_debugger</a>
     
     <li ><a href="#method-i-plan_str">#plan_str</a>
+    
+    <li ><a href="#method-i-sub_create">#sub_create</a>
     
     <li ><a href="#method-i-subscribe">#subscribe</a>
     
@@ -285,7 +287,7 @@ subscription was cancelled.</p>
 
           
           <div class="method-source-code" id="cancel_subscription-source">
-            <pre><span class="ruby-comment"># File app/models/subscription.rb, line 148</span>
+            <pre><span class="ruby-comment"># File app/models/subscription.rb, line 147</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">cancel_subscription</span>(<span class="ruby-identifier">account_user</span>)
 
  <span class="ruby-identifier">subscription_cancelled</span> = <span class="ruby-keyword">true</span>
@@ -305,8 +307,7 @@ subscription was cancelled.</p>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
 
   <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">StripeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">stripe_error</span>
-    <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-node">&quot;[Subscription.cancel_with_stripe] error = #{stripe_error.message}&quot;</span>)
-    <span class="ruby-identifier">errors</span>[<span class="ruby-value">:customer_id</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">stripe_error</span>.<span class="ruby-identifier">message</span>
+    <span class="ruby-identifier">logger_debugger</span>(<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">stripe_error</span>, <span class="ruby-identifier">customer_id</span>, <span class="ruby-node">&quot;[Subscription.cancel_subscription] error = #{stripe_error.message}&quot;</span>)
     <span class="ruby-identifier">subscription_cancelled</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-keyword">end</span>
  <span class="ruby-keyword">end</span>
@@ -345,7 +346,7 @@ subscription was cancelled and the customer was deleted.</p>
 
           
           <div class="method-source-code" id="destroy-source">
-            <pre><span class="ruby-comment"># File app/models/subscription.rb, line 182</span>
+            <pre><span class="ruby-comment"># File app/models/subscription.rb, line 180</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
 
    <span class="ruby-identifier">removed_customer</span> = <span class="ruby-keyword">true</span>
@@ -353,16 +354,14 @@ subscription was cancelled and the customer was deleted.</p>
  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">customer_id</span>.<span class="ruby-identifier">present?</span>
 
   <span class="ruby-keyword">begin</span>
-
+ 
    <span class="ruby-identifier">cancel_subscription</span> (<span class="ruby-keyword">self</span>)
    <span class="ruby-constant">Stripe</span>.<span class="ruby-identifier">api_key</span> = <span class="ruby-constant">STRIPE</span>[<span class="ruby-value">:api_key</span>]
    <span class="ruby-identifier">customer</span> = <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">Customer</span>.<span class="ruby-identifier">retrieve</span>(<span class="ruby-node">&quot;#{self.customer_id}&quot;</span>)
    <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">delete</span>
 
   <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">StripeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">stripe_error</span>
-   <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-node">&quot;[Subscription.cancel_with_stripe] error = #{stripe_error.message}&quot;</span>)
-   <span class="ruby-identifier">errors</span>[<span class="ruby-value">:customer_id</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">stripe_error</span>.<span class="ruby-identifier">message</span>
-   
+   <span class="ruby-identifier">logger_debugger</span>(<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">stripe_error</span>, <span class="ruby-identifier">customer_id</span>, <span class="ruby-node">&quot;[Subscription.destroy] error = #{stripe_error.message}&quot;</span>)
    <span class="ruby-identifier">removed_customer</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-keyword">end</span>
  <span class="ruby-keyword">else</span>
@@ -458,7 +457,7 @@ of Plan 3) Discount Coupon</p>
 <span class="ruby-keyword">if</span> <span class="ruby-identifier">account_user</span>.<span class="ruby-identifier">customer_id</span>.<span class="ruby-identifier">present?</span>
 
   <span class="ruby-keyword">begin</span>
-  
+    <span class="ruby-comment">#binding.pry</span>
     <span class="ruby-constant">Stripe</span>.<span class="ruby-identifier">api_key</span> = <span class="ruby-constant">ENV</span>[<span class="ruby-string">'API_KEY'</span>]
 
     <span class="ruby-identifier">customer</span> = <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">Customer</span>.<span class="ruby-identifier">retrieve</span>(<span class="ruby-node">&quot;#{account_user.customer_id}&quot;</span>)
@@ -468,7 +467,7 @@ of Plan 3) Discount Coupon</p>
     <span class="ruby-comment">#binding.pry</span>
     <span class="ruby-identifier">customer_subscription</span> = <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">update_subscription</span>(
                               <span class="ruby-value">:plan</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">plan_id</span>,
- <span class="ruby-comment">#                             :plan =&gt; self.plan_str(),</span>
+  <span class="ruby-comment">#                            :plan =&gt; self.plan_str(),</span>
                               <span class="ruby-value">:coupon</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">coupon_code</span>
     )
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">cancel_at_period_end</span> = <span class="ruby-identifier">customer_subscription</span>.<span class="ruby-identifier">cancel_at_period_end</span>
@@ -481,8 +480,7 @@ of Plan 3) Discount Coupon</p>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
 
   <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">StripeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">stripe_error</span>
-      <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-node">&quot;[Subscription.update_with_stripe] error = #{stripe_error.message}&quot;</span>)
-      <span class="ruby-identifier">errors</span>[<span class="ruby-value">:customer_id</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">stripe_error</span>.<span class="ruby-identifier">message</span>
+      <span class="ruby-identifier">logger_debugger</span>(<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">stripe_error</span>, <span class="ruby-identifier">customer_id</span>, <span class="ruby-node">&quot;[Subscription.subscribe] error = #{stripe_error.message}&quot;</span>)
       <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">end</span>
  <span class="ruby-keyword">else</span> 
@@ -510,11 +508,47 @@ of Plan 3) Discount Coupon</p>
        </header>
 
     
-      <div id="method-i-is_valid" class="method-detail ">
+      <div id="method-i-logger_debugger" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">is_valid</span><span
-            class="method-args">(params)</span>
+          <span class="method-name">logger_debugger</span><span
+            class="method-args">(errors, stripe_error, customer_id, description)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <pre>return account_valid</pre>
+
+<p>end</p>
+          
+          
+
+          
+          <div class="method-source-code" id="logger_debugger-source">
+            <pre><span class="ruby-comment"># File app/models/subscription.rb, line 229</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">logger_debugger</span>(<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">stripe_error</span>, <span class="ruby-identifier">customer_id</span>, <span class="ruby-identifier">description</span>)
+  <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-identifier">description</span>)
+  <span class="ruby-identifier">errors</span>[<span class="ruby-value">:customer_id</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">stripe_error</span>.<span class="ruby-identifier">message</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-sub_create" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">sub_create</span><span
+            class="method-args">(current_user, stripe_pl_id, coupon)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -528,28 +562,12 @@ of Plan 3) Discount Coupon</p>
           
 
           
-          <div class="method-source-code" id="is_valid-source">
-            <pre><span class="ruby-comment"># File app/models/subscription.rb, line 212</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">is_valid</span>(<span class="ruby-identifier">params</span>)
+          <div class="method-source-code" id="sub_create-source">
+            <pre><span class="ruby-comment"># File app/models/subscription.rb, line 234</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">sub_create</span>(<span class="ruby-identifier">current_user</span>, <span class="ruby-identifier">stripe_pl_id</span>, <span class="ruby-identifier">coupon</span>)
+  <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">subscriptions</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-ivar">@self</span>.<span class="ruby-identifier">subscription</span>
 
-  <span class="ruby-identifier">subscription_valid</span> = <span class="ruby-keyword">true</span>
-
-   <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:cardholder_name</span>].<span class="ruby-identifier">blank?</span>
-      <span class="ruby-identifier">errors</span>[<span class="ruby-value">:cardholder_name</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;Cardholder name cannot be blank.&quot;</span> 
-      <span class="ruby-identifier">subscription_vaild</span> = <span class="ruby-keyword">false</span>
-   <span class="ruby-keyword">end</span>
-
-   <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:plan_id</span>].<span class="ruby-identifier">blank?</span>
-      <span class="ruby-identifier">errors</span>[<span class="ruby-value">:plan_id</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;Plan ID cannot be blank.&quot;</span>
-      <span class="ruby-identifier">subscription_valid</span> = <span class="ruby-keyword">false</span>
-   <span class="ruby-keyword">end</span>
-
-   <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:stripe_cc_token</span>].<span class="ruby-identifier">blank?</span>
-      <span class="ruby-identifier">errors</span>[<span class="ruby-value">:base</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;Could not get a valid response from Stripe.com&quot;</span>
-      <span class="ruby-identifier">subscription_valid</span> = <span class="ruby-keyword">false</span>
-   <span class="ruby-keyword">end</span>
-
-   <span class="ruby-keyword">return</span> <span class="ruby-identifier">account_valid</span>
+  <span class="ruby-ivar">@self</span>.<span class="ruby-identifier">subscribe</span>(<span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">account</span>, <span class="ruby-identifier">stripe_pl_id</span>, <span class="ruby-identifier">coupon</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           

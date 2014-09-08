@@ -3,13 +3,15 @@
 # a user account. This model is then used by the Devise GEM for user
 # user authentication and sign in. The model has been upgraded to
 # include timestamps and strip_attributes for removing leading and
-# trailing whitespaces.
+# trailing white spaces.
 ########################################################################
 class User
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  # Add call to strip leading and trailing white spaces from all atributes
+  include UserRoles
+
+  # Add call to strip leading and trailing white spaces from all attributes
   strip_attributes  # See strip_attributes for more information
 
   # Include default devise modules. Others available are:
@@ -95,43 +97,6 @@ class User
 
   delegate :name, :description, to: :organization, prefix: true
 
-  ## QUERY SCOPES ------------------------------------------------------
-
-  scope :by_email, ->(email){ where(email: /^.*#{email}.*/i) }
-  scope :by_first_name, ->(name){ where(first_name: /^.*#{name}.*/i) }
-  scope :by_last_name, ->(name){ where(last_name: /^.*#{name}.*/i) }
-  scope :by_role, ->(role){ where(role: role) }
-
-  ## PUBLIC INSTANCE METHODS -------------------------------------------
-
-  ######################################################################
-  # The role_str returns the string representation of the role assigned
-  # to the user.
-  ######################################################################
-  def role_str
-    case self.role
-    when CUSTOMER
-      "Customer"
-    when SERVICE_ADMIN
-      "Service Administrator"
-    else
-      "Unknown"
-    end
-  end
-
-  #####################################################################
-  # Returns true or false if user has admin role.
-  #####################################################################
-  def admin?
-    role == SERVICE_ADMIN
-  end
-
-  #####################################################################
-  # Returns true or false if user has customer role.
-  #####################################################################
-  def customer?
-    role == CUSTOMER
-  end
 
   ## PUBLIC CLASS METHODS ----------------------------------------------
 

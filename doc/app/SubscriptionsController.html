@@ -152,9 +152,8 @@ model instance method for creating a subscription on the Stripe.com</p>
             <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 82</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>
   <span class="ruby-ivar">@subscription</span> = <span class="ruby-constant">Subscription</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">subscription_params</span>)
-  <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">subscriptions</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-ivar">@subscription</span>
 
-  <span class="ruby-ivar">@subscription</span>.<span class="ruby-identifier">subscribe</span>(<span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">account</span>, <span class="ruby-identifier">subscription_params</span>[<span class="ruby-value">:stripe_plan_id</span>], <span class="ruby-identifier">subscription_params</span>[<span class="ruby-value">:coupon_code</span>])
+  <span class="ruby-ivar">@subscription</span>.<span class="ruby-identifier">sub_create</span>(<span class="ruby-identifier">current_user</span>,<span class="ruby-identifier">subscription_params</span>[<span class="ruby-value">:stripe_plan_id</span>],<span class="ruby-identifier">subscription_params</span>[<span class="ruby-value">:coupon_code</span>])
 
   <span class="ruby-comment"># Create a subscription with the following information:</span>
   <span class="ruby-comment">#</span>
@@ -168,7 +167,7 @@ model instance method for creating a subscription on the Stripe.com</p>
       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">action</span><span class="ruby-operator">:</span> <span class="ruby-string">'show'</span>, <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-value">:created</span>, <span class="ruby-identifier">location</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@subscription</span> }
     <span class="ruby-keyword">else</span>
       <span class="ruby-ivar">@verrors</span> = <span class="ruby-ivar">@subscription</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">full_messages</span>
-      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">action</span><span class="ruby-operator">:</span> <span class="ruby-string">'new'</span> }
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-string">'new'</span> }
       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">json</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@subscription</span>.<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-value">:unprocessable_entity</span> }
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
@@ -205,7 +204,7 @@ subscription record associated with the user and customer account.</p>
 
           
           <div class="method-source-code" id="destroy-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 133</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 132</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
   <span class="ruby-comment"># First cancel the Stripe subscription</span>
 
@@ -409,7 +408,7 @@ href="Subscription.html">Subscription</a> model class.</p>
 
           
           <div class="method-source-code" id="update-source">
-            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 110</span>
+            <pre><span class="ruby-comment"># File app/controllers/subscriptions_controller.rb, line 109</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>
 
   <span class="ruby-ivar">@subscription</span>.<span class="ruby-identifier">subscribe</span>(<span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">account</span>, <span class="ruby-identifier">subscription_params</span>[<span class="ruby-value">:stripe_plan_id</span>], <span class="ruby-identifier">coupon</span><span class="ruby-operator">:</span> <span class="ruby-identifier">subscription_params</span>[<span class="ruby-value">:coupon_code</span>])
@@ -420,7 +419,7 @@ href="Subscription.html">Subscription</a> model class.</p>
       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">head</span> <span class="ruby-value">:no_content</span> }
     <span class="ruby-keyword">else</span>
       <span class="ruby-ivar">@verrors</span> =  <span class="ruby-ivar">@subscription</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">full_messages</span>
-      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">action</span><span class="ruby-operator">:</span> <span class="ruby-string">'edit'</span> }
+      <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-string">'edit'</span> }
       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">json</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">json</span><span class="ruby-operator">:</span> <span class="ruby-ivar">@subscription</span>.<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">status</span><span class="ruby-operator">:</span> <span class="ruby-value">:unprocessable_entity</span> }
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
