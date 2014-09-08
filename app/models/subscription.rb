@@ -1,5 +1,5 @@
 ########################################################################
-# The Subcription model holds information about a subscription plan
+# The Subscription model holds information about a subscription plan
 # that will be created on the Stripe.com service. The model includes
 # enhancements for timestamps and white space stripping.
 ########################################################################
@@ -8,6 +8,7 @@ class Subscription
   include Mongoid::Timestamps
 
   # Add call to strip leading and trailing white spaces from all atributes
+
   strip_attributes  # See strip_attributes for more information
 
   ## CONSTANTS ---------------------------------------------------------
@@ -47,7 +48,7 @@ class Subscription
   ## Non-database attribute for storing a coupon code when subscribing
   attr_accessor :coupon_code
 
-# Add non database instance variables to store the temporary
+  # Add non database instance variables to store the temporary
   # Stripe credit card data in memory, but not in the database.
   attr_accessor :stripe_cc_token, :cardholder_email, :cardholder_name
   attr_accessor :customer_id
@@ -59,7 +60,6 @@ class Subscription
   validates_presence_of :sub_start
   validates_presence_of :status
   validates_presence_of :user_id
-
 
   ## RELATIONSHIPS -----------------------------------------------------
 
@@ -84,157 +84,157 @@ class Subscription
     end
   end
 
-##########################################################################
-# The subscribe method creates or updates a Stripe subscription for a
-# given user. It then store some of the information in memory for that
-# user. The following parameters are passed to this method:
-#
-# 1) User Account
-# 2) Type of Plan
-# 3) Discount Coupon
-#
-# This method will return a subscription object.
-##########################################################################
+  ##########################################################################
+  # The subscribe method creates or updates a Stripe subscription for a
+  # given user. It then store some of the information in memory for that
+  # user. The following parameters are passed to this method:
+  #
+  # 1) User Account
+  # 2) Type of Plan
+  # 3) Discount Coupon
+  #
+  # This method will return a subscription object.
+  ##########################################################################
 
-def subscribe(account_user, plan_id, coupon_code)
+  def subscribe(account_user, plan_id, coupon_code)
 
-if account_user.customer_id.present?
+    if account_user.customer_id.present?
 
-  begin
-    #binding.pry
-    Stripe.api_key = ENV['API_KEY']
+      begin
+        #binding.pry
+        Stripe.api_key = ENV['API_KEY']
 
-    customer = Stripe::Customer.retrieve("#{account_user.customer_id}")
-    self.sub_start = DateTime.now
-    self.quantity = 1
-    self.stripe_plan_id = plan_id
-    #binding.pry
-    customer_subscription = customer.update_subscription(
-                              :plan => plan_id,
-  #                            :plan => self.plan_str(),
-                              :coupon => coupon_code
-    )
-    self.cancel_at_period_end = customer_subscription.cancel_at_period_end
-    self.current_period_start = customer_subscription.current_period_start
-    self.current_period_end = customer_subscription.current_period_end
-    self.trial_start = customer_subscription.trial_start
-    self.trial_end = customer_subscription.trial_end
-    self.status = ACTIVE
+        customer = Stripe::Customer.retrieve("#{account_user.customer_id}")
+        self.sub_start = DateTime.now
+        self.quantity = 1
+        self.stripe_plan_id = plan_id
+        #binding.pry
+        customer_subscription = customer.update_subscription(
+                                  :plan => plan_id,
+      #                            :plan => self.plan_str(),
+                                  :coupon => coupon_code
+        )
+        self.cancel_at_period_end = customer_subscription.cancel_at_period_end
+        self.current_period_start = customer_subscription.current_period_start
+        self.current_period_end = customer_subscription.current_period_end
+        self.trial_start = customer_subscription.trial_start
+        self.trial_end = customer_subscription.trial_end
+        self.status = ACTIVE
 
-    self.save
+        self.save
 
-  rescue Stripe::StripeError => stripe_error
-      logger_debugger(errors, stripe_error, customer_id, "[Subscription.subscribe] error = #{stripe_error.message}")
+      rescue Stripe::StripeError => stripe_error
+          logger_debugger(errors, stripe_error, customer_id, "[Subscription.subscribe] error = #{stripe_error.message}")
+          return nil
+      end
+    else
       return nil
+    end
+
+    return self
   end
- else
-  return nil
- end
 
-  return self
+  ##########################################################################
+  # The cancel_subscription method cancels a Stripe subscription for a
+  # given user.  The following parameter are passed to this method:
+  #
+  # 1) User Account
+  #
+  # This method will return a 'true' or 'false' indicating whether the
+  # subscription was cancelled.
+  ##########################################################################
+  def cancel_subscription(account_user)
 
-end
+    subscription_cancelled = true
 
-##########################################################################
-# The cancel_subscription method cancels a Stripe subscription for a
-# given user.  The following parameter are passed to this method:
-#
-# 1) User Account
-#
-# This method will return a 'true' or 'false' indicating whether the
-# subscription was cancelled.
-##########################################################################
-def cancel_subscription(account_user)
+    if account_user.customer_id.present?
+      begin
 
- subscription_cancelled = true
+        Stripe.api_key = ENV['API_KEY']
 
- if account_user.customer_id.present?
+        customer = Stripe::Customer.retrieve("#{account_user.customer_id}")
 
-  begin
+        customer.cancel_subscription()
 
-    Stripe.api_key = ENV['API_KEY']
+        self.status = CANCELLED
 
-    customer = Stripe::Customer.retrieve("#{account_user.customer_id}")
+        self.save
 
-    customer.cancel_subscription()
-
-    self.status = CANCELLED
-
-    self.save
-
-  rescue Stripe::StripeError => stripe_error
-    logger_debugger(errors, stripe_error, customer_id, "[Subscription.cancel_subscription] error = #{stripe_error.message}")
-    subscription_cancelled = false
-  end
- end
+      rescue Stripe::StripeError => stripe_error
+        logger_debugger(errors, stripe_error, customer_id, "[Subscription.cancel_subscription] error = #{stripe_error.message}")
+        subscription_cancelled = false
+      end
+    end
     return subscription_cancelled
-end
+  end
 
-##########################################################################
-# The destroy method cancels a Stripe subscription for a given user and
-# then deletes the customer.
-#
-# This method will return a 'true' or 'false' indicating whether the
-# subscription was canceled and the customer was deleted.
-##########################################################################
-def destroy
+  ##########################################################################
+  # The destroy method cancels a Stripe subscription for a given user and
+  # then deletes the customer.
+  #
+  # This method will return a 'true' or 'false' indicating whether the
+  # subscription was canceled and the customer was deleted.
+  ##########################################################################
+  def destroy
 
-  removed_customer = true
+    removed_customer = true
 
-  if self.customer_id.present?
+    if self.customer_id.present?
+      begin
 
-    begin
+        cancel_subscription (self)
+        Stripe.api_key = STRIPE[:api_key]
+        customer = Stripe::Customer.retrieve("#{self.customer_id}")
+        customer.delete
 
-      cancel_subscription (self)
-      Stripe.api_key = STRIPE[:api_key]
-      customer = Stripe::Customer.retrieve("#{self.customer_id}")
-      customer.delete
-
-    rescue Stripe::StripeError => stripe_error
-      logger_debugger(errors, stripe_error, customer_id, "[Subscription.destroy] error = #{stripe_error.message}")
+      rescue Stripe::StripeError => stripe_error
+        logger_debugger(errors, stripe_error, customer_id, "[Subscription.destroy] error = #{stripe_error.message}")
+        removed_customer = false
+      end
+    else
       removed_customer = false
     end
-  else
-    removed_customer = false
+
+    return removed_customer
   end
 
-  return removed_customer
-end
+  ##########################################################################
+  # The sub_create function creates a new subscription by calling the
+  # subscribe function.
+  ##########################################################################
+  def sub_create(current_user, stripe_pl_id, coupon)
+    current_user.subscriptions << self.subscription
 
-protected
+    self.subscribe(current_user.account, stripe_pl_id, coupon)
+  end
 
-  ######################################################################
-  ######################################################################
-#def is_valid(params)
+  protected
 
- # subscription_valid = true
+    ######################################################################
+    ######################################################################
+  #def is_valid(params)
 
- #  if params[:cardholder_name].blank?
- #     errors[:cardholder_name] << "Cardholder name cannot be blank."
- #     subscription_vaild = false
- # end
+   # subscription_valid = true
 
- # if params[:plan_id].blank?
- #     errors[:plan_id] << "Plan ID cannot be blank."
- #     subscription_valid = false
- #  end
+   #  if params[:cardholder_name].blank?
+   #     errors[:cardholder_name] << "Cardholder name cannot be blank."
+   #     subscription_vaild = false
+   # end
 
- #  if params[:stripe_cc_token].blank?
- #     errors[:base] << "Could not get a valid response from Stripe.com"
- #     subscription_valid = false
- # end
+   # if params[:plan_id].blank?
+   #     errors[:plan_id] << "Plan ID cannot be blank."
+   #     subscription_valid = false
+   #  end
 
- #  return account_valid
- # end
-def logger_debugger(errors, stripe_error, customer_id, description)
-  logger.debug(description)
-  errors[:customer_id] << stripe_error.message
-end
+   #  if params[:stripe_cc_token].blank?
+   #     errors[:base] << "Could not get a valid response from Stripe.com"
+   #     subscription_valid = false
+   # end
 
-def sub_create(current_user, stripe_pl_id, coupon)
-  current_user.subscriptions << @self.subscription
-
-  @self.subscribe(current_user.account, stripe_pl_id, coupon)
-end
-
+   #  return account_valid
+   # end
+  def logger_debugger(errors, stripe_error, customer_id, description)
+    logger.debug(description)
+    errors[:customer_id] << stripe_error.message
+  end
 end
