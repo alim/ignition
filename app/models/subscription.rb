@@ -203,8 +203,7 @@ class Subscription
   # subscribe function.
   ##########################################################################
   def sub_create(current_user, stripe_pl_id, coupon)
-    current_user.subscriptions << self.subscription
-
+    current_user.subscription = self
     self.subscribe(current_user.account, stripe_pl_id, coupon)
   end
 
