@@ -76,7 +76,6 @@ describe SubscriptionsController do
       @customer = create_customer(@token, email)
       @user = FactoryGirl.create(:user_with_account)
       @user.account.customer_id = @customer.id
-      sign_in @user
 
       # Setup for the stripe interactions
 
@@ -86,7 +85,8 @@ describe SubscriptionsController do
                     account: {stripe_cc_token: token.id}
         }
 
-      @user.account.save_with_stripe(@params)
+      #@user.account.save_with_stripe(@params)
+      sign_in @user
     }
 
      # CREATE STRIPE COUPON ----------------------------------------
@@ -131,9 +131,9 @@ describe SubscriptionsController do
   before(:each){
    #signin_customer
    stripe_customer
-   #create_stripe_coupon
-   #create_silver_plan
-   #create_bronze_plan
+   create_stripe_coupon
+   create_silver_plan
+   create_bronze_plan
 
 		subject.current_user.should_not be_nil
 		subscription_fake_customers
@@ -143,11 +143,11 @@ describe SubscriptionsController do
   }
 
 	after(:each) {
-    #delete_stripe_coupon
-    #delete_silver_plan
-    #delete_bronze_plan
+    delete_stripe_coupon
+    delete_silver_plan
+    delete_bronze_plan
 		delete_users
-		Subscription.destroy_all
+    Subscription.destroy_all
   }
 
   describe "GET index", :vcr do
@@ -193,21 +193,18 @@ describe SubscriptionsController do
 
     describe "with valid params" do
       it "creates a new Subscription" do
-        #pending
         expect {
           post :create, create_params
         }.to change(Subscription, :count).by(1)
       end
 
       it "assigns a newly created subscription as @subscription" do
-        pending
         post :create, create_params
         assigns(:subscription).should be_a(Subscription)
         assigns(:subscription).should be_persisted
       end
 
       it "redirects to the created subscription" do
-        pending
         post :create, create_params
         response.should redirect_to subscription_url(assigns(:subscription))
       end
@@ -215,7 +212,6 @@ describe SubscriptionsController do
 
     describe "with invalid params", :vcr do
       it "assigns a newly created but unsaved subscription as @subscription" do
-        pending
         # Trigger the behavior that occurs when invalid params are submitted
         Subscription.any_instance.stub(:save).and_return(false)
         post :create, create_params
@@ -223,7 +219,6 @@ describe SubscriptionsController do
       end
 
       it "re-renders the 'new' template" do
-        pending
         # Trigger the behavior that occurs when invalid params are submitted
         Subscription.any_instance.stub(:save).and_return(false)
         post :create, create_params
@@ -235,31 +230,28 @@ describe SubscriptionsController do
   describe "PUT update", :vcr do
     let(:new_fake_stripe_plan_id){ "999999999" }
 
-
     let(:update_params){
       {
         id: @fake_subscription.id,
         subscription: {
           stripe_plan_id: new_fake_stripe_plan_id,
+          coupon_code: bronze_plan_id
         }
       }
     }
 
     describe "with valid params" do
-      it "updates the requested subscription" do
-        pending
-        put :update, update_params
-        assigns(:subscription).stripe_plan_id.should eq(new_fake_stripe_plan_id)
-      end
+      #it "updates the requested subscription" do
+        #put :update, update_params
+        #assigns(:subscription).stripe_plan_id.should eq(new_fake_stripe_plan_id)
+      #end
 
       it "assigns the requested subscription as @subscription" do
-        pending
         put :update, update_params
         assigns(:subscription).should eq(@fake_subscription)
       end
 
       it "redirects to the subscription" do
-        pending
         put :update, update_params
         response.should redirect_to(@fake_subscription)
       end
@@ -267,14 +259,12 @@ describe SubscriptionsController do
 
     describe "with invalid params" do
       it "assigns the subscription as @subscription" do
-        pending
         Subscription.any_instance.stub(:save).and_return(false)
         put :update, update_params
         assigns(:subscription).should eq(@fake_subscription)
       end
 
       it "re-renders the 'edit' template" do
-        pending
         # Trigger the behavior that occurs when invalid params are submitted
         Subscription.any_instance.stub(:save).and_return(false)
         put :update, update_params
@@ -287,14 +277,12 @@ describe SubscriptionsController do
     let(:destroy_params){ {id: @fake_subscription.id } }
 
     it "destroys the requested subscription" do
-      pending
       expect {
         delete :destroy, destroy_params
       }.to change(Subscription, :count).by(-1)
     end
 
     it "redirects to the subscriptions list" do
-      pending
       delete :destroy, destroy_params
       response.should redirect_to(subscriptions_url)
     end
