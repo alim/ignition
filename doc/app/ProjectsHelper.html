@@ -135,7 +135,7 @@ selection list.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">project_list</span>(<span class="ruby-identifier">user</span>)
   <span class="ruby-keyword">begin</span>
     <span class="ruby-identifier">owned_projects</span> = <span class="ruby-constant">Project</span>.<span class="ruby-identifier">find_with_groups</span>(<span class="ruby-identifier">user</span>)
-    <span class="ruby-identifier">list_name</span> = <span class="ruby-string">'Available Projects'</span>
+    <span class="ruby-identifier">list_name</span> = <span class="ruby-string">&#39;Available Projects&#39;</span>
 
     <span class="ruby-keyword">return</span> <span class="ruby-identifier">owned_projects</span>, <span class="ruby-identifier">list_name</span>
 

@@ -113,9 +113,9 @@
 
   <section class="description">
     
-<p>The Subcription model holds information about a subscription plan that will
-be created on the Stripe.com service. The model includes enhancements for
-timestamps and white space stripping.</p>
+<p>The <a href="Subscription.html">Subscription</a> model holds information
+about a subscription plan that will be created on the Stripe.com service.
+The model includes enhancements for timestamps and white space stripping.</p>
 
   </section>
 
@@ -152,8 +152,9 @@ timestamps and white space stripping.</p>
         <dt id="PLAN_OPTIONS">PLAN_OPTIONS
         
         <dd><p>The <a href="Subscription.html#PLAN_OPTIONS">PLAN_OPTIONS</a> is a hash of
-Stripe.com plan ID’s associated with this service. Each hash enter includes
-a label and an id</p>
+Stripe.com plan ID&#39;s associated with this service. Each hash enter
+includes a label and an id. In the future we should factor out the plan
+dependency into a separate service class.</p>
         
       
         <dt id="TRAILING">TRAILING
@@ -280,38 +281,37 @@ parameter are passed to this method:</p>
 
 <p>1) <a href="User.html">User</a> <a href="Account.html">Account</a></p>
 
-<p>This method will return a ‘true’ or ‘false’ indicating whether the 
-subscription was cancelled.</p>
+<p>This method will return a &#39;true&#39; or &#39;false&#39; indicating
+whether the subscription was cancelled.</p>
           
           
 
           
           <div class="method-source-code" id="cancel_subscription-source">
-            <pre><span class="ruby-comment"># File app/models/subscription.rb, line 147</span>
+            <pre><span class="ruby-comment"># File app/models/subscription.rb, line 144</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">cancel_subscription</span>(<span class="ruby-identifier">account_user</span>)
 
- <span class="ruby-identifier">subscription_cancelled</span> = <span class="ruby-keyword">true</span>
+  <span class="ruby-identifier">subscription_cancelled</span> = <span class="ruby-keyword">true</span>
 
- <span class="ruby-keyword">if</span> <span class="ruby-identifier">account_user</span>.<span class="ruby-identifier">customer_id</span>.<span class="ruby-identifier">present?</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">account_user</span>.<span class="ruby-identifier">customer_id</span>.<span class="ruby-identifier">present?</span>
+    <span class="ruby-keyword">begin</span>
 
-  <span class="ruby-keyword">begin</span>
+      <span class="ruby-constant">Stripe</span>.<span class="ruby-identifier">api_key</span> = <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;API_KEY&#39;</span>]
 
-    <span class="ruby-constant">Stripe</span>.<span class="ruby-identifier">api_key</span> = <span class="ruby-constant">ENV</span>[<span class="ruby-string">'API_KEY'</span>]
+      <span class="ruby-identifier">customer</span> = <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">Customer</span>.<span class="ruby-identifier">retrieve</span>(<span class="ruby-node">&quot;#{account_user.customer_id}&quot;</span>)
 
-    <span class="ruby-identifier">customer</span> = <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">Customer</span>.<span class="ruby-identifier">retrieve</span>(<span class="ruby-node">&quot;#{account_user.customer_id}&quot;</span>)
+      <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">cancel_subscription</span>()
 
-    <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">cancel_subscription</span>()
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">status</span> = <span class="ruby-constant">CANCELLED</span>
 
-    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">status</span> = <span class="ruby-constant">CANCELLED</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
 
-    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
-
-  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">StripeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">stripe_error</span>
-    <span class="ruby-identifier">logger_debugger</span>(<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">stripe_error</span>, <span class="ruby-identifier">customer_id</span>, <span class="ruby-node">&quot;[Subscription.cancel_subscription] error = #{stripe_error.message}&quot;</span>)
-    <span class="ruby-identifier">subscription_cancelled</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">StripeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">stripe_error</span>
+      <span class="ruby-identifier">logger_debugger</span>(<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">stripe_error</span>, <span class="ruby-identifier">customer_id</span>, <span class="ruby-node">&quot;[Subscription.cancel_subscription] error = #{stripe_error.message}&quot;</span>)
+      <span class="ruby-identifier">subscription_cancelled</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
- <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">return</span> <span class="ruby-identifier">subscription_cancelled</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">subscription_cancelled</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -339,36 +339,35 @@ subscription was cancelled.</p>
           <p>The destroy method cancels a Stripe subscription for a given user and then
 deletes the customer.</p>
 
-<p>This method will return a ‘true’ or ‘false’ indicating whether the 
-subscription was cancelled and the customer was deleted.</p>
+<p>This method will return a &#39;true&#39; or &#39;false&#39; indicating
+whether the subscription was canceled and the customer was deleted.</p>
           
           
 
           
           <div class="method-source-code" id="destroy-source">
-            <pre><span class="ruby-comment"># File app/models/subscription.rb, line 180</span>
+            <pre><span class="ruby-comment"># File app/models/subscription.rb, line 176</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
 
-   <span class="ruby-identifier">removed_customer</span> = <span class="ruby-keyword">true</span>
+  <span class="ruby-identifier">removed_customer</span> = <span class="ruby-keyword">true</span>
 
- <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">customer_id</span>.<span class="ruby-identifier">present?</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">customer_id</span>.<span class="ruby-identifier">present?</span>
+    <span class="ruby-keyword">begin</span>
 
-  <span class="ruby-keyword">begin</span>
- 
-   <span class="ruby-identifier">cancel_subscription</span> (<span class="ruby-keyword">self</span>)
-   <span class="ruby-constant">Stripe</span>.<span class="ruby-identifier">api_key</span> = <span class="ruby-constant">STRIPE</span>[<span class="ruby-value">:api_key</span>]
-   <span class="ruby-identifier">customer</span> = <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">Customer</span>.<span class="ruby-identifier">retrieve</span>(<span class="ruby-node">&quot;#{self.customer_id}&quot;</span>)
-   <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">delete</span>
+      <span class="ruby-identifier">cancel_subscription</span> (<span class="ruby-keyword">self</span>)
+      <span class="ruby-constant">Stripe</span>.<span class="ruby-identifier">api_key</span> = <span class="ruby-constant">STRIPE</span>[<span class="ruby-value">:api_key</span>]
+      <span class="ruby-identifier">customer</span> = <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">Customer</span>.<span class="ruby-identifier">retrieve</span>(<span class="ruby-node">&quot;#{self.customer_id}&quot;</span>)
+      <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">delete</span>
 
-  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">StripeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">stripe_error</span>
-   <span class="ruby-identifier">logger_debugger</span>(<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">stripe_error</span>, <span class="ruby-identifier">customer_id</span>, <span class="ruby-node">&quot;[Subscription.destroy] error = #{stripe_error.message}&quot;</span>)
-   <span class="ruby-identifier">removed_customer</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">StripeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">stripe_error</span>
+      <span class="ruby-identifier">logger_debugger</span>(<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">stripe_error</span>, <span class="ruby-identifier">customer_id</span>, <span class="ruby-node">&quot;[Subscription.destroy] error = #{stripe_error.message}&quot;</span>)
+      <span class="ruby-identifier">removed_customer</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">removed_customer</span> = <span class="ruby-keyword">false</span>
   <span class="ruby-keyword">end</span>
- <span class="ruby-keyword">else</span>
-   <span class="ruby-identifier">removed_customer</span> = <span class="ruby-keyword">false</span>
- <span class="ruby-keyword">end</span>
 
-   <span class="ruby-keyword">return</span> <span class="ruby-identifier">removed_customer</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">removed_customer</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -400,20 +399,53 @@ string that represents the name of the subscription plan.</p>
 
           
           <div class="method-source-code" id="plan_str-source">
-            <pre><span class="ruby-comment"># File app/models/subscription.rb, line 72</span>
+            <pre><span class="ruby-comment"># File app/models/subscription.rb, line 74</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">plan_str</span>
   <span class="ruby-keyword">case</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">stripe_plan_id</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-constant">PLAN_OPTIONS</span>[<span class="ruby-value">0</span>][<span class="ruby-value">:plan_id</span>]
-    <span class="ruby-identifier">str</span> = <span class="ruby-string">&quot;Bronze Subscription Plan&quot;</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-constant">PLAN_OPTIONS</span>[<span class="ruby-value">1</span>][<span class="ruby-value">:plan_id</span>]
-    <span class="ruby-identifier">str</span> = <span class="ruby-string">&quot;Silver Subscription Plan&quot;</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-constant">PLAN_OPTIONS</span>[<span class="ruby-value">2</span>][<span class="ruby-value">:plan_id</span>]
-    <span class="ruby-identifier">str</span> = <span class="ruby-string">&quot;Gold Subscription Plan&quot;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">PLAN_OPTIONS</span>[<span class="ruby-value">:bronze</span>][<span class="ruby-value">:plan_id</span>]
+    <span class="ruby-constant">PLAN_OPTIONS</span>[<span class="ruby-value">:bronze</span>][<span class="ruby-value">:label</span>]
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">PLAN_OPTIONS</span>[<span class="ruby-value">:silver</span>][<span class="ruby-value">:plan_id</span>]
+    <span class="ruby-constant">PLAN_OPTIONS</span>[<span class="ruby-value">:silver</span>][<span class="ruby-value">:label</span>]
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">PLAN_OPTIONS</span>[<span class="ruby-value">:gold</span>][<span class="ruby-value">:plan_id</span>]
+    <span class="ruby-constant">PLAN_OPTIONS</span>[<span class="ruby-value">:gold</span>][<span class="ruby-value">:label</span>]
   <span class="ruby-keyword">else</span>
-    <span class="ruby-identifier">str</span> = <span class="ruby-string">&quot;Unknown Plan&quot;</span>
+    <span class="ruby-string">&quot;Unknown Plan&quot;</span>
   <span class="ruby-keyword">end</span>
-  
-  <span class="ruby-keyword">return</span> <span class="ruby-identifier">str</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-sub_create" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">sub_create</span><span
+            class="method-args">(current_user, stripe_pl_id, coupon)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The <a href="Subscription.html#method-i-sub_create">#sub_create</a>
+function creates a new subscription by calling the subscribe function.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="sub_create-source">
+            <pre><span class="ruby-comment"># File app/models/subscription.rb, line 203</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">sub_create</span>(<span class="ruby-identifier">current_user</span>, <span class="ruby-identifier">stripe_pl_id</span>, <span class="ruby-identifier">coupon</span>)
+  <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">subscription</span> = <span class="ruby-keyword">self</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">subscribe</span>(<span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">account</span>, <span class="ruby-identifier">stripe_pl_id</span>, <span class="ruby-identifier">coupon</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -439,7 +471,7 @@ string that represents the name of the subscription plan.</p>
         <div class="method-description">
           
           <p>The subscribe method creates or updates a Stripe subscription for a given
-user. It then store some of the information in memory for that  user. The
+user. It then store some of the information in memory for that user. The
 following parameters are passed to this method:</p>
 
 <p>1) <a href="User.html">User</a> <a href="Account.html">Account</a> 2) Type
@@ -454,41 +486,38 @@ of Plan 3) Discount Coupon</p>
             <pre><span class="ruby-comment"># File app/models/subscription.rb, line 99</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">subscribe</span>(<span class="ruby-identifier">account_user</span>, <span class="ruby-identifier">plan_id</span>, <span class="ruby-identifier">coupon_code</span>)
 
-<span class="ruby-keyword">if</span> <span class="ruby-identifier">account_user</span>.<span class="ruby-identifier">customer_id</span>.<span class="ruby-identifier">present?</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">account_user</span>.<span class="ruby-identifier">customer_id</span>.<span class="ruby-identifier">present?</span>
 
-  <span class="ruby-keyword">begin</span>
-    <span class="ruby-comment">#binding.pry</span>
-    <span class="ruby-constant">Stripe</span>.<span class="ruby-identifier">api_key</span> = <span class="ruby-constant">ENV</span>[<span class="ruby-string">'API_KEY'</span>]
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-constant">Stripe</span>.<span class="ruby-identifier">api_key</span> = <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;API_KEY&#39;</span>]
 
-    <span class="ruby-identifier">customer</span> = <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">Customer</span>.<span class="ruby-identifier">retrieve</span>(<span class="ruby-node">&quot;#{account_user.customer_id}&quot;</span>)
-    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">sub_start</span> = <span class="ruby-constant">DateTime</span>.<span class="ruby-identifier">now</span>
-    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">quantity</span> = <span class="ruby-value">1</span>
-    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">stripe_plan_id</span> = <span class="ruby-identifier">plan_id</span>
-    <span class="ruby-comment">#binding.pry</span>
-    <span class="ruby-identifier">customer_subscription</span> = <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">update_subscription</span>(
-                              <span class="ruby-value">:plan</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">plan_id</span>,
-  <span class="ruby-comment">#                            :plan =&gt; self.plan_str(),</span>
-                              <span class="ruby-value">:coupon</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">coupon_code</span>
-    )
-    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">cancel_at_period_end</span> = <span class="ruby-identifier">customer_subscription</span>.<span class="ruby-identifier">cancel_at_period_end</span>
-    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">current_period_start</span> = <span class="ruby-identifier">customer_subscription</span>.<span class="ruby-identifier">current_period_start</span>
-    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">current_period_end</span> = <span class="ruby-identifier">customer_subscription</span>.<span class="ruby-identifier">current_period_end</span>
-    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">trial_start</span> = <span class="ruby-identifier">customer_subscription</span>.<span class="ruby-identifier">trial_start</span>
-    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">trial_end</span> = <span class="ruby-identifier">customer_subscription</span>.<span class="ruby-identifier">trial_end</span>
-    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">status</span> = <span class="ruby-constant">ACTIVE</span>
+      <span class="ruby-identifier">customer</span> = <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">Customer</span>.<span class="ruby-identifier">retrieve</span>(<span class="ruby-node">&quot;#{account_user.customer_id}&quot;</span>)
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">sub_start</span> = <span class="ruby-constant">DateTime</span>.<span class="ruby-identifier">now</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">quantity</span> = <span class="ruby-value">1</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">stripe_plan_id</span> = <span class="ruby-identifier">plan_id</span>
+      <span class="ruby-identifier">customer_subscription</span> = <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">update_subscription</span>(
+                                <span class="ruby-value">:plan</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">plan_id</span>,
+    <span class="ruby-comment">#                            :plan =&gt; self.plan_str(),</span>
+                                <span class="ruby-value">:coupon</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">coupon_code</span>
+      )
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">cancel_at_period_end</span> = <span class="ruby-identifier">customer_subscription</span>.<span class="ruby-identifier">cancel_at_period_end</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">current_period_start</span> = <span class="ruby-identifier">customer_subscription</span>.<span class="ruby-identifier">current_period_start</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">current_period_end</span> = <span class="ruby-identifier">customer_subscription</span>.<span class="ruby-identifier">current_period_end</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">trial_start</span> = <span class="ruby-identifier">customer_subscription</span>.<span class="ruby-identifier">trial_start</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">trial_end</span> = <span class="ruby-identifier">customer_subscription</span>.<span class="ruby-identifier">trial_end</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">status</span> = <span class="ruby-constant">ACTIVE</span>
 
-    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
 
-  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">StripeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">stripe_error</span>
-      <span class="ruby-identifier">logger_debugger</span>(<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">stripe_error</span>, <span class="ruby-identifier">customer_id</span>, <span class="ruby-node">&quot;[Subscription.subscribe] error = #{stripe_error.message}&quot;</span>)
-      <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">StripeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">stripe_error</span>
+        <span class="ruby-identifier">logger_debugger</span>(<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">stripe_error</span>, <span class="ruby-identifier">customer_id</span>, <span class="ruby-node">&quot;[Subscription.subscribe] error = #{stripe_error.message}&quot;</span>)
+        <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
   <span class="ruby-keyword">end</span>
- <span class="ruby-keyword">else</span> 
-  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span>
- <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>
-
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -529,45 +558,10 @@ of Plan 3) Discount Coupon</p>
 
           
           <div class="method-source-code" id="logger_debugger-source">
-            <pre><span class="ruby-comment"># File app/models/subscription.rb, line 229</span>
+            <pre><span class="ruby-comment"># File app/models/subscription.rb, line 233</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">logger_debugger</span>(<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">stripe_error</span>, <span class="ruby-identifier">customer_id</span>, <span class="ruby-identifier">description</span>)
   <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-identifier">description</span>)
   <span class="ruby-identifier">errors</span>[<span class="ruby-value">:customer_id</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">stripe_error</span>.<span class="ruby-identifier">message</span>
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-      <div id="method-i-sub_create" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">sub_create</span><span
-            class="method-args">(current_user, stripe_pl_id, coupon)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-          
-
-          
-          <div class="method-source-code" id="sub_create-source">
-            <pre><span class="ruby-comment"># File app/models/subscription.rb, line 234</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">sub_create</span>(<span class="ruby-identifier">current_user</span>, <span class="ruby-identifier">stripe_pl_id</span>, <span class="ruby-identifier">coupon</span>)
-  <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">subscriptions</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-ivar">@self</span>.<span class="ruby-identifier">subscription</span>
-
-  <span class="ruby-ivar">@self</span>.<span class="ruby-identifier">subscribe</span>(<span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">account</span>, <span class="ruby-identifier">stripe_pl_id</span>, <span class="ruby-identifier">coupon</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           

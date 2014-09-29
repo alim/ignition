@@ -162,7 +162,7 @@ will return a list of groups that are owned by the user. If no groups are
 found for the user then nil will be returned. The group list will return an
 array of hashes. Each array element will contain a hash of the form:</p>
 
-<p><a href="0">group_list</a> = { id: 1, related: true, label: 'name'}</p>
+<p><a href="0">group_list</a> = { id: 1, related: true, label: &#39;name&#39;}</p>
 
 <p>The id: will be the group.id. The related: key will be either true or false
 depending on whether the group is already related to the resource. The
@@ -186,7 +186,7 @@ parameter will be used to see if the group is already related.</p>
       <span class="ruby-identifier">owned_groups</span> = <span class="ruby-constant">Group</span>.<span class="ruby-identifier">owned_groups</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:user</span>])
 <span class="ruby-identifier">resource</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:resource</span>]
 
-            <span class="ruby-ivar">@list_name</span> = <span class="ruby-string">'Available groups'</span>
+            <span class="ruby-ivar">@list_name</span> = <span class="ruby-string">&#39;Available groups&#39;</span>
             <span class="ruby-identifier">group_ids</span> = <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">group_ids</span>
             <span class="ruby-identifier">group_list</span> = []
             <span class="ruby-identifier">owned_groups</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">group</span><span class="ruby-operator">|</span>
@@ -230,11 +230,12 @@ can select multiple resources to share with the group. This instance
 variable is used by the form partial. The example array of hash values are
 shown below:</p>
 
-<p>@<a href="0">resources</a> = { id: 1, related: true, label: ‘name’}</p>
+<p>@<a href="0">resources</a> = { id: 1, related: true, label: &#39;name&#39;}</p>
 
-<p>The ‘related’ key/value is used to indicate whether the resource is already
-related to the group. Its value can either be true or false. The ‘label’
-key/value is text choice that will be displayed to the user.</p>
+<p>The &#39;related&#39; key/value is used to indicate whether the resource is
+already related to the group. Its value can either be true or false. The
+&#39;label&#39; key/value is text choice that will be displayed to the
+user.</p>
 
 <p>This method takes a parameter hash with the following key/value pairs</p>
 <ul><li>
@@ -266,7 +267,7 @@ to share with the group.</p>
     <span class="ruby-comment"># We construct the call to specify the resource class using</span>
     <span class="ruby-comment"># the send and Object.const_get methods.</span>
     <span class="ruby-identifier">related_resource_ids</span> = <span class="ruby-identifier">group</span>.<span class="ruby-identifier">send</span>(
-      <span class="ruby-constant">Object</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">rclass</span>).<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">+</span> <span class="ruby-string">'_ids'</span>)
+      <span class="ruby-constant">Object</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-identifier">rclass</span>).<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;_ids&#39;</span>)
 
     <span class="ruby-identifier">resource_list</span> = []
     <span class="ruby-identifier">resources</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">resource</span><span class="ruby-operator">|</span>

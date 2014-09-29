@@ -96,6 +96,8 @@
     
     <li ><a href="#method-i-missing_document">#missing_document</a>
     
+    <li ><a href="#method-i-set_errors_render">#set_errors_render</a>
+    
     <li ><a href="#method-i-set_menu_active">#set_menu_active</a>
     
   </ul>
@@ -176,8 +178,8 @@ information.</p>
           <div class="method-source-code" id="after_sign_in_path_for-source">
             <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 38</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">after_sign_in_path_for</span>(<span class="ruby-identifier">resource</span>)
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">User</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">resource</span>.<span class="ruby-identifier">first_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">'*None*'</span> <span class="ruby-operator">||</span>
-    <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">last_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">'*None*'</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">User</span>) <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">resource</span>.<span class="ruby-identifier">first_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;*None*&#39;</span> <span class="ruby-operator">||</span>
+    <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">last_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&#39;*None*&#39;</span>)
     <span class="ruby-identifier">edit_user_registration_path</span>
   <span class="ruby-keyword">else</span>
     <span class="ruby-keyword">super</span>
@@ -228,6 +230,43 @@ have signed out the system.</p>
       </div>
 
     
+      <div id="method-i-set_errors_render" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">set_errors_render</span><span
+            class="method-args">(object, view)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The <a
+href="ApplicationController.html#method-i-set_errors_render">#set_errors_render</a>
+method will set an instance variable @verrors, which is used for rendering
+validation errors in views. It will also render the requested view</p>
+          
+          
+
+          
+          <div class="method-source-code" id="set_errors_render-source">
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 66</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">set_errors_render</span>(<span class="ruby-identifier">object</span>, <span class="ruby-identifier">view</span>)
+  <span class="ruby-ivar">@verrors</span> = <span class="ruby-identifier">object</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">full_messages</span>
+  <span class="ruby-identifier">render</span> <span class="ruby-identifier">view</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
       <div id="method-i-set_menu_active" class="method-detail ">
         
         <div class="method-heading">
@@ -253,7 +292,7 @@ CSS class to active.</p>
             <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 54</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">set_menu_active</span>
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Devise</span><span class="ruby-operator">::</span><span class="ruby-constant">RegistrationsController</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">user_signed_in?</span> <span class="ruby-operator">&amp;&amp;</span>
-    <span class="ruby-identifier">params</span>[<span class="ruby-value">:action</span>] <span class="ruby-operator">==</span> <span class="ruby-string">'edit'</span>
+    <span class="ruby-identifier">params</span>[<span class="ruby-value">:action</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&#39;edit&#39;</span>
     <span class="ruby-ivar">@account_active</span>=<span class="ruby-string">&quot;class=active&quot;</span>
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
@@ -297,7 +336,7 @@ unauthorized action. The user will be redirected to the admin_oops_url</p>
 
           
           <div class="method-source-code" id="access_denied-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 101</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 111</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">access_denied</span>(<span class="ruby-identifier">exception</span>)
   <span class="ruby-identifier">msg</span> = <span class="ruby-node">&quot;You are not authorized to access the requested #{exception.subject.class}.&quot;</span>
   <span class="ruby-identifier">display_alert</span>(<span class="ruby-identifier">message</span><span class="ruby-operator">:</span> <span class="ruby-identifier">msg</span>, <span class="ruby-identifier">target</span><span class="ruby-operator">:</span> <span class="ruby-constant">Oops</span><span class="ruby-operator">::</span><span class="ruby-constant">ADMIN</span>)
@@ -333,7 +372,7 @@ href="README_rdoc.html">README</a> file for more details.</p>
 
           
           <div class="method-source-code" id="configure_permitted_parameters-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 70</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 80</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">configure_permitted_parameters</span>
   <span class="ruby-identifier">devise_parameter_sanitizer</span>.<span class="ruby-identifier">for</span>(<span class="ruby-value">:account_update</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">permit</span>(
     <span class="ruby-value">:email</span>, <span class="ruby-value">:password</span>, <span class="ruby-value">:password_confirmation</span>, <span class="ruby-value">:current_password</span>,
@@ -374,7 +413,7 @@ use.</p>
 
           
           <div class="method-source-code" id="layout_by_resource-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 85</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 95</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">layout_by_resource</span>
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">HomeController</span>)
     <span class="ruby-string">&quot;home&quot;</span>
@@ -418,7 +457,7 @@ Mongoid::Errors::DocumentNotFound exception across all controller actions.
 
           
           <div class="method-source-code" id="missing_document-source">
-            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 112</span>
+            <pre><span class="ruby-comment"># File app/controllers/application_controller.rb, line 122</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">missing_document</span>(<span class="ruby-identifier">exception</span>)
   <span class="ruby-identifier">msg</span> = <span class="ruby-node">&quot;We are unable to find the requested #{exception.klass} - ID ##{exception.params[0]}&quot;</span>
   <span class="ruby-identifier">display_alert</span>(<span class="ruby-identifier">message</span><span class="ruby-operator">:</span> <span class="ruby-identifier">msg</span>, <span class="ruby-identifier">target</span><span class="ruby-operator">:</span> <span class="ruby-constant">Oops</span><span class="ruby-operator">::</span><span class="ruby-constant">ADMIN</span>)
