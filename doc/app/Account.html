@@ -164,8 +164,8 @@ no longer active.</p>
       
         <dt id="INACTIVE">INACTIVE
         
-        <dd><p><a href="Account.html#INACTIVE">INACTIVE</a> - The account's charge card is
-not valid any longer, so the account has been moved to an <a
+        <dd><p><a href="Account.html#INACTIVE">INACTIVE</a> - The account&#39;s charge
+card is not valid any longer, so the account has been moved to an <a
 href="Account.html#INACTIVE">INACTIVE</a> state.</p>
         
       
@@ -296,7 +296,7 @@ card data in memory, but not in the database.</p>
 
         <div class="method-description">
           
-          <p>The destory method overides the standard destory method for ActiveModel.
+          <p>The destroy method overrides the standard destroy method for ActiveModel.
 This version will delete Stripe.com customer account associated with the
 stored customer_id.</p>
           
@@ -315,7 +315,7 @@ stored customer_id.</p>
   <span class="ruby-comment"># Destroy the customer account on Stripe.com if the id is present.</span>
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">customer_id</span>.<span class="ruby-identifier">present?</span>
     <span class="ruby-keyword">begin</span>
-      <span class="ruby-constant">Stripe</span>.<span class="ruby-identifier">api_key</span> = <span class="ruby-constant">ENV</span>[<span class="ruby-string">'API_KEY'</span>]
+      <span class="ruby-constant">Stripe</span>.<span class="ruby-identifier">api_key</span> = <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;API_KEY&#39;</span>]
       <span class="ruby-identifier">customer</span> = <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">Customer</span>.<span class="ruby-identifier">retrieve</span>(<span class="ruby-node">&quot;#{self.customer_id}&quot;</span>)
       <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">delete</span>
     <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">StripeError</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">stripe_error</span>
@@ -379,7 +379,7 @@ the card is deliquent</p>
   <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">customer_id</span>.<span class="ruby-identifier">present?</span>
 
     <span class="ruby-keyword">begin</span>
-      <span class="ruby-constant">Stripe</span>.<span class="ruby-identifier">api_key</span> = <span class="ruby-constant">ENV</span>[<span class="ruby-string">'API_KEY'</span>]
+      <span class="ruby-constant">Stripe</span>.<span class="ruby-identifier">api_key</span> = <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;API_KEY&#39;</span>]
       <span class="ruby-identifier">customer</span> = <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">Customer</span>.<span class="ruby-identifier">retrieve</span>(<span class="ruby-node">&quot;#{self.customer_id}&quot;</span>)
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:deleted</span>)
@@ -452,7 +452,7 @@ update methods. This params hash should include:</p>
 
     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">account_valid</span> = <span class="ruby-identifier">is_valid</span>(<span class="ruby-identifier">params</span>))
       <span class="ruby-comment"># Create a stripe customer</span>
-      <span class="ruby-constant">Stripe</span>.<span class="ruby-identifier">api_key</span> = <span class="ruby-constant">ENV</span>[<span class="ruby-string">'API_KEY'</span>]
+      <span class="ruby-constant">Stripe</span>.<span class="ruby-identifier">api_key</span> = <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;API_KEY&#39;</span>]
 
       <span class="ruby-identifier">customer</span> = <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">Customer</span>.<span class="ruby-identifier">create</span>(
         <span class="ruby-value">:description</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{ACCOUNT_NAME} customer account.&quot;</span>,
@@ -562,7 +562,7 @@ update methods.</p>
   <span class="ruby-keyword">begin</span>
     <span class="ruby-keyword">if</span> (<span class="ruby-identifier">account_valid</span> = <span class="ruby-identifier">is_valid</span>(<span class="ruby-identifier">params</span>))
       <span class="ruby-comment"># Create a stripe customer</span>
-      <span class="ruby-constant">Stripe</span>.<span class="ruby-identifier">api_key</span> = <span class="ruby-constant">ENV</span>[<span class="ruby-string">'API_KEY'</span>]
+      <span class="ruby-constant">Stripe</span>.<span class="ruby-identifier">api_key</span> = <span class="ruby-constant">ENV</span>[<span class="ruby-string">&#39;API_KEY&#39;</span>]
       <span class="ruby-identifier">customer</span> = <span class="ruby-constant">Stripe</span><span class="ruby-operator">::</span><span class="ruby-constant">Customer</span>.<span class="ruby-identifier">retrieve</span>(<span class="ruby-node">&quot;#{self.customer_id}&quot;</span>)
 
       <span class="ruby-keyword">if</span> <span class="ruby-identifier">customer</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:deleted</span>)
@@ -733,7 +733,7 @@ instance variables for the <a href="Account.html">Account</a> model.</p>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">card_type</span> = <span class="ruby-identifier">customer_card</span>.<span class="ruby-identifier">type</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">last4</span> = <span class="ruby-identifier">customer_card</span>.<span class="ruby-identifier">last4</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">expiration</span> =  <span class="ruby-identifier">customer_card</span>.<span class="ruby-identifier">exp_month</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span>
-    <span class="ruby-string">'/'</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">customer_card</span>.<span class="ruby-identifier">exp_year</span>.<span class="ruby-identifier">to_s</span>
+    <span class="ruby-string">&#39;/&#39;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">customer_card</span>.<span class="ruby-identifier">exp_year</span>.<span class="ruby-identifier">to_s</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -766,7 +766,7 @@ instance variables for the <a href="Account.html">Account</a> model.</p>
           <div class="method-source-code" id="stripe_error_handler-source">
             <pre><span class="ruby-comment"># File app/models/account.rb, line 231</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">stripe_error_handler</span>(<span class="ruby-identifier">stripe_error</span>, <span class="ruby-identifier">status</span>=<span class="ruby-keyword">nil</span>)
-  <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-node">&quot;[Account.update_with_stripe] stripe error = #{stripe_error.message}&quot;</span>)
+  <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">debug</span>(<span class="ruby-node">&quot;[Account] stripe error = #{stripe_error.message}&quot;</span>)
   <span class="ruby-identifier">errors</span>[<span class="ruby-value">:customer_id</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">stripe_error</span>.<span class="ruby-identifier">message</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">status</span> = <span class="ruby-identifier">status</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">status</span>
   <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>

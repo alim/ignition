@@ -158,10 +158,9 @@ that the user selected.</p>
 
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@project</span>.<span class="ruby-identifier">save</span>
     <span class="ruby-ivar">@project</span>.<span class="ruby-identifier">relate_to_organization</span>
-    <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@project</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">'Project was successfully created.'</span>
+    <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@project</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;Project was successfully created.&#39;</span>
   <span class="ruby-keyword">else</span>
-    <span class="ruby-ivar">@verrors</span> = <span class="ruby-ivar">@project</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">full_messages</span>
-    <span class="ruby-identifier">render</span>  <span class="ruby-string">'new'</span>
+    <span class="ruby-identifier">set_errors_render</span>(<span class="ruby-ivar">@project</span>, <span class="ruby-value">:new</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -196,7 +195,7 @@ the related groups that were given access to the project.</p>
 
           
           <div class="method-source-code" id="destroy-source">
-            <pre><span class="ruby-comment"># File app/controllers/projects_controller.rb, line 117</span>
+            <pre><span class="ruby-comment"># File app/controllers/projects_controller.rb, line 115</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
   <span class="ruby-ivar">@project</span>.<span class="ruby-identifier">destroy</span>
   <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">projects_url</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&quot;Project was successfully deleted.&quot;</span>
@@ -385,14 +384,13 @@ including any changes to the organization associated with the current user.</p>
 
           
           <div class="method-source-code" id="update-source">
-            <pre><span class="ruby-comment"># File app/controllers/projects_controller.rb, line 100</span>
+            <pre><span class="ruby-comment"># File app/controllers/projects_controller.rb, line 99</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@project</span>.<span class="ruby-identifier">update_attributes</span>(<span class="ruby-identifier">project_params</span>)
     <span class="ruby-ivar">@project</span>.<span class="ruby-identifier">relate_to_organization</span>
-    <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@project</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">'Project was successfully updated.'</span>
+    <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@project</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;Project was successfully updated.&#39;</span>
   <span class="ruby-keyword">else</span>
-    <span class="ruby-ivar">@verrors</span> = <span class="ruby-ivar">@project</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">full_messages</span>
-    <span class="ruby-identifier">render</span>  <span class="ruby-string">'edit'</span>
+    <span class="ruby-identifier">set_errors_render</span>(<span class="ruby-ivar">@project</span>, <span class="ruby-value">:edit</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>

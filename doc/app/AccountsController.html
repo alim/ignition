@@ -152,7 +152,7 @@ customer_id and set the status of the account to ACTIVE</p>
   <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span> = <span class="ruby-constant">Account</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">nil?</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">save_with_stripe</span>(<span class="ruby-identifier">params</span>)
-    <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">user_url</span>(<span class="ruby-ivar">@user</span>), <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">'Account was successfully created.'</span>
+    <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">user_url</span>(<span class="ruby-ivar">@user</span>), <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;Account was successfully created.&#39;</span>
   <span class="ruby-keyword">else</span>
     <span class="ruby-identifier">handle_account_errors</span>(<span class="ruby-ivar">@user</span>, <span class="ruby-identifier">params</span>)
     <span class="ruby-identifier">render</span>  <span class="ruby-value">:new</span>
@@ -344,7 +344,7 @@ record.</p>
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@account</span>.<span class="ruby-identifier">present?</span>
 
     <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">account</span>.<span class="ruby-identifier">update_with_stripe</span>(<span class="ruby-identifier">params</span>)
-      <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">user_url</span>(<span class="ruby-ivar">@user</span>), <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">'Account was successfully updated.'</span>
+      <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">user_url</span>(<span class="ruby-ivar">@user</span>), <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;Account was successfully updated.&#39;</span>
     <span class="ruby-keyword">else</span>
       <span class="ruby-identifier">handle_account_errors</span>(<span class="ruby-ivar">@user</span>, <span class="ruby-identifier">params</span>)
       <span class="ruby-identifier">render</span>  <span class="ruby-value">:edit</span>
