@@ -101,14 +101,12 @@ class Subscription
     if account_user.customer_id.present?
 
       begin
-        #binding.pry
         Stripe.api_key = ENV['API_KEY']
 
         customer = Stripe::Customer.retrieve("#{account_user.customer_id}")
         self.sub_start = DateTime.now
         self.quantity = 1
         self.stripe_plan_id = plan_id
-        #binding.pry
         customer_subscription = customer.update_subscription(
                                   :plan => plan_id,
       #                            :plan => self.plan_str(),
@@ -203,8 +201,7 @@ class Subscription
   # subscribe function.
   ##########################################################################
   def sub_create(current_user, stripe_pl_id, coupon)
-    current_user.subscriptions << self.subscription
-
+    current_user.subscription = self
     self.subscribe(current_user.account, stripe_pl_id, coupon)
   end
 
