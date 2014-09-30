@@ -25,53 +25,15 @@ module Oops
   # * resource - the resource that can contain the error messages
   ######################################################################
   def display_alert(args)
-  	if args.count >= 2
-			msg = args[:message]
-			target = args[:target]
-			resource = args[:resource]
+    return nil if args.count < 3
 
-			respond_to do |format|
-				if target == ADMIN
-					format.html { redirect_to admin_oops_url, alert: msg }
-				else
-					format.html { redirect_to home_oops_url, alert: msg }
-				end
+    flash[args[:level]] = args[:message]
 
-		  	format.json { render json: resource.errors,
-		  		status: :unprocessable_entity } if resource.present?
-		  end
+    if args[:target] == ADMIN
+      redirect_to admin_oops_url
     else
-    	return nil
+      redirect_to home_oops_url
     end
   end
 
-  ######################################################################
-  # The display_error method will display an error message to an error
-  # page. It takes a hash as an argument, that includes:
-  # * message - the message to display
-  # * target - the target error page - Oops::ADMIN or Oops::HOME
-  # * resource - the resource that can contain the error messages
-  ######################################################################
-  def display_error(args)
-  	if args.count >= 2
-			msg = args[:message]
-			target = args[:target]
-			resource = args[:resource]
-
-			respond_to do |format|
-				flash[:error] = msg
-
-				if target == ADMIN
-					format.html { redirect_to admin_oops_url }
-				else
-					format.html { redirect_to home_oops_url, alert: msg }
-				end
-
-		  	format.json { render json: @group.errors,
-		  		status: :unprocessable_entity } if resource.present?
-		  end
-    else
-    	return nil
-    end
-  end
 end

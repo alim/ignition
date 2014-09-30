@@ -1,7 +1,9 @@
 ########################################################################
 # The Subscription model holds information about a subscription plan
 # that will be created on the Stripe.com service. The model includes
-# enhancements for timestamps and white space stripping.
+# enhancements for timestamps and white space stripping. Eventually,
+# we would like to generalize this class via dependency injection to
+# support multiple payment providers.
 ########################################################################
 class Subscription
   include Mongoid::Document
@@ -95,7 +97,6 @@ class Subscription
   #
   # This method will return a subscription object.
   ##########################################################################
-
   def subscribe(account_user, plan_id, coupon_code)
 
     if account_user.customer_id.present?
@@ -107,18 +108,10 @@ class Subscription
         self.sub_start = DateTime.now
         self.quantity = 1
         self.stripe_plan_id = plan_id
-        customer_subscription = customer.update_subscription(
-                                  :plan => plan_id,
-      #                            :plan => self.plan_str(),
-                                  :coupon => coupon_code
-        )
-        self.cancel_at_period_end = customer_subscription.cancel_at_period_end
-        self.current_period_start = customer_subscription.current_period_start
-        self.current_period_end = customer_subscription.current_period_end
-        self.trial_start = customer_subscription.trial_start
-        self.trial_end = customer_subscription.trial_end
-        self.status = ACTIVE
 
+        update_customer_subscription_info(customer, plan_id, coupon_code)
+
+        self.status = ACTIVE
         self.save
 
       rescue Stripe::StripeError => stripe_error
@@ -205,31 +198,28 @@ class Subscription
     self.subscribe(current_user.account, stripe_pl_id, coupon)
   end
 
+  ## PROTECTED INSTANCE METHODS --------------------------------------------
   protected
 
-    ######################################################################
-    ######################################################################
-  #def is_valid(params)
+  ##########################################################################
+  # Utility method to dupate the subscription information from the Stripe
+  # customer record.
+  ##########################################################################
+  def update_customer_subscription_info(customer, plan_id, coupon_code)
+    customer_subscription = customer.update_subscription(
+                              :plan => plan_id,
+                              :coupon => coupon_code
+    )
+    self.cancel_at_period_end = customer_subscription.cancel_at_period_end
+    self.current_period_start = customer_subscription.current_period_start
+    self.current_period_end = customer_subscription.current_period_end
+    self.trial_start = customer_subscription.trial_start
+    self.trial_end = customer_subscription.trial_end
+  end
 
-   # subscription_valid = true
-
-   #  if params[:cardholder_name].blank?
-   #     errors[:cardholder_name] << "Cardholder name cannot be blank."
-   #     subscription_vaild = false
-   # end
-
-   # if params[:plan_id].blank?
-   #     errors[:plan_id] << "Plan ID cannot be blank."
-   #     subscription_valid = false
-   #  end
-
-   #  if params[:stripe_cc_token].blank?
-   #     errors[:base] << "Could not get a valid response from Stripe.com"
-   #     subscription_valid = false
-   # end
-
-   #  return account_valid
-   # end
+  #########################################################################
+  # Debug level logger
+  #########################################################################
   def logger_debugger(errors, stripe_error, customer_id, description)
     logger.debug(description)
     errors[:customer_id] << stripe_error.message

@@ -110,7 +110,7 @@ class ApplicationController < ActionController::Base
   ######################################################################
   def access_denied(exception)
     msg = "You are not authorized to access the requested #{exception.subject.class}."
-    display_alert(message: msg, target: Oops::ADMIN)
+    display_alert(message: msg, target: Oops::ADMIN, level: :alert)
   end
 
 
@@ -121,6 +121,6 @@ class ApplicationController < ActionController::Base
   ######################################################################
   def missing_document(exception)
     msg = "We are unable to find the requested #{exception.klass} - ID ##{exception.params[0]}"
-    display_alert(message: msg, target: Oops::ADMIN)
+    display_alert(message: msg, target: Oops::ADMIN, level: :alert)
   end
 end
