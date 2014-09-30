@@ -257,8 +257,8 @@ describe Organization do
 
   describe "#managed_classes" do
     before(:each) {
-      projects_with_users
       single_organization_with_users
+      10.times.each { FactoryGirl.create(:project, user: @owner)}
     }
 
     it "should find all instances of a related class" do

@@ -25,29 +25,11 @@ module Oops
   # * resource - the resource that can contain the error messages
   ######################################################################
   def display_alert(args)
-    return nil if args.count < 2
-    flash[:alert] = args[:message]
-    display_message(args[:target])
-  end
+    return nil if args.count < 3
 
-  ######################################################################
-  # The display_error method will display an error message to an error
-  # page. It takes a hash as an argument, that includes:
-  # * message - the message to display
-  # * target - the target error page - Oops::ADMIN or Oops::HOME
-  # * resource - the resource that can contain the error messages
-  ######################################################################
-  def display_error(args)
-  	return nil if args.count < 2
-    flash[:error] = args[:message]
-    display_message(args[:target])
-  end
+    flash[args[:level]] = args[:message]
 
-  ######################################################################
-  # Display an error message on the correct layout.
-  ######################################################################
-  def display_message(target)
-    if target == ADMIN
+    if args[:target] == ADMIN
       redirect_to admin_oops_url
     else
       redirect_to home_oops_url
