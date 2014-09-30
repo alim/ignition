@@ -224,10 +224,10 @@ describe Organization do
   end
 
   # RELATE CLASSES ----------------------------------------------------
-  describe "#describe_classes" do
+  describe "#relate_classes" do
     before(:each) {
-      projects_with_users
       single_organization_with_users
+      10.times.each { FactoryGirl.create(:project, user: @owner)}
     }
 
     it "should set the organization of managed projects" do

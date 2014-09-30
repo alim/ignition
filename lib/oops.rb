@@ -25,24 +25,9 @@ module Oops
   # * resource - the resource that can contain the error messages
   ######################################################################
   def display_alert(args)
-  	if args.count >= 2
-			msg = args[:message]
-			target = args[:target]
-			resource = args[:resource]
-
-			respond_to do |format|
-				if target == ADMIN
-					format.html { redirect_to admin_oops_url, alert: msg }
-				else
-					format.html { redirect_to home_oops_url, alert: msg }
-				end
-
-		  	format.json { render json: resource.errors,
-		  		status: :unprocessable_entity } if resource.present?
-		  end
-    else
-    	return nil
-    end
+    return nil if args.count < 2
+    flash[:alert] = args[:message]
+    display_message(args[:target])
   end
 
   ######################################################################
@@ -53,25 +38,20 @@ module Oops
   # * resource - the resource that can contain the error messages
   ######################################################################
   def display_error(args)
-  	if args.count >= 2
-			msg = args[:message]
-			target = args[:target]
-			resource = args[:resource]
+  	return nil if args.count < 2
+    flash[:error] = args[:message]
+    display_message(args[:target])
+  end
 
-			respond_to do |format|
-				flash[:error] = msg
-
-				if target == ADMIN
-					format.html { redirect_to admin_oops_url }
-				else
-					format.html { redirect_to home_oops_url, alert: msg }
-				end
-
-		  	format.json { render json: @group.errors,
-		  		status: :unprocessable_entity } if resource.present?
-		  end
+  ######################################################################
+  # Display an error message on the correct layout.
+  ######################################################################
+  def display_message(target)
+    if target == ADMIN
+      redirect_to admin_oops_url
     else
-    	return nil
+      redirect_to home_oops_url
     end
   end
+
 end
