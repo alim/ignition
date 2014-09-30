@@ -179,9 +179,9 @@ a service administrator</p>
             <pre><span class="ruby-comment"># File app/models/user.rb, line 124</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">filter_by</span>(<span class="ruby-identifier">filter</span>)
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">filter</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-string">'customer'</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;customer&#39;</span>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">by_role</span>(<span class="ruby-constant">User</span><span class="ruby-operator">::</span><span class="ruby-constant">CUSTOMER</span>)
-  <span class="ruby-keyword">when</span> <span class="ruby-string">'service_admin'</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;service_admin&#39;</span>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">by_role</span>(<span class="ruby-constant">User</span><span class="ruby-operator">::</span><span class="ruby-constant">SERVICE_ADMIN</span>)
   <span class="ruby-keyword">else</span>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">all</span>
@@ -221,11 +221,11 @@ request.</p>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">search_by</span>(<span class="ruby-identifier">search_type</span>, <span class="ruby-identifier">search_term</span>)
   <span class="ruby-comment"># Check for the type of search we are doing</span>
   <span class="ruby-keyword">case</span> <span class="ruby-identifier">search_type</span>
-  <span class="ruby-keyword">when</span> <span class="ruby-string">'email'</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;email&#39;</span>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">by_email</span>(<span class="ruby-identifier">search_term</span>)
-  <span class="ruby-keyword">when</span> <span class="ruby-string">'first_name'</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;first_name&#39;</span>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">by_first_name</span>(<span class="ruby-identifier">search_term</span>)
-  <span class="ruby-keyword">when</span> <span class="ruby-string">'last_name'</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&#39;last_name&#39;</span>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">by_last_name</span>(<span class="ruby-identifier">search_term</span>)
   <span class="ruby-keyword">else</span> <span class="ruby-comment"># Unrecognized search type so return all</span>
     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">all</span>

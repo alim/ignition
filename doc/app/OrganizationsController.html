@@ -157,12 +157,10 @@ created. All members will be notified by email.</p>
   <span class="ruby-ivar">@organization</span> = <span class="ruby-constant">Organization</span>.<span class="ruby-identifier">create_with_owner</span>(<span class="ruby-identifier">organization_params</span>, <span class="ruby-identifier">current_user</span>)
 
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">save</span>
-    <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">relate_and_notify</span>
-
-    <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@organization</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">'Organization was successfully created.'</span>
+    <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">notify_and_update_classes</span>
+    <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@organization</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;Organization was successfully created.&#39;</span>
   <span class="ruby-keyword">else</span>
-    <span class="ruby-ivar">@verrors</span> = <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">full_messages</span>
-    <span class="ruby-identifier">render</span>  <span class="ruby-string">'new'</span>
+    <span class="ruby-identifier">set_errors_render</span>(<span class="ruby-ivar">@organization</span>, <span class="ruby-value">:new</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -199,7 +197,7 @@ be needed.</p>
 
           
           <div class="method-source-code" id="destroy-source">
-            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 128</span>
+            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 124</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
   <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">unrelate_classes</span>
   <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">destroy</span>
@@ -360,7 +358,7 @@ a single organization member and re-display the show template.</p>
 
           
           <div class="method-source-code" id="notify-source">
-            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 142</span>
+            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 138</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">notify</span>
   <span class="ruby-ivar">@user</span> = <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">users</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:uid</span>])
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">invite_member</span>(<span class="ruby-ivar">@user</span>)
@@ -439,17 +437,15 @@ remove organization members and add new organization members.</p>
 
           
           <div class="method-source-code" id="update-source">
-            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 106</span>
+            <pre><span class="ruby-comment"># File app/controllers/organizations_controller.rb, line 104</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>
   <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">remove_members</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:organization</span>][<span class="ruby-value">:user_ids</span>])
 
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">update_attributes</span>(<span class="ruby-identifier">organization_params</span>)
-    <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">relate_and_notify</span>
-
-    <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@organization</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">'Organization was successfully updated.'</span>
+    <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">notify_and_update_classes</span>
+    <span class="ruby-identifier">redirect_to</span> <span class="ruby-ivar">@organization</span>, <span class="ruby-identifier">notice</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;Organization was successfully updated.&#39;</span>
   <span class="ruby-keyword">else</span>
-    <span class="ruby-ivar">@verrors</span> = <span class="ruby-ivar">@organization</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">full_messages</span>
-    <span class="ruby-identifier">render</span>  <span class="ruby-string">'edit'</span>
+    <span class="ruby-identifier">set_errors_render</span>(<span class="ruby-ivar">@organization</span>, <span class="ruby-value">:edit</span>)
   <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>

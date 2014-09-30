@@ -27,6 +27,10 @@ services. The build status is shown below for:
 
 * Master Branch - {<img src="https://travis-ci.org/alim/ignition.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/alim/ignition]
 
+In addition to using Travis CI for continuous integration, we are using Code Climate
+analyzer for static code analysis.
+
+* Master Branch Score - {<img src="https://codeclimate.com/github/alim/ignition/badges/gpa.svg" />}[https://codeclimate.com/github/alim/ignition]
 
 = Getting Started
 

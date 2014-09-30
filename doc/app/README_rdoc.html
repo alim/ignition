@@ -145,9 +145,9 @@ application whatever you want. In the example, we use “someapp”.</p>
 rhc app show-app someapp</pre>
 </li><li>
 <p>Create a text file to hold environment variables for setting up email and
-default administrator login. We will call this file ‘variables.txt’. This
-file should not be included in your git repository. Example file contents
-are below:</p>
+default administrator login. We will call this file
+&#39;variables.txt&#39;. This file should not be included in your git
+repository. Example file contents are below:</p>
 
 <pre>SMTP_HOST=smtpout.someserver.net
 SMTP_PORT=3535
@@ -161,14 +161,14 @@ ADMIN_PHONE=800.555.1212
 ADMIN_EMAIL=sadmin@example.com
 ADMIN_PASSWORD=somepassword
 
-TEST_API_KEY='your stripe test api/private key'
-TEST_PUB_KEY='your stripe test public key'
-PROD_API_KEY='your stripe production api/private key'
-PROD_PUB_KEY='your stripe production public key'
+TEST_API_KEY=&#39;your stripe test api/private key&#39;
+TEST_PUB_KEY=&#39;your stripe test public key&#39;
+PROD_API_KEY=&#39;your stripe production api/private key&#39;
+PROD_PUB_KEY=&#39;your stripe production public key&#39;
 
-export CONTACT_EMAILBOX='operations@example.com'
-export CONTACT_FROM='no-reply-mailbox@example.com'
-export CONTACT_SUBJECT='New Contact Request'
+export CONTACT_EMAILBOX=&#39;operations@example.com&#39;
+export CONTACT_FROM=&#39;no-reply-mailbox@example.com&#39;
+export CONTACT_SUBJECT=&#39;New Contact Request&#39;
 
 export GROUP_FROM_EMAIL=&quot;no-reply-mailbox@example.com&quot;
 export GROUP_EMAIL_SUBJECT=&quot;Group Membership Notification&quot;</pre>
