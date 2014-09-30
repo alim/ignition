@@ -30,7 +30,7 @@ services. The build status is shown below for:
 In addition to using Travis CI for continuous integration, we are using Code Climate
 analyzer for static code analysis.
 
-{<img src="https://codeclimate.com/github/alim/ignition/badges/gpa.svg" />}[https://codeclimate.com/github/alim/ignition]
+* Master Branch Score - {<img src="https://codeclimate.com/github/alim/ignition/badges/gpa.svg" />}[https://codeclimate.com/github/alim/ignition]
 
 = Getting Started
 
