@@ -284,8 +284,8 @@ describe Organization do
       end
     }
     before(:each) {
-      projects_with_users
       single_organization_with_users
+      10.times.each { FactoryGirl.create(:project, user: @owner)}
     }
 
     it "should un-relate project classes" do
