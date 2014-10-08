@@ -11,6 +11,11 @@ class SubscriptionsController < ApplicationController
   before_filter :authenticate_user!
   before_action :set_subscription, only: [:show, :edit, :update, :destroy]
 
+  # CANCAN AUTHORIZATION -----------------------------------------------
+  # This helper assumes that the instance variable @group is loaded
+  # or checks Class permissions
+  authorize_resource
+
   ######################################################################
   # GET /subscriptions
   # GET /subscriptions.json
