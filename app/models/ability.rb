@@ -17,6 +17,7 @@ class Ability
 			if user.role == User::CUSTOMER
 
         can :crud, Account, user: {id: user.id}
+        can :crud, Subscription, user_id: user.id
         can [:crud, :notify], Organization, owner_id: user.id
 				can [:show, :edit, :update], User, id: user.id
 				can :crud, Project do |project|
