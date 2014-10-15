@@ -79,54 +79,57 @@ include_context 'subscription_setup'
       end
     end
     describe "Subscription Access Tests" do
-     let(:subscription_fake_customers) {
-      create_subscriptions
-      @fake_subscription = Subscription.last
-     }
 
-    describe "Subscription Admin Access Tests" do
+      # Create a normal user
+      let(:normal_user) { FactoryGirl.create(:user) }
 
-      sub_admin = FactoryGirl.create(:adminuser)
-      subject(:admin_ability) { Ability.new(sub_admin) }
+      # Create a single fake subscription owned by a single user
+      let(:subscription_fake_customer) {
+        FactoryGirl.create(:subscription, user: normal_user)
+      }
 
-      it "Create a Subscription" do
-        should be_able_to(:create, subscription_fake_customers)
+      describe "Subscription Admin Access Tests" do
+
+        sub_admin = FactoryGirl.create(:adminuser)
+        subject(:admin_ability) { Ability.new(sub_admin) }
+
+        it "Create a Subscription" do
+          should be_able_to(:create, subscription_fake_customer)
+        end
+
+        it "Read a Subscription" do
+          should be_able_to(:read, subscription_fake_customer)
+        end
+
+        it "Update a Subscription" do
+          should be_able_to(:update, subscription_fake_customer)
+        end
+
+        it "Delete a Subscription" do
+          should be_able_to(:destroy, subscription_fake_customer)
+        end
       end
 
-      it "Read a Subscription" do
-        should be_able_to(:read, subscription_fake_customers)
-      end
+      describe "Subscription User Access Tests" do
 
-      it "Update a Subscription" do
-        should be_able_to(:update, subscription_fake_customers)
-      end
+        subject(:user_ability) { Ability.new(normal_user) }
 
-      it "Delete a Subscription" do
-        should be_able_to(:delete, subscription_fake_customers)
+        it "Create a Subscription" do
+          should be_able_to(:create, subscription_fake_customer)
+        end
+
+        it "Read a Subscription" do
+          should be_able_to(:read, subscription_fake_customer)
+        end
+
+        it "Update a Subscription" do
+          should be_able_to(:update, subscription_fake_customer)
+        end
+
+        it "Delete a Subscription" do
+          should be_able_to(:destroy, subscription_fake_customer)
+        end
       end
     end
-
-    describe "Subscription User Access Tests" do
-
-      sub_user = FactoryGirl.create(:user)
-      subject(:user_ability) { Ability.new(sub_user) }
-
-      it "Create a Subscription" do
-        should be_able_to(:create, subscription_fake_customers)
-      end
-
-      it "Read a Subscription" do
-        should be_able_to(:read, subscription_fake_customers)
-      end
-
-      it "Update a Subscription" do
-        should be_able_to(:update, subscription_fake_customers)
-      end
-
-      it "Delete a Subscription" do
-        should be_able_to(:delete, subscription_fake_customers)
-      end
-    end
-   end
   end
 end
