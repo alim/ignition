@@ -83,11 +83,20 @@ include_context 'subscription_setup'
       # Create a normal user
       let(:normal_user) { FactoryGirl.create(:user) }
 
+      # Create a abnormal user
+      let(:abnormal_user) { FactoryGirl.create(:user) }
+
       # Create a single fake subscription owned by a single user
       let(:subscription_fake_customer) {
         FactoryGirl.create(:subscription, user: normal_user)
       }
 
+      # Create a single fake subscription owned by a single abnormal user
+      let(:subscription_fake_abnormal_customer) {
+        FactoryGirl.create(:subscription, user: abnormal_user)
+      }
+
+      # Subscription Admin Tests with CRUD access rights
       describe "Subscription Admin Access Tests" do
 
         sub_admin = FactoryGirl.create(:adminuser)
@@ -110,6 +119,7 @@ include_context 'subscription_setup'
         end
       end
 
+      # Subscription User Tests with CRUD access rights
       describe "Subscription User Access Tests" do
 
         subject(:user_ability) { Ability.new(normal_user) }
@@ -128,6 +138,26 @@ include_context 'subscription_setup'
 
         it "Delete a Subscription" do
           should be_able_to(:destroy, subscription_fake_customer)
+        end
+      end
+
+      # Subscription User Tests with Non CRUD access rights
+      describe "Subscription Non User Access Tests" do
+
+        it "Create a Subscription" do
+          should_not be_able_to(:create, subscription_fake_abnormal_customer)
+        end
+
+        it "Read a Subscription" do
+          should_not be_able_to(:read, subscription_fake_abnormal_customer)
+        end
+
+        it "Update a Subscription" do
+          should_not be_able_to(:update, subscription_fake_abnormal_customer)
+        end
+
+        it "Delete a Subscription" do
+          should_not be_able_to(:destroy, subscription_fake_abnormal_customer)
         end
       end
     end
