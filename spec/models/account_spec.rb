@@ -113,7 +113,7 @@ describe Account do
 
 			  it "Should set account with credit card expiration date" do
 			    user.account.save_with_stripe(params).should be_true
-			    user.account.expiration.should eq(Date.today.month.to_s + '/' +
+			    user.account.expiration.should eq((Date.today.month - 1).to_s + '/' +
 			      (Date.today.year + 1).to_s)
 			  end
 
@@ -217,7 +217,7 @@ describe Account do
 			  it "Should set account with credit card expiration date" do
 			    user.account.save_with_stripe(params).should be_true
 			    user.account.update_with_stripe(update_params).should be_true
-			    user.account.expiration.should eq(Date.today.month.to_s + '/' +
+			    user.account.expiration.should eq((Date.today.month - 1).to_s + '/' +
 			      (Date.today.year + 2).to_s)
 			  end
 
@@ -311,7 +311,7 @@ describe Account do
 				  user.account.save_with_stripe(params).should be_true
 				  user.account.get_customer
 
-				  month = Date.today.month.to_s
+				  month = (Date.today.month - 1).to_s
 				  year = (Date.today.year + 3).to_s
 				  user.account.expiration.should match(/#{month}\/#{year}/)
 			  end

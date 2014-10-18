@@ -20,7 +20,7 @@ describe AccountsController do
   let(:name) { "Jane Smith" }
   let(:cvcvalue) { "616" }
   let(:token) { get_token(name, cardnum, Date.today.month,
-    (Date.today.year + 1), cvcvalue) }
+    (Date.today.year), cvcvalue) }
 
 
   let(:customer_account_params){
@@ -258,7 +258,7 @@ describe AccountsController do
       it "Should update account card expiration" do
         post :create, account_params
         assigns(:user).account.expiration.should eq(
-          Date.today.month.to_s + '/' + (Date.today.year + 1).to_s
+          (Date.today.month - 1).to_s + '/' + (Date.today.year + 1).to_s
         )
       end
     end # Valid create examples
