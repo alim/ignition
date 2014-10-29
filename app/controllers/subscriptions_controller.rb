@@ -23,7 +23,12 @@ class SubscriptionsController < ApplicationController
   # The index method will only be available for service administrators
   ######################################################################
   def index
-    @subscriptions = Subscription.all
+
+    if current_user.role == User::SERVICE_ADMIN
+      @subscriptions = Subscription.all
+    else
+      @subscriptions = Subscription.where(user_id: current_user.id)
+    end
   end
 
   ######################################################################
