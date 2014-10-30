@@ -337,10 +337,12 @@ describe SubscriptionsController do
 
       it "Should return all subscriptions, if service admin" do
         login_admin
+        count = Subscription.count
+        count = ApplicationController::PAGE_COUNT if count > ApplicationController::PAGE_COUNT
         get :index
         response.should be_success
         assigns(:subscriptions).count.should_not eq(0)
-        assigns(:subscriptions).count.should eq(Subscription.count)
+        assigns(:subscriptions).count.should eq(count)
       end
     end # Index authorization
     describe "Authorization Show examples", :vcr do

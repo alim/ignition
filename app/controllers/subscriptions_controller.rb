@@ -23,9 +23,11 @@ class SubscriptionsController < ApplicationController
   # The index method will only be available for service administrators
   ######################################################################
   def index
+     # Get page number
+    page = params[:page].nil? ? 1 : params[:page]
 
     if current_user.role == User::SERVICE_ADMIN
-      @subscriptions = Subscription.all
+      @subscriptions = Subscription.all.paginate(page: page,  per_page: PAGE_COUNT)
     else
       @subscriptions = Subscription.where(user_id: current_user.id)
     end
