@@ -46,6 +46,14 @@ describe SubscriptionsController do
       }
     }
 
+ # Credit card and stripe test data
+    let(:cardnum2) { "4012888888881881" }
+    let(:email2) { "janesmith@example.com" }
+    let(:name2) { "Jane Smith" }
+    let(:cvcvalue2) { "617" }
+    let(:token2) { @token2 = get_token(name2, cardnum2, Date.today.month,
+     (Date.today.year + 1), cvcvalue2) }
+
   # Credit card and stripe test data
     let(:cardnum) { "4242424242424242" }
     let(:email) { "johnsmith@example.com" }
@@ -85,7 +93,7 @@ describe SubscriptionsController do
                     account: {stripe_cc_token: token.id}
         }
 
-      #@user.account.save_with_stripe(@params)
+      @user.account.save_with_stripe(@params)
       sign_in @user
     }
 
@@ -121,15 +129,12 @@ describe SubscriptionsController do
    }
 
 
-
-
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # SubscriptionsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
   before(:each){
-   #signin_customer
    stripe_customer
    create_stripe_coupon
    create_silver_plan
@@ -287,5 +292,187 @@ describe SubscriptionsController do
       response.should redirect_to(subscriptions_url)
     end
   end
+  describe "Authorization examples", :vcr do
 
+      let(:login_nonowner) {
+       sign_out subject.current_user
+       @nonuser = FactoryGirl.create(:user_with_account)
+       sign_in @nonuser
+      }
+
+       let(:destroy_params) {
+      { id: @fake_subscription.id }
+      }
+
+      let(:show_params) {
+      { id: @fake_subscription.id }
+      }
+
+      let(:edit_params) {
+      { id: @fake_subscription.id }
+      }
+
+    describe "Authorization Index examples", :vcr do
+
+      it "Should return success as a owner" do
+        get :index
+        response.should be_success
+      end
+
+      it "Should only access subscriptions that user owns" do
+        get :index
+        assigns(:subscriptions).count.should_not eq(0)
+        assigns(:subscriptions).each do |subscription|
+          subscription.user.should eq(subscription.user)
+        end
+      end
+
+      it "Should not access any subscriptions, if not subscription owner" do
+        login_nonowner
+        get :index
+        assigns(:subscriptions).each do |subscription|
+          subscription.user.should_not eq(@nonuser)
+        end
+      end
+
+      it "Should return all subscriptions, if service admin" do
+        login_admin
+        count = Subscription.count
+        count = ApplicationController::PAGE_COUNT if count > ApplicationController::PAGE_COUNT
+        get :index
+        response.should be_success
+        assigns(:subscriptions).count.should_not eq(0)
+        assigns(:subscriptions).count.should eq(count)
+      end
+    end # Index authorization
+    describe "Authorization Show examples", :vcr do
+
+      describe "access by owner" do
+        it "Return success for a subscription owned by the user" do
+          get :show, show_params
+          response.should be_success
+        end
+
+        it "Find the requested subscription owned by the user" do
+          get :show, show_params
+          assigns(:subscription).id.should eq(@fake_subscription.id)
+        end
+      end # owner access
+
+      describe "access by non-owner" do
+
+        it "Redirect to admin_oops_url for a subscription NOT owned by the user" do
+          login_nonowner
+          get :show, show_params
+          response.should redirect_to admin_oops_url
+        end
+      end  # non-owner access
+
+      describe "access by admin user" do
+        before(:each) { login_admin }
+
+        it "Return success for a subscription using admin login" do
+          get :show, show_params
+          response.should be_success
+        end
+
+        it "Find the requested subscription with admin login" do
+          get :show, show_params
+          assigns(:subscription).id.should eq(@fake_subscription.id)
+        end
+
+        it "Subscription should have different owner than admin" do
+          get :show, show_params
+          assigns(:subscription).user.id.should_not eq(subject.current_user.id)
+        end
+      end # access by admin user
+     end # Show Authorization Examples
+     describe "Authorization Edit examples", :vcr do
+       describe "access by owner" do
+        it "Return success for a subscription owned by the user" do
+          get :edit, edit_params
+          response.should be_success
+        end
+
+        it "Find the requested subscription owned by the user" do
+          get :edit, edit_params
+          assigns(:subscription).id.should eq(@fake_subscription.id)
+        end
+
+        it "Subscription user.id should match signed_in_user.id" do
+          get :edit, edit_params
+          assigns(:subscription).user.id.should eq(subject.current_user.id)
+        end
+       end # access by owner
+
+       describe "access by non-owner" do
+
+        it "Redirect to admin_oops_url for a subscription NOT owned by the user" do
+          login_nonowner
+          get :edit, edit_params
+          response.should redirect_to admin_oops_url
+        end
+       end  # non-owner access
+
+      describe "access by admin user" do
+        before(:each) { login_admin }
+
+        it "Return success for a subscription owned by the user" do
+          get :edit, edit_params
+          response.should be_success
+        end
+
+        it "Find the requested subscription owned by the user" do
+          get :edit, edit_params
+          assigns(:subscription).id.should eq(@fake_subscription.id)
+        end
+
+        it "Subscription user.id should match admin_user id" do
+          get :edit, edit_params
+          assigns(:subscription).user.id.should_not eq(subject.current_user.id)
+        end
+      end # access by admin user
+     end # Edit authorization examples
+     describe "Authorization Create tests", :vcr do
+      describe "with access by owner" do
+        it "should create a subscription with customer's id" do
+          get :create, create_params
+          assigns(:subscription).user.id.should eq(subject.current_user.id)
+        end
+      end # access by owner
+     end # Create Tests
+     describe "Authorization Destroy examples", :vcr do
+      describe "with access by owner" do
+        it "Should redirect to subscriptions_url, upon successful deletion of owned group" do
+          delete :destroy, destroy_params
+          response.should redirect_to subscriptions_url
+        end
+
+        it "Deleted subscription should have same owner id as login" do
+          delete :destroy, destroy_params
+          assigns(:subscription).user.id.should eq(subject.current_user.id)
+        end
+
+        it "Should reduce the number of Subscription records by 1" do
+          expect{
+            delete :destroy, destroy_params
+          }.to change(Subscription, :count).by(-1)
+        end
+      end
+    describe "access by non-owner and non-group member" do
+        before(:each) { login_nonowner }
+
+        it "Redirect to admin_oops_url for a subscription NOT owned by the user" do
+          delete :destroy, destroy_params
+          response.should redirect_to admin_oops_url
+        end
+
+        it "Should not delete a Subscription record" do
+          expect {
+            delete :destroy, destroy_params
+          }.to change(Subscription, :count).by(0)
+        end
+      end
+    end
+  end
 end

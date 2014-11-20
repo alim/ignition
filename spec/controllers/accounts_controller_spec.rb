@@ -8,12 +8,6 @@ describe AccountsController do
   let(:admin){ User.where(role: User::SERVICE_ADMIN).first }
   let(:customer_account){ User.where(role: User::CUSTOMER).where(:account.exists => true).first }
 
-  # let(:find_one_user) {
-  #   @customer = User.where(role: User::CUSTOMER).where(:account.exists => false).first
-  #   @admin = User.where(role: User::SERVICE_ADMIN).first
-  #   @customer_account = @customer = User.where(role: User::CUSTOMER).where(:account.exists => true).first
-  # }
-
   # Credit card and stripe test data
   let(:cardnum) { "4242424242424242" }
   let(:email) { "janesmith@example.com" }
@@ -258,7 +252,7 @@ describe AccountsController do
       it "Should update account card expiration" do
         post :create, account_params
         assigns(:user).account.expiration.should eq(
-          (Date.today.month - 1).to_s + '/' + (Date.today.year + 1).to_s
+          token.card[:exp_month].to_s + '/' + token.card[:exp_year].to_s
         )
       end
     end # Valid create examples
