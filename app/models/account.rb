@@ -132,7 +132,6 @@ class Account
   #####################################################################
   def save_with_stripe(params)
     account_valid = true
-
     begin
 
       if (account_valid = is_valid(params))

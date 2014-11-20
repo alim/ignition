@@ -70,7 +70,7 @@ describe Account do
     	context "Valid attributes", :vcr do
 
 		    let(:token) do
-		    	get_token(name, cardnum, Date.today.month, (Date.today.year + 1),
+		    	@token = get_token(name, cardnum, Date.today.month, (Date.today.year + 1),
 		    		cvcvalue)
 		  	end
 
@@ -78,9 +78,11 @@ describe Account do
 		    	{
 						cardholder_name: name,
 						cardholder_email: email,
-						account: {stripe_cc_token: token.id}
+						account: {stripe_cc_token: @token.id}
 		    	}
 		    end
+
+		    before { token }
 
 	      it "Should allow saving with stripe information to account record" do
 				  user.account.save_with_stripe(params).should be_true
@@ -113,8 +115,8 @@ describe Account do
 
 			  it "Should set account with credit card expiration date" do
 			    user.account.save_with_stripe(params).should be_true
-			    user.account.expiration.should eq((Date.today.month - 1).to_s + '/' +
-			      (Date.today.year + 1).to_s)
+			    user.account.expiration.should eq(@token.card[:exp_month].to_s + '/' +
+			      @token.card[:exp_year].to_s)
 			  end
 
 			  it "Should update account status to ACTIVE" do
@@ -126,7 +128,7 @@ describe Account do
 			context 'Invalid stripe attributes', :vcr do
 
 		    let(:token) do
-	    		get_token(name, cardnum, Date.today.month, (Date.today.year + 1),
+	    		@token = get_token(name, cardnum, Date.today.month, (Date.today.year + 1),
 	    			cvcvalue)
 		    end
 
@@ -134,9 +136,11 @@ describe Account do
 		    	{
 						cardholder_name: name,
 						cardholder_email: email,
-						account: {stripe_cc_token: token.id}
+						account: {stripe_cc_token: @token.id}
 		    	}
 		    end
+
+		    before { token }
 
 			  it "Should not save the account with an invalid token" do
 			    params[:account][:stripe_cc_token] = '123451234512345'
@@ -155,12 +159,12 @@ describe Account do
 			context "Valid stripe account update tests", :vcr do
 
 		    let(:first_token) do
-		    	get_token(name, cardnum, Date.today.month, (Date.today.year + 1),
+		    	@first_token = get_token(name, cardnum, Date.today.month, (Date.today.year + 1),
 		    		cvcvalue)
 				end
 
 		    let(:second_token) do
-		    	get_token(new_name, cardnum, Date.today.month, (Date.today.year + 2),
+		    	@second_token = get_token(new_name, cardnum, Date.today.month, (Date.today.year + 2),
 		    		cvcvalue)
 				end
 
@@ -168,7 +172,7 @@ describe Account do
 			  	{
 					  cardholder_name: name,
 					  cardholder_email: email,
-					  account: {stripe_cc_token: first_token.id}
+					  account: {stripe_cc_token: @first_token.id}
 					}
 			  end
 
@@ -176,8 +180,13 @@ describe Account do
 			  	{
 					  cardholder_name: new_name,
 					  cardholder_email: new_email,
-					  account: {stripe_cc_token: second_token.id}
+					  account: {stripe_cc_token: @second_token.id}
 					}
+			  end
+
+			  before do
+			  	first_token
+			  	second_token
 			  end
 
 			  it "Should update a saved account with new attributes" do
@@ -217,8 +226,8 @@ describe Account do
 			  it "Should set account with credit card expiration date" do
 			    user.account.save_with_stripe(params).should be_true
 			    user.account.update_with_stripe(update_params).should be_true
-			    user.account.expiration.should eq((Date.today.month - 1).to_s + '/' +
-			      (Date.today.year + 2).to_s)
+			    user.account.expiration.should eq(@second_token.card[:exp_month].to_s + '/' +
+			      @second_token.card[:exp_year].to_s)
 			  end
 
 			  it "Should update a saved account and status should be ACTIVE" do
@@ -233,12 +242,12 @@ describe Account do
 			context "Updating with invalid stripe attributes", :vcr do
 
 		    let(:third_token) do
-		    	get_token(name, cardnum, Date.today.month, (Date.today.year + 1),
+		    	@third_token = get_token(name, cardnum, Date.today.month, (Date.today.year + 1),
 		    		cvcvalue)
 				end
 
 		    let(:forth_token) do
-		    	get_token(new_name, cardnum, Date.today.month, (Date.today.year + 2),
+		    	@forth_token = get_token(new_name, cardnum, Date.today.month, (Date.today.year + 2),
 		    		cvcvalue)
 				end
 
@@ -277,7 +286,7 @@ describe Account do
 				let(:name) { 'Mickey Mouse' }
 
 				let(:info_token) do
-		    	get_token(name, cardnum, Date.today.month, (Date.today.year + 3),
+		    	@info_token = get_token(name, cardnum, Date.today.month, (Date.today.year + 3),
 		    		cvcvalue)
 				end
 
@@ -285,9 +294,11 @@ describe Account do
 			  	{
 					  cardholder_name: name,
 					  cardholder_email: email,
-					  account: {stripe_cc_token: info_token.id}
+					  account: {stripe_cc_token: @info_token.id}
 					}
 			  end
+
+			  before { info_token }
 
 			  it "Should retrieve the correct email address" do
 				  user.account.save_with_stripe(params).should be_true
@@ -311,8 +322,8 @@ describe Account do
 				  user.account.save_with_stripe(params).should be_true
 				  user.account.get_customer
 
-				  month = (Date.today.month - 1).to_s
-				  year = (Date.today.year + 3).to_s
+				  month = @info_token.card[:exp_month].to_s
+				  year = @info_token.card[:exp_year].to_s
 				  user.account.expiration.should match(/#{month}\/#{year}/)
 			  end
 
